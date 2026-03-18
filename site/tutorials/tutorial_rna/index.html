@@ -1,0 +1,1162 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for SampleDisc, a pipeline for sample-level representation learning from single-cell multi-omics data.">
+      
+      
+      
+      
+        <link rel="prev" href="../config_overview/">
+      
+      
+        <link rel="next" href="../tutorial_atac/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>Tutorial 1: scRNA-seq Analysis - SampleDisc Docs v0.1-dev</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tutorial-1-scrna-seq-analysis" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="SampleDisc Docs v0.1-dev" class="md-header__button md-logo" aria-label="SampleDisc Docs v0.1-dev" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SampleDisc Docs v0.1-dev
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tutorial 1: scRNA-seq Analysis
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SampleDisc Docs v0.1-dev" class="md-nav__button md-logo" aria-label="SampleDisc Docs v0.1-dev" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SampleDisc Docs v0.1-dev
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview: Using Config Files
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 1: scRNA-seq Analysis
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 1: scRNA-seq Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-entry-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended entry point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-stages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline stages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-parameters-to-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key parameters to review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#representative-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Representative outputs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Representative outputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pseudotime-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pseudotime summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#k-means-sample-clusters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        K-means sample clusters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-search-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution search summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scanpy-style-documentation-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scanpy-style documentation reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes-on-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes on interpretation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runtime-estimate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime estimate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related references
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_atac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 2: scATAC-seq Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_multiomics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 3: Multi-omics Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/preparation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Preparation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/embedding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sample Embedding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/downstream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Downstream Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About/Citation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-entry-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended entry point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-stages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline stages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-parameters-to-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key parameters to review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#representative-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Representative outputs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Representative outputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pseudotime-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pseudotime summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#k-means-sample-clusters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        K-means sample clusters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-search-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution search summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scanpy-style-documentation-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scanpy-style documentation reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes-on-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes on interpretation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runtime-estimate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime estimate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related references
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="tutorial-1-scrna-seq-analysis">Tutorial 1: scRNA-seq Analysis<a class="headerlink" href="#tutorial-1-scrna-seq-analysis" title="Permanent link">&para;</a></h1>
+<p>This tutorial walks through the RNA-only branch of SampleDisc: preprocessing, cell-type clustering, sample embedding, trajectory inference, and sample-level downstream analysis.</p>
+<h2 id="recommended-entry-point">Recommended entry point<a class="headerlink" href="#recommended-entry-point" title="Permanent link">&para;</a></h2>
+<p>Use the RNA-specific keys in a full config and run the main CLI:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>/users/hjiang/GenoDistance/code/SampleDisc.py<span class="w"> </span>-m<span class="w"> </span>complex<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--config<span class="w"> </span>/users/hjiang/GenoDistance/code/config/config_covid_rna.yaml
+</code></pre></div>
+<h2 id="pipeline-stages">Pipeline stages<a class="headerlink" href="#pipeline-stages" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Preprocess cell-level RNA counts and generate <code>adata_cell</code> / <code>adata_sample</code>.</li>
+<li>Cluster cells or reuse existing cell-type annotations.</li>
+<li>Build sample embeddings from pseudobulk expression and composition features.</li>
+<li>Run sample distance, supervised or unsupervised trajectory inference, and optional trajectory DGE.</li>
+</ol>
+<h2 id="key-parameters-to-review">Key parameters to review<a class="headerlink" href="#key-parameters-to-review" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>QC and normalization</td>
+<td><code>rna_min_cells</code>, <code>rna_min_genes</code>, <code>rna_pct_mito_cutoff</code>, <code>rna_num_cell_hvgs</code></td>
+</tr>
+<tr>
+<td>Cell typing</td>
+<td><code>rna_leiden_cluster_resolution</code>, <code>rna_existing_cell_types</code>, <code>rna_n_target_cell_clusters</code></td>
+</tr>
+<tr>
+<td>Sample embedding</td>
+<td><code>rna_sample_hvg_number</code>, <code>rna_sample_embedding_dimension</code>, <code>rna_harmony_for_proportion</code></td>
+</tr>
+<tr>
+<td>Trajectory</td>
+<td><code>rna_n_cca_pcs</code>, <code>rna_trajectory_col</code>, <code>rna_trajectory_supervised</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="representative-outputs">Representative outputs<a class="headerlink" href="#representative-outputs" title="Permanent link">&para;</a></h2>
+<h3 id="pseudotime-summary">Pseudotime summary<a class="headerlink" href="#pseudotime-summary" title="Permanent link">&para;</a></h3>
+<p>The RNA tutorial example includes a small pseudotime table copied from the result directory:</p>
+<table>
+<thead>
+<tr>
+<th>Sample</th>
+<th style="text-align: right;">Pseudotime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HD-1-Wilk</code></td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr>
+<td><code>HD-20-Aruna</code></td>
+<td style="text-align: right;">0.2483</td>
+</tr>
+<tr>
+<td><code>CoV-34-Aruna</code></td>
+<td style="text-align: right;">0.3961</td>
+</tr>
+<tr>
+<td><code>CoV-36-Aruna</code></td>
+<td style="text-align: right;">0.5511</td>
+</tr>
+<tr>
+<td><code>CoV-4-Wilk</code></td>
+<td style="text-align: right;">1.0000</td>
+</tr>
+</tbody>
+</table>
+<p>Full artifact: <a href="../../resource/data/rna/pseudotime_expression.csv">pseudotime_expression.csv</a></p>
+<h3 id="k-means-sample-clusters">K-means sample clusters<a class="headerlink" href="#k-means-sample-clusters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Sample</th>
+<th style="text-align: right;">Cluster</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HD-1-Wilk</code></td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td><code>HD-20-Aruna</code></td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td><code>CoV-4-Wilk</code></td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td><code>CoV-34-Aruna</code></td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td><code>CoV-3-Wilk</code></td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+<p>Full artifact: <a href="../../resource/data/rna/kmeans_clusters_expression.csv">kmeans_clusters_expression.csv</a></p>
+<h3 id="resolution-search-summary">Resolution search summary<a class="headerlink" href="#resolution-search-summary" title="Permanent link">&para;</a></h3>
+<p>Use the copied CSV below to compare candidate cell-type resolutions for expression-derived embeddings:</p>
+<ul>
+<li><a href="../../resource/data/rna/all_resolution_results_expression.csv">all_resolution_results_expression.csv</a></li>
+</ul>
+<h3 id="scanpy-style-documentation-reference">Scanpy-style documentation reference<a class="headerlink" href="#scanpy-style-documentation-reference" title="Permanent link">&para;</a></h3>
+<p>The image below is included as a visual style reference for the kind of API-oriented presentation this docs site is aiming for.</p>
+<p><img alt="Scanpy preprocessing reference" src="../../resource/figures/tutorial_rna/scanpy-preprocessing-reference.png" /></p>
+<h2 id="notes-on-interpretation">Notes on interpretation<a class="headerlink" href="#notes-on-interpretation" title="Permanent link">&para;</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The RNA path is often the easiest place to start because all downstream modules in <code>wrapper.py</code> can be run after the sample embedding stage without cross-modality dependencies.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If <code>rna_preprocessing</code> is set to <code>false</code>, make sure the resume paths point to compatible <code>.h5ad</code> files. The wrapper expects preprocessed objects with the same <code>sample</code> and <code>cell_type</code> conventions used later in the pipeline.</p>
+</div>
+<h2 id="runtime-estimate">Runtime estimate<a class="headerlink" href="#runtime-estimate" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Reusing preprocessed <code>.h5ad</code> files: typically <strong>minutes to tens of minutes</strong>.</li>
+<li>End-to-end from raw data: typically <strong>tens of minutes to over an hour</strong>, depending on cell count and whether Harmony is applied.</li>
+</ul>
+<h2 id="related-references">Related references<a class="headerlink" href="#related-references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../config_overview/">Overview: Using Config Files</a></li>
+<li><a href="../../api/preparation/">Preparation API</a></li>
+<li><a href="../../api/downstream/">Downstream Analysis API</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

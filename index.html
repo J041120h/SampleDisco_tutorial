@@ -3,24 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SampleDisc Docs Source</title>
+    <title>SampleDisc Documentation</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="notice-page">
       <section class="notice-card">
         <p class="eyebrow">SampleDisc documentation</p>
-        <h1>This repository now uses MkDocs</h1>
-        <p>
-          The old placeholder landing page has been replaced by a documentation
-          site source tree in <code>docs/</code> with configuration in
-          <code>mkdocs.yml</code>.
+        <h1 id="status-title">Preparing documentation site</h1>
+        <p id="status-text">
+          Checking whether the built MkDocs site is available from this GitHub
+          Pages deployment.
         </p>
-        <p>
-          Preview locally with <code>mkdocs serve</code>, or deploy with the
-          included GitHub Pages workflow.
-        </p>
+
+        <div class="actions">
+          <a class="button primary" href="./site/">Open built docs</a>
+          <a class="button secondary" href="./README.md">Deployment notes</a>
+        </div>
+
+        <div class="info-block" id="info-block">
+          <p>
+            If this page stays visible on GitHub Pages, the repository is
+            serving the source files instead of the generated MkDocs output.
+          </p>
+          <ul>
+            <li>Preferred: set GitHub Pages source to <code>GitHub Actions</code>.</li>
+            <li>Fallback: run <code>mkdocs build</code> and commit the <code>site/</code> folder.</li>
+          </ul>
+        </div>
       </section>
     </main>
+
+    <script>
+      (async function () {
+        const title = document.getElementById("status-title");
+        const text = document.getElementById("status-text");
+
+        try {
+          const response = await fetch("./site/index.html", {
+            method: "GET",
+            cache: "no-store",
+          });
+
+          if (response.ok) {
+            title.textContent = "Redirecting to the built docs";
+            text.textContent =
+              "The generated MkDocs site was found. Redirecting now.";
+            window.location.replace("./site/");
+            return;
+          }
+        } catch (error) {
+          // Fall through to the deployment help state.
+        }
+
+        title.textContent = "GitHub Pages is serving the source repo";
+        text.textContent =
+          "The built MkDocs output was not found at ./site/. Follow the deployment notes below to publish the actual documentation pages.";
+      })();
+    </script>
   </body>
 </html>
