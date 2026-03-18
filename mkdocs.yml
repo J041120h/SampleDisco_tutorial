@@ -1,0 +1,59 @@
+site_name: SampleDisc Docs v0.1-dev
+site_description: Documentation for SampleDisc, a pipeline for sample-level representation learning from single-cell multi-omics data.
+use_directory_urls: true
+strict: false
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+  palette:
+    - scheme: default
+      primary: blue
+      accent: cyan
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Tutorials:
+      - "Overview: Using Config Files": tutorials/config_overview.md
+      - "Tutorial 1: scRNA-seq Analysis": tutorials/tutorial_rna.md
+      - "Tutorial 2: scATAC-seq Analysis": tutorials/tutorial_atac.md
+      - "Tutorial 3: Multi-omics Integration": tutorials/tutorial_multiomics.md
+  - API Reference:
+      - Preparation: api/preparation.md
+      - Sample Embedding: api/embedding.md
+      - Downstream Analysis: api/downstream.md
+  - About/Citation: about.md
