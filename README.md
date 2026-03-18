@@ -1,56 +1,29 @@
-## Sample Disco Tutorial Website
+# J041120h GitHub Pages Starter
 
-This repository contains the source for the **Sample Disco** tutorial website, used as the project page for the GenoDistance / Sample Disco method on GitHub.
+This repository now includes a minimal static homepage for GitHub Pages:
 
-The site is meant to:
-- **Introduce** the Sample Disco method at a high level
-- **Show** small, concrete examples (toy datasets, basic commands)
-- **Link** to the main paper, code, and datasets
+- `index.html` is the site entry file.
+- `styles.css` contains the simple styling.
 
-### Live demo (example)
+## Local editing
 
-If you deploy this with GitHub Pages, your site URL will look like:
+Open `index.html` in a browser, or preview it with any static file server.
 
-`https://<your-github-username>.github.io/SampleDisco_tutorial/`
+## Publish on GitHub Pages
 
-Update this line once you have the real URL:
+The GitHub Pages guide says the simplest setup is:
 
-- **Live site**: _coming soon_  
+1. Create or use a repository for the site.
+2. Put an entry file like `index.html` at the top level.
+3. Push the repository to GitHub.
+4. In GitHub, go to `Settings` -> `Pages`.
+5. Set the publishing source to the `main` branch and the root folder.
 
-### Repository structure
+## Important note
 
-- `index.html`: **Landing page** with a short method overview and links
-- `assets/` or `static/`: **CSS, JS, and images** for the website (create as needed)
-- `examples/`: **Small tutorial examples** (e.g., example input/output, small figures)
+For a personal GitHub Pages site, the repository name usually needs to be
+exactly `j041120h.github.io`.
 
-You can adapt this structure to match your actual files.
-
-### How to view locally
-
-From the `SampleDisco_tutorial` folder:
-
-```bash
-# Option 1: Python simple server
-python -m http.server 8000
-
-# Then open in a browser:
-# http://localhost:8000
-```
-
-Or open `index.html` directly in a browser (right-click → "Open With" → your browser).
-
-### How to publish on GitHub Pages
-
-1. **Push** this folder as a GitHub repository (or as a subdirectory if you prefer).
-2. In your GitHub repo, go to **Settings → Pages**.
-3. Under **Source**, select the branch (e.g., `main`) and the root folder (or `/docs` if you move the site there).
-4. Click **Save**. After a few minutes, GitHub will give you a public URL.
-
-### Customization ideas
-
-- Add a **figure** that illustrates the Sample Disco pipeline.
-- Include a **"Quick Start"** section with 3–5 minimal commands.
-- Add a **"Cite us"** section with BibTeX for the related paper.
-- Embed small **interactive plots** or demo scripts if relevant.
-
-Feel free to edit any of this text to better match your actual project.
+This local folder and remote currently use `J041120h.github.io.` with a trailing
+period, which may prevent GitHub Pages from treating it as the standard user
+site repository.
