@@ -1,29 +1,29 @@
-# J041120h GitHub Pages Starter
+# SampleDisc documentation site
 
-This repository now includes a minimal static homepage for GitHub Pages:
+This directory now contains the MkDocs source for the SampleDisc documentation website.
 
-- `index.html` is the site entry file.
-- `styles.css` contains the simple styling.
+## Local preview
 
-## Local editing
+```bash
+cd /users/hjiang/GenoDistance/website/SampleDisco_tutorial
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-docs.txt
+mkdocs serve
+```
 
-Open `index.html` in a browser, or preview it with any static file server.
+Then open `http://127.0.0.1:8000`.
 
-## Publish on GitHub Pages
+## Build static files
 
-The GitHub Pages guide says the simplest setup is:
+```bash
+mkdocs build
+```
 
-1. Create or use a repository for the site.
-2. Put an entry file like `index.html` at the top level.
-3. Push the repository to GitHub.
-4. In GitHub, go to `Settings` -> `Pages`.
-5. Set the publishing source to the `main` branch and the root folder.
+The generated site is written to `site/`.
 
-## Important note
+## Deploy on GitHub Pages
 
-For a personal GitHub Pages site, the repository name usually needs to be
-exactly `j041120h.github.io`.
-
-This local folder and remote currently use `J041120h.github.io.` with a trailing
-period, which may prevent GitHub Pages from treating it as the standard user
-site repository.
+A GitHub Actions workflow is included at `.github/workflows/deploy-docs.yml`.
+Push the repository to GitHub, enable Pages with **GitHub Actions** as the source,
+and each push to `main` or `master` will rebuild the docs site.
