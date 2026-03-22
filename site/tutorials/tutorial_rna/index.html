@@ -11,7 +11,7 @@
       
       
       
-        <link rel="prev" href="../config_overview/">
+        <link rel="prev" href="../config_guide/">
       
       
         <link rel="next" href="../tutorial_atac/">
@@ -25,7 +25,7 @@
     
     
       
-        <title>Tutorial 1: scRNA-seq Analysis - SampleDisc Docs v0.1-dev</title>
+        <title>RNA Pipeline - SampleDisc Docs v0.2</title>
       
     
     
@@ -69,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tutorial-1-scrna-seq-analysis" class="md-skip">
+        <a href="#rna-pipeline-tutorial" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="SampleDisc Docs v0.1-dev" class="md-header__button md-logo" aria-label="SampleDisc Docs v0.1-dev" data-md-component="logo">
+    <a href="../.." title="SampleDisc Docs v0.2" class="md-header__button md-logo" aria-label="SampleDisc Docs v0.2" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,13 +108,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SampleDisc Docs v0.1-dev
+            SampleDisc Docs v0.2
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tutorial 1: scRNA-seq Analysis
+              RNA Pipeline
             
           </span>
         </div>
@@ -127,7 +127,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
     
   
 </form>
@@ -206,13 +206,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SampleDisc Docs v0.1-dev" class="md-nav__button md-logo" aria-label="SampleDisc Docs v0.1-dev" data-md-component="logo">
+    <a href="../.." title="SampleDisc Docs v0.2" class="md-nav__button md-logo" aria-label="SampleDisc Docs v0.2" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    SampleDisc Docs v0.1-dev
+    SampleDisc Docs v0.2
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -332,14 +332,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../config_overview/" class="md-nav__link">
+      <a href="../config_guide/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Overview: Using Config Files
+    Configuration Guide
   
 
     
@@ -376,7 +376,7 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 1: scRNA-seq Analysis
+    RNA Pipeline
   
 
     
@@ -394,7 +394,7 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 1: scRNA-seq Analysis
+    RNA Pipeline
   
 
     
@@ -420,10 +420,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#recommended-entry-point" class="md-nav__link">
+  <a href="#run-command" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommended entry point
+        Run command
       
     </span>
   </a>
@@ -431,10 +431,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pipeline-stages" class="md-nav__link">
+  <a href="#1-preprocessing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline stages
+        1) Preprocessing
       
     </span>
   </a>
@@ -442,10 +442,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-parameters-to-review" class="md-nav__link">
+  <a href="#2-cell-type-clustering" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key parameters to review
+        2) Cell type clustering
       
     </span>
   </a>
@@ -453,71 +453,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#representative-outputs" class="md-nav__link">
+  <a href="#3-sample-embedding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Representative outputs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Representative outputs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pseudotime-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pseudotime summary
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#k-means-sample-clusters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        K-means sample clusters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#resolution-search-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolution search summary
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#scanpy-style-documentation-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scanpy-style documentation reference
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notes-on-interpretation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notes on interpretation
+        3) Sample embedding
       
     </span>
   </a>
@@ -525,10 +464,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#runtime-estimate" class="md-nav__link">
+  <a href="#4-sample-distance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runtime estimate
+        4) Sample distance
       
     </span>
   </a>
@@ -536,10 +475,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related-references" class="md-nav__link">
+  <a href="#5-trajectory-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related references
+        5) Trajectory analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-trajectory-dge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Trajectory DGE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-sample-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7) Sample clustering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-additional-downstream-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8) Additional downstream modules
       
     </span>
   </a>
@@ -569,7 +541,7 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 2: scATAC-seq Analysis
+    ATAC Pipeline
   
 
     
@@ -597,7 +569,35 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 3: Multi-omics Integration
+    Multi-omics Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_downstream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Downstream Analysis
   
 
     
@@ -679,14 +679,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/preparation/" class="md-nav__link">
+      <a href="../../api/rna/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Preparation
+    RNA
   
 
     
@@ -707,14 +707,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/embedding/" class="md-nav__link">
+      <a href="../../api/atac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Sample Embedding
+    ATAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/multiomics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-omics
   
 
     
@@ -742,7 +770,7 @@
   <span class="md-ellipsis">
     
   
-    Downstream Analysis
+    Downstream
   
 
     
@@ -759,33 +787,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    About/Citation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -817,10 +818,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#recommended-entry-point" class="md-nav__link">
+  <a href="#run-command" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommended entry point
+        Run command
       
     </span>
   </a>
@@ -828,10 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pipeline-stages" class="md-nav__link">
+  <a href="#1-preprocessing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline stages
+        1) Preprocessing
       
     </span>
   </a>
@@ -839,10 +840,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-parameters-to-review" class="md-nav__link">
+  <a href="#2-cell-type-clustering" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key parameters to review
+        2) Cell type clustering
       
     </span>
   </a>
@@ -850,71 +851,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#representative-outputs" class="md-nav__link">
+  <a href="#3-sample-embedding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Representative outputs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Representative outputs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pseudotime-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pseudotime summary
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#k-means-sample-clusters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        K-means sample clusters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#resolution-search-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolution search summary
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#scanpy-style-documentation-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scanpy-style documentation reference
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notes-on-interpretation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notes on interpretation
+        3) Sample embedding
       
     </span>
   </a>
@@ -922,10 +862,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#runtime-estimate" class="md-nav__link">
+  <a href="#4-sample-distance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runtime estimate
+        4) Sample distance
       
     </span>
   </a>
@@ -933,10 +873,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related-references" class="md-nav__link">
+  <a href="#5-trajectory-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related references
+        5) Trajectory analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-trajectory-dge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Trajectory DGE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-sample-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7) Sample clustering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-additional-downstream-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8) Additional downstream modules
       
     </span>
   </a>
@@ -960,141 +933,90 @@
 
 
 
-<h1 id="tutorial-1-scrna-seq-analysis">Tutorial 1: scRNA-seq Analysis<a class="headerlink" href="#tutorial-1-scrna-seq-analysis" title="Permanent link">&para;</a></h1>
-<p>This tutorial walks through the RNA-only branch of SampleDisc: preprocessing, cell-type clustering, sample embedding, trajectory inference, and sample-level downstream analysis.</p>
-<h2 id="recommended-entry-point">Recommended entry point<a class="headerlink" href="#recommended-entry-point" title="Permanent link">&para;</a></h2>
-<p>Use the RNA-specific keys in a full config and run the main CLI:</p>
+<h1 id="rna-pipeline-tutorial">RNA Pipeline Tutorial<a class="headerlink" href="#rna-pipeline-tutorial" title="Permanent link">&para;</a></h1>
+<p>This tutorial follows the RNA branch of <code>wrapper(...)</code> and shows key outputs after each stage.</p>
+<h2 id="run-command">Run command<a class="headerlink" href="#run-command" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>/users/hjiang/GenoDistance/code/SampleDisc.py<span class="w"> </span>-m<span class="w"> </span>complex<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--config<span class="w"> </span>/users/hjiang/GenoDistance/code/config/config_covid_rna.yaml
 </code></pre></div>
-<h2 id="pipeline-stages">Pipeline stages<a class="headerlink" href="#pipeline-stages" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Preprocess cell-level RNA counts and generate <code>adata_cell</code> / <code>adata_sample</code>.</li>
-<li>Cluster cells or reuse existing cell-type annotations.</li>
-<li>Build sample embeddings from pseudobulk expression and composition features.</li>
-<li>Run sample distance, supervised or unsupervised trajectory inference, and optional trajectory DGE.</li>
-</ol>
-<h2 id="key-parameters-to-review">Key parameters to review<a class="headerlink" href="#key-parameters-to-review" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Stage</th>
-<th>Parameters</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>QC and normalization</td>
-<td><code>rna_min_cells</code>, <code>rna_min_genes</code>, <code>rna_pct_mito_cutoff</code>, <code>rna_num_cell_hvgs</code></td>
-</tr>
-<tr>
-<td>Cell typing</td>
-<td><code>rna_leiden_cluster_resolution</code>, <code>rna_existing_cell_types</code>, <code>rna_n_target_cell_clusters</code></td>
-</tr>
-<tr>
-<td>Sample embedding</td>
-<td><code>rna_sample_hvg_number</code>, <code>rna_sample_embedding_dimension</code>, <code>rna_harmony_for_proportion</code></td>
-</tr>
-<tr>
-<td>Trajectory</td>
-<td><code>rna_n_cca_pcs</code>, <code>rna_trajectory_col</code>, <code>rna_trajectory_supervised</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="representative-outputs">Representative outputs<a class="headerlink" href="#representative-outputs" title="Permanent link">&para;</a></h2>
-<h3 id="pseudotime-summary">Pseudotime summary<a class="headerlink" href="#pseudotime-summary" title="Permanent link">&para;</a></h3>
-<p>The RNA tutorial example includes a small pseudotime table copied from the result directory:</p>
-<table>
-<thead>
-<tr>
-<th>Sample</th>
-<th style="text-align: right;">Pseudotime</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>HD-1-Wilk</code></td>
-<td style="text-align: right;">0.0000</td>
-</tr>
-<tr>
-<td><code>HD-20-Aruna</code></td>
-<td style="text-align: right;">0.2483</td>
-</tr>
-<tr>
-<td><code>CoV-34-Aruna</code></td>
-<td style="text-align: right;">0.3961</td>
-</tr>
-<tr>
-<td><code>CoV-36-Aruna</code></td>
-<td style="text-align: right;">0.5511</td>
-</tr>
-<tr>
-<td><code>CoV-4-Wilk</code></td>
-<td style="text-align: right;">1.0000</td>
-</tr>
-</tbody>
-</table>
-<p>Full artifact: <a href="../../resource/data/rna/pseudotime_expression.csv">pseudotime_expression.csv</a></p>
-<h3 id="k-means-sample-clusters">K-means sample clusters<a class="headerlink" href="#k-means-sample-clusters" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Sample</th>
-<th style="text-align: right;">Cluster</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>HD-1-Wilk</code></td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr>
-<td><code>HD-20-Aruna</code></td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr>
-<td><code>CoV-4-Wilk</code></td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr>
-<td><code>CoV-34-Aruna</code></td>
-<td style="text-align: right;">2</td>
-</tr>
-<tr>
-<td><code>CoV-3-Wilk</code></td>
-<td style="text-align: right;">3</td>
-</tr>
-</tbody>
-</table>
-<p>Full artifact: <a href="../../resource/data/rna/kmeans_clusters_expression.csv">kmeans_clusters_expression.csv</a></p>
-<h3 id="resolution-search-summary">Resolution search summary<a class="headerlink" href="#resolution-search-summary" title="Permanent link">&para;</a></h3>
-<p>Use the copied CSV below to compare candidate cell-type resolutions for expression-derived embeddings:</p>
+<h2 id="1-preprocessing">1) Preprocessing<a class="headerlink" href="#1-preprocessing" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li><a href="../../resource/data/rna/all_resolution_results_expression.csv">all_resolution_results_expression.csv</a></li>
+<li><code>rna_preprocessing</code></li>
+<li><code>rna_min_cells</code>, <code>rna_min_genes</code>, <code>rna_pct_mito_cutoff</code></li>
+<li><code>rna_num_cell_hvgs</code>, <code>rna_cell_embedding_num_pcs</code></li>
+<li><code>rna_cell_level_batch_key</code></li>
 </ul>
-<h3 id="scanpy-style-documentation-reference">Scanpy-style documentation reference<a class="headerlink" href="#scanpy-style-documentation-reference" title="Permanent link">&para;</a></h3>
-<p>The image below is included as a visual style reference for the kind of API-oriented presentation this docs site is aiming for.</p>
-<p><img alt="Scanpy preprocessing reference" src="../../resource/figures/tutorial_rna/scanpy-preprocessing-reference.png" /></p>
-<h2 id="notes-on-interpretation">Notes on interpretation<a class="headerlink" href="#notes-on-interpretation" title="Permanent link">&para;</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The RNA path is often the easiest place to start because all downstream modules in <code>wrapper.py</code> can be run after the sample embedding stage without cross-modality dependencies.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If <code>rna_preprocessing</code> is set to <code>false</code>, make sure the resume paths point to compatible <code>.h5ad</code> files. The wrapper expects preprocessed objects with the same <code>sample</code> and <code>cell_type</code> conventions used later in the pipeline.</p>
-</div>
-<h2 id="runtime-estimate">Runtime estimate<a class="headerlink" href="#runtime-estimate" title="Permanent link">&para;</a></h2>
+<p>Main API: <code>preprocess()</code> / <code>preprocess_linux()</code></p>
+<h2 id="2-cell-type-clustering">2) Cell type clustering<a class="headerlink" href="#2-cell-type-clustering" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li>Reusing preprocessed <code>.h5ad</code> files: typically <strong>minutes to tens of minutes</strong>.</li>
-<li>End-to-end from raw data: typically <strong>tens of minutes to over an hour</strong>, depending on cell count and whether Harmony is applied.</li>
+<li><code>rna_cell_type_cluster</code></li>
+<li><code>rna_leiden_cluster_resolution</code></li>
+<li><code>rna_existing_cell_types</code></li>
+<li><code>rna_n_target_cell_clusters</code></li>
+<li><code>rna_umap</code></li>
 </ul>
-<h2 id="related-references">Related references<a class="headerlink" href="#related-references" title="Permanent link">&para;</a></h2>
+<p>Main API: <code>cell_types()</code></p>
+<p><img alt="RNA cell types" src="../../assets/images/rna/preprocess_cell_type.png" /></p>
+<h2 id="3-sample-embedding">3) Sample embedding<a class="headerlink" href="#3-sample-embedding" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li><a href="../config_overview/">Overview: Using Config Files</a></li>
-<li><a href="../../api/preparation/">Preparation API</a></li>
-<li><a href="../../api/downstream/">Downstream Analysis API</a></li>
+<li><code>rna_derive_sample_embedding</code></li>
+<li><code>rna_sample_hvg_number</code></li>
+<li><code>rna_sample_embedding_dimension</code></li>
+<li><code>rna_harmony_for_proportion</code></li>
 </ul>
+<p>Main API: <code>calculate_sample_embedding()</code></p>
+<h2 id="4-sample-distance">4) Sample distance<a class="headerlink" href="#4-sample-distance" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
+<ul>
+<li><code>rna_sample_distance_calculation</code></li>
+<li><code>rna_sample_distance_methods</code></li>
+<li><code>rna_grouping_columns</code></li>
+</ul>
+<p>Main API: <code>sample_distance()</code></p>
+<p><img alt="RNA distance (expression, cosine)" src="../../assets/images/rna/sample_distance_expression_DR_heatmap_cosine.pdf" />
+<img alt="RNA distance (proportion, cosine)" src="../../assets/images/rna/sample_distance_proportion_DR_heatmap_cosine.pdf" /></p>
+<h2 id="5-trajectory-analysis">5) Trajectory analysis<a class="headerlink" href="#5-trajectory-analysis" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
+<ul>
+<li><code>rna_trajectory_analysis</code></li>
+<li><code>rna_trajectory_supervised</code></li>
+<li><code>rna_n_cca_pcs</code></li>
+<li><code>rna_trajectory_col</code></li>
+<li><code>rna_cca_pvalue</code></li>
+</ul>
+<p>Main API: <code>CCA_Call()</code>, <code>cca_pvalue_test()</code>, <code>TSCAN()</code></p>
+<p><img alt="RNA CCA expression" src="../../assets/images/rna/cca_expression.pdf" />
+<img alt="RNA CCA proportion" src="../../assets/images/rna/cca_proportion.pdf" />
+<img alt="RNA CCA p-value expression" src="../../assets/images/rna/cca_pvalue_X_DR_expression.png" />
+<img alt="RNA CCA p-value proportion" src="../../assets/images/rna/cca_pvalue_X_DR_proportion.png" />
+<img alt="RNA TSCAN clusters by cluster (expression)" src="../../assets/images/rna/tscan_clusters_by_cluster_expression.png" />
+<img alt="RNA TSCAN clusters by grouping (expression)" src="../../assets/images/rna/tscan_clusters_by_grouping_expression.png" />
+<img alt="RNA TSCAN clusters by cluster (proportion)" src="../../assets/images/rna/tscan_clusters_by_cluster_proportion.png" /></p>
+<h2 id="6-trajectory-dge">6) Trajectory DGE<a class="headerlink" href="#6-trajectory-dge" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
+<ul>
+<li><code>rna_trajectory_dge</code></li>
+<li><code>rna_fdr_threshold</code>, <code>rna_effect_size_threshold</code></li>
+<li><code>rna_top_n_genes</code>, <code>rna_num_splines</code>, <code>rna_spline_order</code></li>
+<li><code>rna_visualization_gene_list</code></li>
+</ul>
+<p>Main API: <code>run_trajectory_gam_differential_gene_analysis()</code></p>
+<p><img alt="RNA trajectory DGE heatmap" src="../../assets/images/rna/tde_heatmap.png" />
+<img alt="RNA trajectory DGE gene curves" src="../../assets/images/rna/gene_curves.png" /></p>
+<h2 id="7-sample-clustering">7) Sample clustering<a class="headerlink" href="#7-sample-clustering" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
+<ul>
+<li><code>rna_sample_cluster</code></li>
+<li><code>rna_cluster_number</code></li>
+</ul>
+<p>Main API: <code>cluster()</code></p>
+<p><img alt="RNA kmeans expression" src="../../assets/images/rna/kmeans_expression_embedding.png" />
+<img alt="RNA kmeans proportion" src="../../assets/images/rna/kmeans_proportion_embedding.png" /></p>
+<h2 id="8-additional-downstream-modules">8) Additional downstream modules<a class="headerlink" href="#8-additional-downstream-modules" title="Permanent link">&para;</a></h2>
+<p>For proportion testing, RAISIN-based cluster DGE, and extended trajectory visualizations, see <a href="../tutorial_downstream/">Downstream Analysis</a>.</p>
 
 
 

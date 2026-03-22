@@ -1,6 +1,4 @@
-# API Reference: Downstream Analysis
-
-The shared `downstream_analysis(...)` function in `code/wrapper/wrapper.py` dispatches the major sample-level analyses after embeddings are computed.
+# Downstream API
 
 ## `downstream_analysis(...)`
 
@@ -10,6 +8,8 @@ downstream_analysis(
     output_dir: str,
     modality: str,
     status_flags: dict,
+    adata_cell=None,
+    adata_sample=None,
     sample_distance_calculation: bool = True,
     trajectory_analysis: bool = True,
     trajectory_DGE: bool = True,
@@ -17,99 +17,106 @@ downstream_analysis(
     proportion_test: bool = False,
     cluster_DGE: bool = False,
     visualize_data: bool = True,
-    ...
-) -> dict
-```
-
-**Responsibilities**
-
-- Run sample distance calculations.
-- Perform supervised CCA or unsupervised TSCAN trajectory inference.
-- Launch GAM-based trajectory differential testing.
-- Cluster samples and run optional group comparisons.
-- Produce auxiliary visualizations.
-
-## `sample_distance(...)`
-
-```python
-sample_distance(
-    adata: AnnData,
-    output_dir: str,
-    method: str,
-    data_type: str = "ATAC",
-    ...
-)
-```
-
-Computes sample-sample distances from reduced sample embeddings or cell-type composition summaries.
-
-**Supported families**
-
-- Standard distances such as cosine and correlation on reduced sample coordinates.
-- EMD using cell-type proportions and centroids.
-- Chi-square and Jensen-Shannon distances on compositional profiles.
-
-## `CCA_Call(...)` and `TSCAN(...)`
-
-```python
-CCA_Call(adata: AnnData, output_dir: str = None, trajectory_col: str = "sev.level", ...)
-TSCAN(AnnData_sample: sc.AnnData, column: str, output_dir: str = "./", ...)
-```
-
-Two trajectory modes are exposed:
-
-- `CCA_Call(...)` for supervised trajectory alignment when a known ordering column is available.
-- `TSCAN(...)` for unsupervised pseudotime estimation from sample embeddings.
-
-## `run_trajectory_gam_differential_gene_analysis(...)`
-
-```python
-run_trajectory_gam_differential_gene_analysis(
-    pseudobulk_adata: ad.AnnData,
-    pseudotime_source,
+    visualize_embedding: bool = False,
+    use_gpu: bool = False,
+    verbose: bool = True,
     sample_col: str = "sample",
-    pseudotime_col: str = "pseudotime",
+    batch_col: Optional[Union[str, List[str]]] = None,
+    celltype_col: str = "cell_type",
+    sample_distance_methods: Optional[List[str]] = None,
+    grouping_columns: Optional[List[str]] = None,
+    summary_sample_csv_path: Optional[str] = None,
+    n_cca_pcs: int = 2,
+    trajectory_col: str = "sev.level",
+    trajectory_supervised: bool = False,
+    trajectory_visualization_label: Optional[List[str]] = None,
+    cca_pvalue: bool = False,
+    tscan_origin: Optional[str] = None,
     fdr_threshold: float = 0.05,
     effect_size_threshold: float = 1,
     top_n_genes: int = 100,
-    ...
-) -> pd.DataFrame
+    trajectory_diff_gene_covariate: Optional[List] = None,
+    num_splines: int = 5,
+    spline_order: int = 3,
+    visualization_gene_list: Optional[List] = None,
+    cluster_number: int = 4,
+    cluster_differential_gene_group_col: Optional[str] = None,
+    age_bin_size: Optional[int] = None,
+    age_column: str = "age",
+    plot_dendrogram_flag: bool = True,
+    plot_cell_type_proportions_pca_flag: bool = False,
+    plot_cell_type_expression_umap_flag: bool = False,
+    multiomics_modality_col: str = "modality",
+    multiomics_color_col: Optional[str] = None,
+    multiomics_visualization_grouping_column: Optional[List[str]] = None,
+    multiomics_target_modality: str = "ATAC",
+    multiomics_expression_key: str = "X_DR_expression",
+    multiomics_proportion_key: str = "X_DR_proportion",
+    multiomics_figsize: Tuple[int, int] = (20, 8),
+    multiomics_point_size: int = 60,
+    multiomics_alpha: float = 0.8,
+    multiomics_colormap: str = "viridis",
+    multiomics_show_sample_names: bool = False,
+    multiomics_force_data_type: Optional[str] = None,
+) -> dict
 ```
 
-Fits GAM-style models along pseudotime and returns a table of significant trajectory-associated genes or features.
+Shared orchestrator for downstream modules across RNA/ATAC/multi-omics.
+
+### Main controls
+
+| Group | Key parameters | Meaning |
+| --- | --- | --- |
+| Distance | `sample_distance_calculation`, `sample_distance_methods`, `grouping_columns` | Sample-to-sample distance generation |
+| Trajectory | `trajectory_analysis`, `trajectory_supervised`, `trajectory_col`, `n_cca_pcs` | CCA/TSCAN pseudotime inference |
+| Trajectory DGE | `trajectory_DGE`, `fdr_threshold`, `effect_size_threshold`, `num_splines` | GAM-based trajectory differential analysis |
+| Clustering | `sample_cluster`, `cluster_number` | K-means clustering on sample embeddings |
+| Proportion/cluster DGE | `proportion_test`, `cluster_DGE`, `cluster_differential_gene_group_col` | Proportion testing and RAISIN analysis |
+| Visualization | `visualize_data`, `plot_*` | Dendrogram and embedding visualization controls |
+| Multi-omics embedding viz | `visualize_embedding`, `multiomics_*` | Multi-modal embedding display controls |
+
+## `sample_distance(...)`
+
+- Source: `sample_distance/sample_distance.py`
+- Purpose: compute sample distances from expression/proportion DR or compositional methods.
+- Important `method` values include `cosine`, `correlation`, `emd`, `jensenshannon`, and `chi_square`.
+
+## `CCA_Call(...)`, `cca_pvalue_test(...)`, `TSCAN(...)`
+
+- `CCA_Call()` (source: `sample_trajectory/CCA.py`) runs supervised CCA trajectory.
+- `cca_pvalue_test()` (source: `sample_trajectory/CCA_test.py`) runs p-value checks for CCA correlation.
+- `TSCAN()` (source: `sample_trajectory/TSCAN.py`) runs unsupervised pseudotime.
+
+## `run_trajectory_gam_differential_gene_analysis(...)`
+
+- Source: `sample_trajectory/trajectory_diff_gene.py`
+- Purpose: fit GAM models across pseudotime and detect trajectory-associated genes/features.
 
 ## `cluster(...)`
 
-```python
-cluster(
-    pseudobulk_adata: ad.AnnData,
-    output_dir: str,
-    number_of_clusters: int = 5,
-    use_expression: bool = True,
-    use_proportion: bool = True,
-    random_state: int = 0,
-) -> Tuple[Optional[Dict[str, int]], Optional[Dict[str, int]]]
-```
+- Source: `cluster.py`
+- Purpose: K-means clustering for expression/proportion sample embeddings.
 
-Clusters samples in expression-derived and/or proportion-derived spaces.
+## `proportion_test(...)`
 
-## `proportion_test(...)`, `raisinfit(...)`, and `run_pairwise_tests(...)`
+- Source: `sample_clustering/proportion_test.py`
+- Purpose: statistical testing on cell type composition differences across groups/clusters.
 
-These functions perform group-aware statistical testing on sample clusters and cell-type proportions.
+## `raisinfit(...)` and `run_pairwise_tests(...)`
 
-- `proportion_test(...)`: assess composition differences.
-- `raisinfit(...)`: fit the RAISIN model for paired or unpaired comparisons.
-- `run_pairwise_tests(...)`: extract pairwise group contrasts and result tables.
+- Sources: `sample_clustering/RAISIN.py`, `sample_clustering/RAISIN_TEST.py`
+- Purpose: cluster differential analysis and pairwise tests.
 
-## Visualization helpers
+## `visualization(...)` and `visualize_multimodal_embedding(...)`
 
-- `visualization(...)` in `visualization/visualization_other.py`
-- `visualize_multimodal_embedding(...)` in `visualization/multi_omics_visualization.py`
+- `visualization()` source: `visualization/visualization_other.py`
+- `visualize_multimodal_embedding()` source: `visualization/multi_omics_visualization.py`
 
-Use these after sample embeddings are available to generate PCA, UMAP, dendrogram, or modality-colored summaries.
+Use these to generate standard downstream visual outputs after embeddings exist.
 
-## Suggested reading order
+## Related
 
-1. [Preparation API](preparation.md)
-2. [Sample Embedding API](embedding.md)
-3. [Tutorial pages](../tutorials/config_overview.md)
+- [RNA API](rna.md)
+- [ATAC API](atac.md)
+- [Multi-omics API](multiomics.md)
+- [Downstream tutorial](../tutorials/tutorial_downstream.md)
