@@ -38,10 +38,10 @@ Controlled by:
 
 Main API: `cell_types_multiomics()` / `cell_types_multiomics_linux()`
 
-![Multi-omics UMAP by cell type](../assets/images/multiomics/umap_cell_type.png)
-![Multi-omics UMAP by modality](../assets/images/multiomics/umap_modality.png)
-![Multi-omics UMAP split by modality](../assets/images/multiomics/umap_split_by_modality.png)
-![Cell type by modality heatmap](../assets/images/multiomics/celltype_modality_heatmap.png)
+![Multi-omics UMAP by cell type](/users/hjiang/GenoDistance/website/resource/multiomics/umap_cell_type.png)
+![Multi-omics UMAP by modality](/users/hjiang/GenoDistance/website/resource/multiomics/umap_modality.png)
+![Multi-omics UMAP split by modality](/users/hjiang/GenoDistance/website/resource/multiomics/umap_split_by_modality.png)
+![Cell type by modality heatmap](/users/hjiang/GenoDistance/website/resource/multiomics/celltype_modality_heatmap.png)
 
 ## 4) Sample embedding
 
@@ -68,13 +68,13 @@ Controlled by:
 
 Main API: `downstream_analysis()`
 
-![Multi-omics CCA expression](../assets/images/multiomics/cca_expression.pdf)
-![Multi-omics CCA proportion](../assets/images/multiomics/cca_proportion.pdf)
-![Multi-omics distance heatmap](../assets/images/multiomics/sample_distance_expression_DR_heatmap_cosine.pdf)
-![Multi-omics TSCAN clusters by cluster](../assets/images/multiomics/tscan_clusters_by_cluster_expression.png)
-![Multi-omics TSCAN clusters by grouping](../assets/images/multiomics/tscan_clusters_by_grouping_expression.png)
-![Multi-omics kmeans expression](../assets/images/multiomics/kmeans_expression_embedding.png)
-![Multi-omics kmeans proportion](../assets/images/multiomics/kmeans_proportion_embedding.png)
+![Multi-omics CCA expression](/users/hjiang/GenoDistance/website/resource/multiomics/cca_expression.pdf)
+![Multi-omics CCA proportion](/users/hjiang/GenoDistance/website/resource/multiomics/cca_proportion.pdf)
+![Multi-omics distance heatmap](/users/hjiang/GenoDistance/website/resource/multiomics/sample_distance_expression_DR_heatmap_cosine.pdf)
+![Multi-omics TSCAN clusters by cluster](/users/hjiang/GenoDistance/website/resource/multiomics/tscan_clusters_by_cluster_expression.png)
+![Multi-omics TSCAN clusters by grouping](/users/hjiang/GenoDistance/website/resource/multiomics/tscan_clusters_by_grouping_expression.png)
+![Multi-omics kmeans expression](/users/hjiang/GenoDistance/website/resource/multiomics/kmeans_expression_embedding.png)
+![Multi-omics kmeans proportion](/users/hjiang/GenoDistance/website/resource/multiomics/kmeans_proportion_embedding.png)
 
 ## 6) Multi-omics embedding visualization
 
@@ -91,12 +91,12 @@ Controlled by:
 
 Main API: `visualize_multimodal_embedding()`
 
-![All samples expression](../assets/images/multiomics/all_samples_expression.png)
-![All samples proportion](../assets/images/multiomics/all_samples_proportion.png)
-![All samples combined by severity](../assets/images/multiomics/all_samples_combined_by_sev_level.png)
-![Expression by severity](../assets/images/multiomics/all_samples_expression_by_sev_level.png)
-![Proportion by severity](../assets/images/multiomics/all_samples_proportion_by_sev_level.png)
-![scGLUE UMAP by modality](../assets/images/multiomics/scglue_umap_modality.png)
+![All samples expression](/users/hjiang/GenoDistance/website/resource/multiomics/all_samples_expression.png)
+![All samples proportion](/users/hjiang/GenoDistance/website/resource/multiomics/all_samples_proportion.png)
+![All samples combined by severity](/users/hjiang/GenoDistance/website/resource/multiomics/all_samples_combined_by_sev_level.png)
+![Expression by severity](/users/hjiang/GenoDistance/website/resource/multiomics/all_samples_expression_by_sev_level.png)
+![Proportion by severity](/users/hjiang/GenoDistance/website/resource/multiomics/all_samples_proportion_by_sev_level.png)
+![scGLUE UMAP by modality](/users/hjiang/GenoDistance/website/resource/multiomics/scglue_umap_modality.png)
 
 ## Notes
 

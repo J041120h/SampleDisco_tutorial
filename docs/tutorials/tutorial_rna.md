@@ -32,7 +32,7 @@ Controlled by:
 
 Main API: `cell_types()`
 
-![RNA cell types](../assets/images/rna/preprocess_cell_type.png)
+![RNA cell types](/users/hjiang/GenoDistance/website/resource/rna/preprocess_cell_type.png)
 
 ## 3) Sample embedding
 
@@ -55,8 +55,8 @@ Controlled by:
 
 Main API: `sample_distance()`
 
-![RNA distance (expression, cosine)](../assets/images/rna/sample_distance_expression_DR_heatmap_cosine.pdf)
-![RNA distance (proportion, cosine)](../assets/images/rna/sample_distance_proportion_DR_heatmap_cosine.pdf)
+![RNA distance (expression, cosine)](/users/hjiang/GenoDistance/website/resource/rna/sample_distance_expression_DR_heatmap_cosine.pdf)
+![RNA distance (proportion, cosine)](/users/hjiang/GenoDistance/website/resource/rna/sample_distance_proportion_DR_heatmap_cosine.pdf)
 
 ## 5) Trajectory analysis
 
@@ -70,13 +70,13 @@ Controlled by:
 
 Main API: `CCA_Call()`, `cca_pvalue_test()`, `TSCAN()`
 
-![RNA CCA expression](../assets/images/rna/cca_expression.pdf)
-![RNA CCA proportion](../assets/images/rna/cca_proportion.pdf)
-![RNA CCA p-value expression](../assets/images/rna/cca_pvalue_X_DR_expression.png)
-![RNA CCA p-value proportion](../assets/images/rna/cca_pvalue_X_DR_proportion.png)
-![RNA TSCAN clusters by cluster (expression)](../assets/images/rna/tscan_clusters_by_cluster_expression.png)
-![RNA TSCAN clusters by grouping (expression)](../assets/images/rna/tscan_clusters_by_grouping_expression.png)
-![RNA TSCAN clusters by cluster (proportion)](../assets/images/rna/tscan_clusters_by_cluster_proportion.png)
+![RNA CCA expression](/users/hjiang/GenoDistance/website/resource/rna/cca_expression.pdf)
+![RNA CCA proportion](/users/hjiang/GenoDistance/website/resource/rna/cca_proportion.pdf)
+![RNA CCA p-value expression](/users/hjiang/GenoDistance/website/resource/rna/cca_pvalue_X_DR_expression.png)
+![RNA CCA p-value proportion](/users/hjiang/GenoDistance/website/resource/rna/cca_pvalue_X_DR_proportion.png)
+![RNA TSCAN clusters by cluster (expression)](/users/hjiang/GenoDistance/website/resource/rna/tscan_clusters_by_cluster_expression.png)
+![RNA TSCAN clusters by grouping (expression)](/users/hjiang/GenoDistance/website/resource/rna/tscan_clusters_by_grouping_expression.png)
+![RNA TSCAN clusters by cluster (proportion)](/users/hjiang/GenoDistance/website/resource/rna/tscan_clusters_by_cluster_proportion.png)
 
 ## 6) Trajectory DGE
 
@@ -89,8 +89,8 @@ Controlled by:
 
 Main API: `run_trajectory_gam_differential_gene_analysis()`
 
-![RNA trajectory DGE heatmap](../assets/images/rna/tde_heatmap.png)
-![RNA trajectory DGE gene curves](../assets/images/rna/gene_curves.png)
+![RNA trajectory DGE heatmap](/users/hjiang/GenoDistance/website/resource/rna/tde_heatmap.png)
+![RNA trajectory DGE gene curves](/users/hjiang/GenoDistance/website/resource/rna/gene_curves.png)
 
 ## 7) Sample clustering
 
@@ -101,8 +101,8 @@ Controlled by:
 
 Main API: `cluster()`
 
-![RNA kmeans expression](../assets/images/rna/kmeans_expression_embedding.png)
-![RNA kmeans proportion](../assets/images/rna/kmeans_proportion_embedding.png)
+![RNA kmeans expression](/users/hjiang/GenoDistance/website/resource/rna/kmeans_expression_embedding.png)
+![RNA kmeans proportion](/users/hjiang/GenoDistance/website/resource/rna/kmeans_proportion_embedding.png)
 
 ## 8) Additional downstream modules
 

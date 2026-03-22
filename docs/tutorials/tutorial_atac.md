@@ -24,7 +24,7 @@ Controlled by:
 
 Main API: `cell_types()`
 
-![ATAC dendrogram](../assets/images/atac/cell_type_dendrogram.png)
+![ATAC dendrogram](/users/hjiang/GenoDistance/website/resource/atac/cell_type_dendrogram.png)
 
 ## 3) Sample embedding
 
@@ -47,8 +47,8 @@ Controlled by:
 
 Main API: `sample_distance()`
 
-![ATAC distance (expression, cosine)](../assets/images/atac/sample_distance_expression_DR_heatmap_cosine.pdf)
-![ATAC distance (proportion, cosine)](../assets/images/atac/sample_distance_proportion_DR_heatmap_cosine.pdf)
+![ATAC distance (expression, cosine)](/users/hjiang/GenoDistance/website/resource/atac/sample_distance_expression_DR_heatmap_cosine.pdf)
+![ATAC distance (proportion, cosine)](/users/hjiang/GenoDistance/website/resource/atac/sample_distance_proportion_DR_heatmap_cosine.pdf)
 
 ## 5) Trajectory analysis
 
@@ -61,8 +61,8 @@ Controlled by:
 
 Main API: `CCA_Call()` or `TSCAN()`
 
-![ATAC CCA expression](../assets/images/atac/cca_expression.pdf)
-![ATAC CCA proportion](../assets/images/atac/cca_proportion.pdf)
+![ATAC CCA expression](/users/hjiang/GenoDistance/website/resource/atac/cca_expression.pdf)
+![ATAC CCA proportion](/users/hjiang/GenoDistance/website/resource/atac/cca_proportion.pdf)
 
 ## 6) Sample clustering
 
@@ -73,8 +73,8 @@ Controlled by:
 
 Main API: `cluster()`
 
-![ATAC kmeans expression](../assets/images/atac/kmeans_expression_embedding.png)
-![ATAC kmeans proportion](../assets/images/atac/kmeans_proportion_embedding.png)
+![ATAC kmeans expression](/users/hjiang/GenoDistance/website/resource/atac/kmeans_expression_embedding.png)
+![ATAC kmeans proportion](/users/hjiang/GenoDistance/website/resource/atac/kmeans_proportion_embedding.png)
 
 ## 7) Proportion test
 
@@ -84,7 +84,7 @@ Controlled by:
 
 Main API: `proportion_test()`
 
-![ATAC proportion heatmap](../assets/images/atac/proportion_heatmap_group_by_celltype.png)
+![ATAC proportion heatmap](/users/hjiang/GenoDistance/website/resource/atac/proportion_heatmap_group_by_celltype.png)
 
 ## 8) Notes
 
