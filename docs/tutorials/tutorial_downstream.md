@@ -26,55 +26,55 @@ downstream_analysis(
 
 Main API: `sample_distance()`
 
-![Distance expression cosine](../assets/images/downstream/sample_distance_expression_DR_heatmap_cosine.pdf)
-![Distance proportion cosine](../assets/images/downstream/sample_distance_proportion_DR_heatmap_cosine.pdf)
-![Distance expression correlation](../assets/images/downstream/sample_distance_expression_DR_heatmap_correlation.pdf)
-![Distance proportion correlation](../assets/images/downstream/sample_distance_proportion_DR_heatmap_correlation.pdf)
+![Distance expression cosine](/users/hjiang/GenoDistance/website/resource/downstream/sample_distance_expression_DR_heatmap_cosine.pdf)
+![Distance proportion cosine](/users/hjiang/GenoDistance/website/resource/downstream/sample_distance_proportion_DR_heatmap_cosine.pdf)
+![Distance expression correlation](/users/hjiang/GenoDistance/website/resource/downstream/sample_distance_expression_DR_heatmap_correlation.pdf)
+![Distance proportion correlation](/users/hjiang/GenoDistance/website/resource/downstream/sample_distance_proportion_DR_heatmap_correlation.pdf)
 
 ## 2) Supervised trajectory (CCA)
 
 Main API: `CCA_Call()`, optional `cca_pvalue_test()`
 
-![CCA expression](../assets/images/downstream/cca_expression.pdf)
-![CCA expression contributions](../assets/images/downstream/cca_expression_contributions.pdf)
-![CCA proportion](../assets/images/downstream/cca_proportion.pdf)
-![CCA p-value expression](../assets/images/downstream/cca_pvalue_X_DR_expression.png)
-![CCA p-value proportion](../assets/images/downstream/cca_pvalue_X_DR_proportion.png)
+![CCA expression](/users/hjiang/GenoDistance/website/resource/downstream/cca_expression.pdf)
+![CCA expression contributions](/users/hjiang/GenoDistance/website/resource/downstream/cca_expression_contributions.pdf)
+![CCA proportion](/users/hjiang/GenoDistance/website/resource/downstream/cca_proportion.pdf)
+![CCA p-value expression](/users/hjiang/GenoDistance/website/resource/downstream/cca_pvalue_X_DR_expression.png)
+![CCA p-value proportion](/users/hjiang/GenoDistance/website/resource/downstream/cca_pvalue_X_DR_proportion.png)
 
 ## 3) Unsupervised trajectory (TSCAN)
 
 Main API: `TSCAN()`
 
-![TSCAN clusters by cluster expression](../assets/images/downstream/tscan_clusters_by_cluster_expression.png)
-![TSCAN clusters by grouping expression](../assets/images/downstream/tscan_clusters_by_grouping_expression.png)
-![TSCAN clusters by cluster proportion](../assets/images/downstream/tscan_clusters_by_cluster_proportion.png)
-![TSCAN clusters by grouping proportion](../assets/images/downstream/tscan_clusters_by_grouping_proportion.png)
+![TSCAN clusters by cluster expression](/users/hjiang/GenoDistance/website/resource/downstream/tscan_clusters_by_cluster_expression.png)
+![TSCAN clusters by grouping expression](/users/hjiang/GenoDistance/website/resource/downstream/tscan_clusters_by_grouping_expression.png)
+![TSCAN clusters by cluster proportion](/users/hjiang/GenoDistance/website/resource/downstream/tscan_clusters_by_cluster_proportion.png)
+![TSCAN clusters by grouping proportion](/users/hjiang/GenoDistance/website/resource/downstream/tscan_clusters_by_grouping_proportion.png)
 
 ## 4) Trajectory DGE (GAM)
 
 Main API: `run_trajectory_gam_differential_gene_analysis()`
 
-![Trajectory DGE summary](../assets/images/downstream/results_summary.png)
-![Trajectory DGE heatmap](../assets/images/downstream/tde_heatmap.png)
-![Trajectory DGE volcano](../assets/images/downstream/volcano_plot.png)
-![Trajectory DGE gene curves](../assets/images/downstream/gene_curves.png)
-![Trajectory DGE sample density](../assets/images/downstream/sample_density.png)
-![Trajectory DGE cluster patterns](../assets/images/downstream/cluster_patterns.png)
-![Trajectory DGE sample-level curves](../assets/images/downstream/sample_level_curves.png)
+![Trajectory DGE summary](/users/hjiang/GenoDistance/website/resource/downstream/results_summary.png)
+![Trajectory DGE heatmap](/users/hjiang/GenoDistance/website/resource/downstream/tde_heatmap.png)
+![Trajectory DGE volcano](/users/hjiang/GenoDistance/website/resource/downstream/volcano_plot.png)
+![Trajectory DGE gene curves](/users/hjiang/GenoDistance/website/resource/downstream/gene_curves.png)
+![Trajectory DGE sample density](/users/hjiang/GenoDistance/website/resource/downstream/sample_density.png)
+![Trajectory DGE cluster patterns](/users/hjiang/GenoDistance/website/resource/downstream/cluster_patterns.png)
+![Trajectory DGE sample-level curves](/users/hjiang/GenoDistance/website/resource/downstream/sample_level_curves.png)
 
 ## 5) Sample clustering
 
 Main API: `cluster()`
 
-![Kmeans expression embedding](../assets/images/downstream/kmeans_expression_embedding.png)
-![Kmeans proportion embedding](../assets/images/downstream/kmeans_proportion_embedding.png)
+![Kmeans expression embedding](/users/hjiang/GenoDistance/website/resource/downstream/kmeans_expression_embedding.png)
+![Kmeans proportion embedding](/users/hjiang/GenoDistance/website/resource/downstream/kmeans_proportion_embedding.png)
 
 ## 6) Proportion test
 
 Main API: `proportion_test()`
 
-![Proportion heatmap](../assets/images/downstream/proportion_heatmap_group_by_celltype.png)
-![Proportion significance matrix](../assets/images/downstream/proportion_significance_matrix.png)
+![Proportion heatmap](/users/hjiang/GenoDistance/website/resource/downstream/proportion_heatmap_group_by_celltype.png)
+![Proportion significance matrix](/users/hjiang/GenoDistance/website/resource/downstream/proportion_significance_matrix.png)
 
 ## 7) Cluster DGE (RAISIN)
 

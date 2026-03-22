@@ -37,7 +37,7 @@ SampleDisc is a config-driven Python pipeline that learns **sample-level embeddi
 
 ## Workflow overview
 
-![SampleDisc workflow](assets/images/overview.jpg)
+![SampleDisc workflow](/users/hjiang/GenoDistance/website/resource/overview.jpg)
 
 <div class="figure-caption">Overview of the SampleDisc workflow from preprocessing to downstream sample-level analyses.</div>
 
