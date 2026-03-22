@@ -1,122 +1,241 @@
 # Downstream API
 
-## `downstream_analysis(...)`
-
-```python
-downstream_analysis(
-    pseudo_adata,
-    output_dir: str,
-    modality: str,
-    status_flags: dict,
-    adata_cell=None,
-    adata_sample=None,
-    sample_distance_calculation: bool = True,
-    trajectory_analysis: bool = True,
-    trajectory_DGE: bool = True,
-    sample_cluster: bool = True,
-    proportion_test: bool = False,
-    cluster_DGE: bool = False,
-    visualize_data: bool = True,
-    visualize_embedding: bool = False,
-    use_gpu: bool = False,
-    verbose: bool = True,
-    sample_col: str = "sample",
-    batch_col: Optional[Union[str, List[str]]] = None,
-    celltype_col: str = "cell_type",
-    sample_distance_methods: Optional[List[str]] = None,
-    grouping_columns: Optional[List[str]] = None,
-    summary_sample_csv_path: Optional[str] = None,
-    n_cca_pcs: int = 2,
-    trajectory_col: str = "sev.level",
-    trajectory_supervised: bool = False,
-    trajectory_visualization_label: Optional[List[str]] = None,
-    cca_pvalue: bool = False,
-    tscan_origin: Optional[str] = None,
-    fdr_threshold: float = 0.05,
-    effect_size_threshold: float = 1,
-    top_n_genes: int = 100,
-    trajectory_diff_gene_covariate: Optional[List] = None,
-    num_splines: int = 5,
-    spline_order: int = 3,
-    visualization_gene_list: Optional[List] = None,
-    cluster_number: int = 4,
-    cluster_differential_gene_group_col: Optional[str] = None,
-    age_bin_size: Optional[int] = None,
-    age_column: str = "age",
-    plot_dendrogram_flag: bool = True,
-    plot_cell_type_proportions_pca_flag: bool = False,
-    plot_cell_type_expression_umap_flag: bool = False,
-    multiomics_modality_col: str = "modality",
-    multiomics_color_col: Optional[str] = None,
-    multiomics_visualization_grouping_column: Optional[List[str]] = None,
-    multiomics_target_modality: str = "ATAC",
-    multiomics_expression_key: str = "X_DR_expression",
-    multiomics_proportion_key: str = "X_DR_proportion",
-    multiomics_figsize: Tuple[int, int] = (20, 8),
-    multiomics_point_size: int = 60,
-    multiomics_alpha: float = 0.8,
-    multiomics_colormap: str = "viridis",
-    multiomics_show_sample_names: bool = False,
-    multiomics_force_data_type: Optional[str] = None,
-) -> dict
-```
-
-Shared orchestrator for downstream modules across RNA/ATAC/multi-omics.
-
-### Main controls
-
-| Group | Key parameters | Meaning |
-| --- | --- | --- |
-| Distance | `sample_distance_calculation`, `sample_distance_methods`, `grouping_columns` | Sample-to-sample distance generation |
-| Trajectory | `trajectory_analysis`, `trajectory_supervised`, `trajectory_col`, `n_cca_pcs` | CCA/TSCAN pseudotime inference |
-| Trajectory DGE | `trajectory_DGE`, `fdr_threshold`, `effect_size_threshold`, `num_splines` | GAM-based trajectory differential analysis |
-| Clustering | `sample_cluster`, `cluster_number` | K-means clustering on sample embeddings |
-| Proportion/cluster DGE | `proportion_test`, `cluster_DGE`, `cluster_differential_gene_group_col` | Proportion testing and RAISIN analysis |
-| Visualization | `visualize_data`, `plot_*` | Dendrogram and embedding visualization controls |
-| Multi-omics embedding viz | `visualize_embedding`, `multiomics_*` | Multi-modal embedding display controls |
+This page documents downstream functions called after sample embeddings are available.
 
 ## `sample_distance(...)`
 
-- Source: `sample_distance/sample_distance.py`
-- Purpose: compute sample distances from expression/proportion DR or compositional methods.
-- Important `method` values include `cosine`, `correlation`, `emd`, `jensenshannon`, and `chi_square`.
+Source: `code/sample_distance/sample_distance.py`
 
-## `CCA_Call(...)`, `cca_pvalue_test(...)`, `TSCAN(...)`
+```python
+sample_distance(
+    adata,
+    output_dir,
+    method,
+    data_type="ATAC",
+    grouping_columns=None,
+    summary_csv_path=None,
+    cell_adata=None,
+    cell_type_column="cell_type",
+    sample_column="sample",
+    embedding_key="X_pca_harmony",
+    n_pcs=20,
+    proportions=None,
+    centroids=None,
+    pseudobulk_adata=None,
+)
+```
 
-- `CCA_Call()` (source: `sample_trajectory/CCA.py`) runs supervised CCA trajectory.
-- `cca_pvalue_test()` (source: `sample_trajectory/CCA_test.py`) runs p-value checks for CCA correlation.
-- `TSCAN()` (source: `sample_trajectory/TSCAN.py`) runs unsupervised pseudotime.
+Compute sample distance outputs (cosine/correlation/EMD/Jensen-Shannon/Chi-square).
+
+## `CCA_Call(...)`
+
+Source: `code/sample_trajectory/CCA.py`
+
+```python
+CCA_Call(
+    adata,
+    output_dir=None,
+    trajectory_col="sev.level",
+    n_components=2,
+    auto_select_best_2pc=True,
+    verbose=False,
+    show_sample_labels=False,
+)
+```
+
+Run supervised CCA-based trajectory inference.
+
+## `cca_pvalue_test(...)`
+
+Source: `code/sample_trajectory/CCA_test.py`
+
+```python
+cca_pvalue_test(
+    pseudo_adata,
+    column,
+    input_correlation,
+    output_directory,
+    num_simulations=1000,
+    trajectory_col="sev.level",
+    verbose=True,
+)
+```
+
+Compute empirical p-value diagnostics for CCA trajectory correlation.
+
+## `TSCAN(...)`
+
+Source: `code/sample_trajectory/TSCAN.py`
+
+```python
+TSCAN(
+    AnnData_sample,
+    column,
+    n_clusters=None,
+    output_dir="./",
+    grouping_columns=None,
+    verbose=False,
+    origin=None,
+    pseudotime_mode="rank",
+)
+```
+
+Run unsupervised sample-level pseudotime inference.
 
 ## `run_trajectory_gam_differential_gene_analysis(...)`
 
-- Source: `sample_trajectory/trajectory_diff_gene.py`
-- Purpose: fit GAM models across pseudotime and detect trajectory-associated genes/features.
+Source: `code/sample_trajectory/trajectory_diff_gene.py`
+
+```python
+run_trajectory_gam_differential_gene_analysis(
+    pseudobulk_adata,
+    pseudotime_source,
+    *,
+    sample_col="sample",
+    pseudotime_col="pseudotime",
+    covariate_columns=None,
+    fdr_threshold=0.01,
+    effect_size_threshold=1.0,
+    top_n_genes=100,
+    num_splines=5,
+    spline_order=3,
+    output_dir="trajectory_diff_gene_results_single",
+    visualization_gene_list=None,
+    generate_visualizations=True,
+    group_col=None,
+    n_clusters=3,
+    top_n_genes_for_curves=20,
+    verbose=True,
+)
+```
+
+Identify trajectory-associated genes/features using GAM models.
 
 ## `cluster(...)`
 
-- Source: `cluster.py`
-- Purpose: K-means clustering for expression/proportion sample embeddings.
+Source: `code/cluster.py`
+
+```python
+cluster(
+    pseudobulk_adata,
+    output_dir,
+    number_of_clusters=5,
+    use_expression=True,
+    use_proportion=True,
+    random_state=0,
+)
+```
+
+K-means clustering in expression/proportion sample embedding spaces.
 
 ## `proportion_test(...)`
 
-- Source: `sample_clustering/proportion_test.py`
-- Purpose: statistical testing on cell type composition differences across groups/clusters.
+Source: `code/sample_clustering/proportion_test.py`
 
-## `raisinfit(...)` and `run_pairwise_tests(...)`
+```python
+proportion_test(
+    adata,
+    sample_col,
+    group_col=None,
+    sample_to_clade=None,
+    celltype_col="celltype",
+    output_dir=None,
+    verbose=True,
+)
+```
 
-- Sources: `sample_clustering/RAISIN.py`, `sample_clustering/RAISIN_TEST.py`
-- Purpose: cluster differential analysis and pairwise tests.
+Test cell type composition differences across groups or clusters.
 
-## `visualization(...)` and `visualize_multimodal_embedding(...)`
+## `raisinfit(...)`
 
-- `visualization()` source: `visualization/visualization_other.py`
-- `visualize_multimodal_embedding()` source: `visualization/multi_omics_visualization.py`
+Source: `code/sample_clustering/RAISIN.py`
 
-Use these to generate standard downstream visual outputs after embeddings exist.
+```python
+raisinfit(
+    adata,
+    sample_col,
+    testtype="unpaired",
+    group_col=None,
+    individual_col=None,
+    batch_col=None,
+    sample_to_clade=None,
+    custom_design=None,
+    intercept=True,
+    filtergene=False,
+    filtergenequantile=0.5,
+    n_jobs=None,
+    verbose=True,
+)
+```
 
-## Related
+Fit RAISIN model for cluster differential analysis.
 
-- [RNA API](rna.md)
-- [ATAC API](atac.md)
-- [Multi-omics API](multiomics.md)
-- [Downstream tutorial](../tutorials/tutorial_downstream.md)
+## `run_pairwise_tests(...)`
+
+Source: `code/sample_clustering/RAISIN_TEST.py`
+
+```python
+run_pairwise_tests(
+    fit,
+    output_dir,
+    groups_to_compare=None,
+    control_group=None,
+    fdrmethod="fdr_bh",
+    n_permutations=100,
+    fdr_threshold=0.05,
+    top_n_genes=50,
+    make_summary_plots=True,
+    verbose=True,
+)
+```
+
+Run pairwise RAISIN contrasts and produce summary plots/tables.
+
+## `visualization(...)`
+
+Source: `code/visualization/visualization_other.py`
+
+```python
+visualization(
+    AnnData_cell,
+    pseudobulk_anndata,
+    output_dir,
+    grouping_columns=None,
+    age_bin_size=None,
+    age_column="age",
+    verbose=True,
+    plot_dendrogram_flag=True,
+    plot_cell_type_proportions_pca_flag=False,
+    plot_cell_type_expression_umap_flag=False,
+)
+```
+
+Generate downstream visualization panels (dendrogram and optional embeddings).
+
+## `visualize_multimodal_embedding(...)`
+
+Source: `code/visualization/multi_omics_visualization.py`
+
+```python
+visualize_multimodal_embedding(
+    adata,
+    modality_col=None,
+    color_col=None,
+    target_modality=None,
+    expression_key="X_DR_expression",
+    proportion_key="X_DR_proportion",
+    figsize=(20, 8),
+    point_size=60,
+    alpha=0.8,
+    colormap="viridis",
+    categorical_cmap="tab10",
+    output_dir=None,
+    show_sample_names=False,
+    force_data_type=None,
+    show_default=True,
+    verbose=True,
+    visualization_grouping_column=None,
+)
+```
+
+Visualize multi-omics sample embeddings with modality/group coloring.
