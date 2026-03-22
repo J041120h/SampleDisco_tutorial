@@ -14,7 +14,7 @@
         <link rel="prev" href="../tutorial_atac/">
       
       
-        <link rel="next" href="../../api/preparation/">
+        <link rel="next" href="../tutorial_downstream/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Tutorial 3: Multi-omics Integration - SampleDisc Docs v0.1-dev</title>
+        <title>Multi-omics Pipeline - SampleDisc Docs v0.2</title>
       
     
     
@@ -69,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tutorial-3-multi-omics-integration" class="md-skip">
+        <a href="#multi-omics-pipeline-tutorial" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="SampleDisc Docs v0.1-dev" class="md-header__button md-logo" aria-label="SampleDisc Docs v0.1-dev" data-md-component="logo">
+    <a href="../.." title="SampleDisc Docs v0.2" class="md-header__button md-logo" aria-label="SampleDisc Docs v0.2" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,13 +108,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SampleDisc Docs v0.1-dev
+            SampleDisc Docs v0.2
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tutorial 3: Multi-omics Integration
+              Multi-omics Pipeline
             
           </span>
         </div>
@@ -127,7 +127,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
     
   
 </form>
@@ -206,13 +206,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SampleDisc Docs v0.1-dev" class="md-nav__button md-logo" aria-label="SampleDisc Docs v0.1-dev" data-md-component="logo">
+    <a href="../.." title="SampleDisc Docs v0.2" class="md-nav__button md-logo" aria-label="SampleDisc Docs v0.2" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    SampleDisc Docs v0.1-dev
+    SampleDisc Docs v0.2
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -332,14 +332,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../config_overview/" class="md-nav__link">
+      <a href="../config_guide/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Overview: Using Config Files
+    Configuration Guide
   
 
     
@@ -367,7 +367,7 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 1: scRNA-seq Analysis
+    RNA Pipeline
   
 
     
@@ -395,7 +395,7 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 2: scATAC-seq Analysis
+    ATAC Pipeline
   
 
     
@@ -432,7 +432,7 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 3: Multi-omics Integration
+    Multi-omics Pipeline
   
 
     
@@ -450,7 +450,7 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 3: Multi-omics Integration
+    Multi-omics Pipeline
   
 
     
@@ -476,10 +476,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#high-level-workflow" class="md-nav__link">
+  <a href="#1-glue-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        High-level workflow
+        1) GLUE integration
       
     </span>
   </a>
@@ -487,10 +487,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#important-wrapper-behavior" class="md-nav__link">
+  <a href="#2-integration-preprocessing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Important wrapper behavior
+        2) Integration preprocessing
       
     </span>
   </a>
@@ -498,60 +498,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#representative-outputs" class="md-nav__link">
+  <a href="#3-cell-type-clustering-on-integrated-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Representative outputs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Representative outputs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#integrated-sample-coordinates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integrated sample coordinates
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#modality-alignment-and-resolution-summaries" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Modality alignment and resolution summaries
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#trajectory-linked-differential-signals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Trajectory-linked differential signals
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#practical-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Practical notes
+        3) Cell type clustering on integrated data
       
     </span>
   </a>
@@ -559,10 +509,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#runtime-estimate" class="md-nav__link">
+  <a href="#4-sample-embedding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runtime estimate
+        4) Sample embedding
       
     </span>
   </a>
@@ -570,10 +520,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related-references" class="md-nav__link">
+  <a href="#5-shared-downstream-modules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related references
+        5) Shared downstream modules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-multi-omics-embedding-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Multi-omics embedding visualization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
       
     </span>
   </a>
@@ -584,6 +556,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_downstream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Downstream Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -657,14 +657,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/preparation/" class="md-nav__link">
+      <a href="../../api/rna/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Preparation
+    RNA
   
 
     
@@ -685,14 +685,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/embedding/" class="md-nav__link">
+      <a href="../../api/atac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Sample Embedding
+    ATAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/multiomics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-omics
   
 
     
@@ -720,7 +748,7 @@
   <span class="md-ellipsis">
     
   
-    Downstream Analysis
+    Downstream
   
 
     
@@ -737,33 +765,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    About/Citation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -795,10 +796,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#high-level-workflow" class="md-nav__link">
+  <a href="#1-glue-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        High-level workflow
+        1) GLUE integration
       
     </span>
   </a>
@@ -806,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#important-wrapper-behavior" class="md-nav__link">
+  <a href="#2-integration-preprocessing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Important wrapper behavior
+        2) Integration preprocessing
       
     </span>
   </a>
@@ -817,60 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#representative-outputs" class="md-nav__link">
+  <a href="#3-cell-type-clustering-on-integrated-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Representative outputs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Representative outputs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#integrated-sample-coordinates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integrated sample coordinates
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#modality-alignment-and-resolution-summaries" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Modality alignment and resolution summaries
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#trajectory-linked-differential-signals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Trajectory-linked differential signals
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#practical-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Practical notes
+        3) Cell type clustering on integrated data
       
     </span>
   </a>
@@ -878,10 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#runtime-estimate" class="md-nav__link">
+  <a href="#4-sample-embedding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runtime estimate
+        4) Sample embedding
       
     </span>
   </a>
@@ -889,10 +840,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related-references" class="md-nav__link">
+  <a href="#5-shared-downstream-modules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related references
+        5) Shared downstream modules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-multi-omics-embedding-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Multi-omics embedding visualization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
       
     </span>
   </a>
@@ -916,91 +889,90 @@
 
 
 
-<h1 id="tutorial-3-multi-omics-integration">Tutorial 3: Multi-omics Integration<a class="headerlink" href="#tutorial-3-multi-omics-integration" title="Permanent link">&para;</a></h1>
-<p>The multi-omics branch combines RNA and ATAC samples through GLUE-based integration, followed by a shared sample-level embedding and downstream analyses.</p>
-<h2 id="high-level-workflow">High-level workflow<a class="headerlink" href="#high-level-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Run GLUE preprocessing and training on RNA and ATAC inputs.</li>
-<li>Integrate the modalities into a common cell representation.</li>
-<li>Preprocess the integrated object for sample-level analysis.</li>
-<li>Optionally search for the optimal cell-type resolution.</li>
-<li>Build expression and proportion sample embeddings, then run downstream analysis.</li>
-</ol>
-<h2 id="important-wrapper-behavior">Important wrapper behavior<a class="headerlink" href="#important-wrapper-behavior" title="Permanent link">&para;</a></h2>
-<p>The multi-omics wrapper documents one major sequencing rule:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># find_optimal_resolution runs BEFORE dimensionality_reduction</span>
-</code></pre></div>
-<p>That ordering matters when you compare candidate resolutions across RNA and ATAC structure.</p>
-<h2 id="representative-outputs">Representative outputs<a class="headerlink" href="#representative-outputs" title="Permanent link">&para;</a></h2>
-<h3 id="integrated-sample-coordinates">Integrated sample coordinates<a class="headerlink" href="#integrated-sample-coordinates" title="Permanent link">&para;</a></h3>
-<p>The copied distance-reduction coordinates file mixes RNA and ATAC samples in one table:</p>
-<table>
-<thead>
-<tr>
-<th>Sample</th>
-<th style="text-align: right;">PC1</th>
-<th style="text-align: right;">PC2</th>
-<th style="text-align: right;">PC3</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SRR14466474_ATAC</code></td>
-<td style="text-align: right;">-1.7112</td>
-<td style="text-align: right;">-3.4762</td>
-<td style="text-align: right;">1.5893</td>
-</tr>
-<tr>
-<td><code>CoV-34-Aruna_RNA</code></td>
-<td style="text-align: right;">7.5848</td>
-<td style="text-align: right;">19.6423</td>
-<td style="text-align: right;">11.0849</td>
-</tr>
-<tr>
-<td><code>CoV-3-Wilk_RNA</code></td>
-<td style="text-align: right;">9.6717</td>
-<td style="text-align: right;">4.4960</td>
-<td style="text-align: right;">-10.9849</td>
-</tr>
-<tr>
-<td><code>HD-4-Wilk_RNA</code></td>
-<td style="text-align: right;">-0.0195</td>
-<td style="text-align: right;">-9.7368</td>
-<td style="text-align: right;">8.5743</td>
-</tr>
-</tbody>
-</table>
-<p>Full artifact: <a href="../../resource/data/multiomics/expression_dr_coordinates.csv">expression_dr_coordinates.csv</a></p>
-<h3 id="modality-alignment-and-resolution-summaries">Modality alignment and resolution summaries<a class="headerlink" href="#modality-alignment-and-resolution-summaries" title="Permanent link">&para;</a></h3>
+<h1 id="multi-omics-pipeline-tutorial">Multi-omics Pipeline Tutorial<a class="headerlink" href="#multi-omics-pipeline-tutorial" title="Permanent link">&para;</a></h1>
+<p>This tutorial follows the <code>multiomics_wrapper(...)</code> branch and then shared downstream analysis.</p>
+<h2 id="1-glue-integration">1) GLUE integration<a class="headerlink" href="#1-glue-integration" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li><a href="../../resource/data/multiomics/resolution_results_rna_expression.csv">resolution_results_rna_expression.csv</a></li>
-<li><a href="../../resource/data/multiomics/celltype_modality_distribution.csv">celltype_modality_distribution.csv</a></li>
+<li><code>multiomics_integration</code></li>
+<li><code>multiomics_run_glue_preprocessing</code></li>
+<li><code>multiomics_run_glue_training</code></li>
+<li><code>multiomics_run_glue_gene_activity</code></li>
+<li><code>multiomics_run_glue_visualization</code></li>
 </ul>
-<h3 id="trajectory-linked-differential-signals">Trajectory-linked differential signals<a class="headerlink" href="#trajectory-linked-differential-signals" title="Permanent link">&para;</a></h3>
-<p>The copied GAM results include p-values, FDR, effect size, direction, and a <code>pseudoDEG</code> flag.</p>
+<p>Main API: <code>multiomics_preparation()</code></p>
+<h2 id="2-integration-preprocessing">2) Integration preprocessing<a class="headerlink" href="#2-integration-preprocessing" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li><a href="../../resource/data/multiomics/trajectory_deg_significant.tsv">trajectory_deg_significant.tsv</a></li>
+<li><code>multiomics_integration_preprocessing</code></li>
+<li><code>multiomics_min_cells_sample</code></li>
+<li><code>multiomics_min_cell_gene</code></li>
+<li><code>multiomics_min_features</code></li>
+<li><code>multiomics_pct_mito_cutoff</code></li>
 </ul>
-<h2 id="practical-notes">Practical notes<a class="headerlink" href="#practical-notes" title="Permanent link">&para;</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Multi-omics is the best tutorial for understanding how SampleDisc uses both expression-derived and composition-derived sample spaces to compare modalities.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>GLUE integration and gene-activity generation are typically the longest-running steps in the whole project. Plan for GPU access when possible and test on a smaller subset before scaling to a full study collection.</p>
-</div>
-<h2 id="runtime-estimate">Runtime estimate<a class="headerlink" href="#runtime-estimate" title="Permanent link">&para;</a></h2>
+<p>Main API: <code>integrate_preprocess()</code></p>
+<h2 id="3-cell-type-clustering-on-integrated-data">3) Cell type clustering on integrated data<a class="headerlink" href="#3-cell-type-clustering-on-integrated-data" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li>Small demonstration runs: <strong>roughly an hour</strong> when major intermediates are reused.</li>
-<li>Larger cross-study integrations: <strong>multiple hours</strong>, especially with GLUE training, gene activity, and full downstream analysis enabled.</li>
+<li><code>multiomics_cell_type_cluster</code></li>
+<li><code>multiomics_cluster_resolution</code></li>
+<li><code>multiomics_use_rep_celltype</code></li>
+<li><code>multiomics_n_target_clusters</code></li>
+<li><code>multiomics_generate_umap_celltype</code></li>
 </ul>
-<h2 id="related-references">Related references<a class="headerlink" href="#related-references" title="Permanent link">&para;</a></h2>
+<p>Main API: <code>cell_types_multiomics()</code> / <code>cell_types_multiomics_linux()</code></p>
+<p><img alt="Multi-omics UMAP by cell type" src="../../assets/images/multiomics/umap_cell_type.png" />
+<img alt="Multi-omics UMAP by modality" src="../../assets/images/multiomics/umap_modality.png" />
+<img alt="Multi-omics UMAP split by modality" src="../../assets/images/multiomics/umap_split_by_modality.png" />
+<img alt="Cell type by modality heatmap" src="../../assets/images/multiomics/celltype_modality_heatmap.png" /></p>
+<h2 id="4-sample-embedding">4) Sample embedding<a class="headerlink" href="#4-sample-embedding" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li><a href="../config_overview/">Overview: Using Config Files</a></li>
-<li><a href="../../api/embedding/">Sample Embedding API</a></li>
-<li><a href="../../api/downstream/">Downstream Analysis API</a></li>
+<li><code>multiomics_dimensionality_reduction</code></li>
+<li><code>multiomics_sample_hvg_number</code></li>
+<li><code>multiomics_n_expression_components</code></li>
+<li><code>multiomics_n_proportion_components</code></li>
+<li><code>multiomics_harmony_for_proportion</code></li>
 </ul>
+<p>Main API: <code>calculate_multiomics_sample_embedding()</code></p>
+<h2 id="5-shared-downstream-modules">5) Shared downstream modules<a class="headerlink" href="#5-shared-downstream-modules" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
+<ul>
+<li><code>multiomics_sample_distance_calculation</code></li>
+<li><code>multiomics_trajectory_analysis</code></li>
+<li><code>multiomics_trajectory_dge</code></li>
+<li><code>multiomics_sample_cluster</code></li>
+<li><code>multiomics_proportion_test</code></li>
+<li><code>multiomics_cluster_dge</code></li>
+</ul>
+<p>Main API: <code>downstream_analysis()</code></p>
+<p><img alt="Multi-omics CCA expression" src="../../assets/images/multiomics/cca_expression.pdf" />
+<img alt="Multi-omics CCA proportion" src="../../assets/images/multiomics/cca_proportion.pdf" />
+<img alt="Multi-omics distance heatmap" src="../../assets/images/multiomics/sample_distance_expression_DR_heatmap_cosine.pdf" />
+<img alt="Multi-omics TSCAN clusters by cluster" src="../../assets/images/multiomics/tscan_clusters_by_cluster_expression.png" />
+<img alt="Multi-omics TSCAN clusters by grouping" src="../../assets/images/multiomics/tscan_clusters_by_grouping_expression.png" />
+<img alt="Multi-omics kmeans expression" src="../../assets/images/multiomics/kmeans_expression_embedding.png" />
+<img alt="Multi-omics kmeans proportion" src="../../assets/images/multiomics/kmeans_proportion_embedding.png" /></p>
+<h2 id="6-multi-omics-embedding-visualization">6) Multi-omics embedding visualization<a class="headerlink" href="#6-multi-omics-embedding-visualization" title="Permanent link">&para;</a></h2>
+<p>This is specific to the multi-omics branch.</p>
+<p>Controlled by:</p>
+<ul>
+<li><code>multiomics_visualize_embedding</code></li>
+<li><code>multiomics_color_col</code></li>
+<li><code>multiomics_visualization_grouping_column</code></li>
+<li><code>multiomics_target_modality</code></li>
+<li><code>multiomics_expression_key</code></li>
+<li><code>multiomics_proportion_key</code></li>
+</ul>
+<p>Main API: <code>visualize_multimodal_embedding()</code></p>
+<p><img alt="All samples expression" src="../../assets/images/multiomics/all_samples_expression.png" />
+<img alt="All samples proportion" src="../../assets/images/multiomics/all_samples_proportion.png" />
+<img alt="All samples combined by severity" src="../../assets/images/multiomics/all_samples_combined_by_sev_level.png" />
+<img alt="Expression by severity" src="../../assets/images/multiomics/all_samples_expression_by_sev_level.png" />
+<img alt="Proportion by severity" src="../../assets/images/multiomics/all_samples_proportion_by_sev_level.png" />
+<img alt="scGLUE UMAP by modality" src="../../assets/images/multiomics/scglue_umap_modality.png" /></p>
+<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
+<p><code>multiomics_find_optimal_resolution</code> is intentionally not covered in this tutorial page. It is documented in the Multi-omics API section.</p>
 
 
 

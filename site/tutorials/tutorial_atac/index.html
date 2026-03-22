@@ -25,7 +25,7 @@
     
     
       
-        <title>Tutorial 2: scATAC-seq Analysis - SampleDisc Docs v0.1-dev</title>
+        <title>ATAC Pipeline - SampleDisc Docs v0.2</title>
       
     
     
@@ -69,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tutorial-2-scatac-seq-analysis" class="md-skip">
+        <a href="#atac-pipeline-tutorial" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="SampleDisc Docs v0.1-dev" class="md-header__button md-logo" aria-label="SampleDisc Docs v0.1-dev" data-md-component="logo">
+    <a href="../.." title="SampleDisc Docs v0.2" class="md-header__button md-logo" aria-label="SampleDisc Docs v0.2" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,13 +108,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SampleDisc Docs v0.1-dev
+            SampleDisc Docs v0.2
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tutorial 2: scATAC-seq Analysis
+              ATAC Pipeline
             
           </span>
         </div>
@@ -127,7 +127,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
     
   
 </form>
@@ -206,13 +206,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SampleDisc Docs v0.1-dev" class="md-nav__button md-logo" aria-label="SampleDisc Docs v0.1-dev" data-md-component="logo">
+    <a href="../.." title="SampleDisc Docs v0.2" class="md-nav__button md-logo" aria-label="SampleDisc Docs v0.2" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    SampleDisc Docs v0.1-dev
+    SampleDisc Docs v0.2
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -332,14 +332,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../config_overview/" class="md-nav__link">
+      <a href="../config_guide/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Overview: Using Config Files
+    Configuration Guide
   
 
     
@@ -367,7 +367,7 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 1: scRNA-seq Analysis
+    RNA Pipeline
   
 
     
@@ -404,7 +404,7 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 2: scATAC-seq Analysis
+    ATAC Pipeline
   
 
     
@@ -422,7 +422,7 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 2: scATAC-seq Analysis
+    ATAC Pipeline
   
 
     
@@ -448,10 +448,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-changes-for-atac" class="md-nav__link">
+  <a href="#1-preprocessing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What changes for ATAC
+        1) Preprocessing
       
     </span>
   </a>
@@ -459,10 +459,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-command" class="md-nav__link">
+  <a href="#2-cell-type-clustering" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key command
+        2) Cell type clustering
       
     </span>
   </a>
@@ -470,10 +470,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#atac-specific-parameters" class="md-nav__link">
+  <a href="#3-sample-embedding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ATAC-specific parameters
+        3) Sample embedding
       
     </span>
   </a>
@@ -481,71 +481,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#representative-outputs" class="md-nav__link">
+  <a href="#4-sample-distance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Representative outputs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Representative outputs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-embedding-coordinates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample embedding coordinates
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sample-clusters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample clusters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#resolution-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolution summary
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#scanpy-style-documentation-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scanpy-style documentation reference
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#interpretation-guidance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Interpretation guidance
+        4) Sample distance
       
     </span>
   </a>
@@ -553,10 +492,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#runtime-estimate" class="md-nav__link">
+  <a href="#5-trajectory-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runtime estimate
+        5) Trajectory analysis
       
     </span>
   </a>
@@ -564,10 +503,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related-references" class="md-nav__link">
+  <a href="#6-sample-clustering" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related references
+        6) Sample clustering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-proportion-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7) Proportion test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8) Notes
       
     </span>
   </a>
@@ -597,7 +558,35 @@
   <span class="md-ellipsis">
     
   
-    Tutorial 3: Multi-omics Integration
+    Multi-omics Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_downstream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Downstream Analysis
   
 
     
@@ -679,14 +668,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/preparation/" class="md-nav__link">
+      <a href="../../api/rna/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Preparation
+    RNA
   
 
     
@@ -707,14 +696,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/embedding/" class="md-nav__link">
+      <a href="../../api/atac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Sample Embedding
+    ATAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/multiomics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-omics
   
 
     
@@ -742,7 +759,7 @@
   <span class="md-ellipsis">
     
   
-    Downstream Analysis
+    Downstream
   
 
     
@@ -759,33 +776,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    About/Citation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -817,10 +807,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-changes-for-atac" class="md-nav__link">
+  <a href="#1-preprocessing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What changes for ATAC
+        1) Preprocessing
       
     </span>
   </a>
@@ -828,10 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-command" class="md-nav__link">
+  <a href="#2-cell-type-clustering" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key command
+        2) Cell type clustering
       
     </span>
   </a>
@@ -839,10 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#atac-specific-parameters" class="md-nav__link">
+  <a href="#3-sample-embedding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ATAC-specific parameters
+        3) Sample embedding
       
     </span>
   </a>
@@ -850,71 +840,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#representative-outputs" class="md-nav__link">
+  <a href="#4-sample-distance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Representative outputs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Representative outputs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-embedding-coordinates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample embedding coordinates
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sample-clusters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample clusters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#resolution-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolution summary
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#scanpy-style-documentation-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scanpy-style documentation reference
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#interpretation-guidance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Interpretation guidance
+        4) Sample distance
       
     </span>
   </a>
@@ -922,10 +851,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#runtime-estimate" class="md-nav__link">
+  <a href="#5-trajectory-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runtime estimate
+        5) Trajectory analysis
       
     </span>
   </a>
@@ -933,10 +862,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related-references" class="md-nav__link">
+  <a href="#6-sample-clustering" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related references
+        6) Sample clustering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-proportion-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7) Proportion test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8) Notes
       
     </span>
   </a>
@@ -960,115 +911,78 @@
 
 
 
-<h1 id="tutorial-2-scatac-seq-analysis">Tutorial 2: scATAC-seq Analysis<a class="headerlink" href="#tutorial-2-scatac-seq-analysis" title="Permanent link">&para;</a></h1>
-<p>The ATAC workflow mirrors the RNA pipeline but uses ATAC-aware preprocessing and dimensionality reduction before sample embedding.</p>
-<h2 id="what-changes-for-atac">What changes for ATAC<a class="headerlink" href="#what-changes-for-atac" title="Permanent link">&para;</a></h2>
+<h1 id="atac-pipeline-tutorial">ATAC Pipeline Tutorial<a class="headerlink" href="#atac-pipeline-tutorial" title="Permanent link">&para;</a></h1>
+<p>This tutorial follows the ATAC branch of <code>wrapper(...)</code>.</p>
+<h2 id="1-preprocessing">1) Preprocessing<a class="headerlink" href="#1-preprocessing" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li>QC relies on feature counts rather than gene counts.</li>
-<li>The sample embedding layer can switch to TF-IDF and LSI style features.</li>
-<li>ATAC-specific parameters control feature filtering, doublet detection, and LSI behavior.</li>
+<li><code>atac_preprocessing</code></li>
+<li><code>atac_min_features</code>, <code>atac_max_features</code>, <code>atac_min_cells_per_sample</code></li>
+<li><code>atac_doublet_detection</code>, <code>atac_num_cell_hvfs</code></li>
+<li><code>atac_tfidf_scale_factor</code>, <code>atac_log_transform</code>, <code>atac_drop_first_lsi</code></li>
 </ul>
-<h2 id="key-command">Key command<a class="headerlink" href="#key-command" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>/users/hjiang/GenoDistance/code/SampleDisc.py<span class="w"> </span>-m<span class="w"> </span>complex<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--config<span class="w"> </span>path/to/atac_config.yaml
-</code></pre></div>
-<h2 id="atac-specific-parameters">ATAC-specific parameters<a class="headerlink" href="#atac-specific-parameters" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Parameters</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Filtering</td>
-<td><code>atac_min_cells</code>, <code>atac_min_features</code>, <code>atac_max_features</code>, <code>atac_min_cells_per_sample</code></td>
-</tr>
-<tr>
-<td>Preprocessing</td>
-<td><code>atac_doublet_detection</code>, <code>atac_num_cell_hvfs</code>, <code>atac_tfidf_scale_factor</code></td>
-</tr>
-<tr>
-<td>Latent space</td>
-<td><code>atac_cell_embedding_num_pcs</code>, <code>atac_drop_first_lsi</code>, <code>atac_cell_embedding_column</code></td>
-</tr>
-<tr>
-<td>Sample embedding</td>
-<td><code>atac_sample_hvg_number</code>, <code>atac_sample_embedding_dimension</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="representative-outputs">Representative outputs<a class="headerlink" href="#representative-outputs" title="Permanent link">&para;</a></h2>
-<h3 id="sample-embedding-coordinates">Sample embedding coordinates<a class="headerlink" href="#sample-embedding-coordinates" title="Permanent link">&para;</a></h3>
-<p>The copied ATAC sample embedding file stores LSI coordinates per sample:</p>
-<table>
-<thead>
-<tr>
-<th>Sample</th>
-<th style="text-align: right;">LSI1</th>
-<th style="text-align: right;">LSI2</th>
-<th style="text-align: right;">LSI3</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SRR14466462</code></td>
-<td style="text-align: right;">0.5133</td>
-<td style="text-align: right;">-0.2725</td>
-<td style="text-align: right;">-0.0907</td>
-</tr>
-<tr>
-<td><code>SRR14466463</code></td>
-<td style="text-align: right;">0.2937</td>
-<td style="text-align: right;">-0.4944</td>
-<td style="text-align: right;">0.3187</td>
-</tr>
-<tr>
-<td><code>SRR14466464</code></td>
-<td style="text-align: right;">0.2870</td>
-<td style="text-align: right;">-0.2458</td>
-<td style="text-align: right;">-0.7417</td>
-</tr>
-<tr>
-<td><code>SRR14466470</code></td>
-<td style="text-align: right;">0.3955</td>
-<td style="text-align: right;">0.0582</td>
-<td style="text-align: right;">0.5404</td>
-</tr>
-</tbody>
-</table>
-<p>Full artifact: <a href="../../resource/data/atac/sample_expression_embedding.csv">sample_expression_embedding.csv</a></p>
-<h3 id="sample-clusters">Sample clusters<a class="headerlink" href="#sample-clusters" title="Permanent link">&para;</a></h3>
+<p>Main API: <code>preprocess()</code> / <code>preprocess_linux()</code></p>
+<h2 id="2-cell-type-clustering">2) Cell type clustering<a class="headerlink" href="#2-cell-type-clustering" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li><a href="../../resource/data/atac/kmeans_clusters_expression.csv">kmeans_clusters_expression.csv</a></li>
+<li><code>atac_cell_type_cluster</code></li>
+<li><code>atac_leiden_cluster_resolution</code></li>
+<li><code>atac_existing_cell_types</code></li>
+<li><code>atac_n_target_cell_clusters</code></li>
 </ul>
-<h3 id="resolution-summary">Resolution summary<a class="headerlink" href="#resolution-summary" title="Permanent link">&para;</a></h3>
+<p>Main API: <code>cell_types()</code></p>
+<p><img alt="ATAC dendrogram" src="../../assets/images/atac/cell_type_dendrogram.png" /></p>
+<h2 id="3-sample-embedding">3) Sample embedding<a class="headerlink" href="#3-sample-embedding" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li><a href="../../resource/data/atac/all_resolution_results_expression.csv">all_resolution_results_expression.csv</a></li>
+<li><code>atac_derive_sample_embedding</code></li>
+<li><code>atac_sample_hvg_number</code></li>
+<li><code>atac_sample_embedding_dimension</code></li>
+<li><code>atac_harmony_for_proportion</code></li>
 </ul>
-<h3 id="scanpy-style-documentation-reference">Scanpy-style documentation reference<a class="headerlink" href="#scanpy-style-documentation-reference" title="Permanent link">&para;</a></h3>
-<p>This copied screenshot is included as a design anchor for detailed parameter documentation pages.</p>
-<p><img alt="Scanpy filter cells reference" src="../../resource/figures/tutorial_atac/scanpy-filter-cells-reference.png" /></p>
-<h2 id="interpretation-guidance">Interpretation guidance<a class="headerlink" href="#interpretation-guidance" title="Permanent link">&para;</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><code>calculate_sample_embedding(...)</code> documents that the ATAC path uses TF-IDF/LSI rather than the normalization and PCA path used in RNA mode.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>ATAC preprocessing is sensitive to feature-count thresholds. Overly strict <code>atac_min_features</code> or <code>atac_max_features</code> settings can remove large fractions of cells before sample embedding is constructed.</p>
-</div>
-<h2 id="runtime-estimate">Runtime estimate<a class="headerlink" href="#runtime-estimate" title="Permanent link">&para;</a></h2>
+<p>Main API: <code>calculate_sample_embedding(..., atac=True)</code></p>
+<h2 id="4-sample-distance">4) Sample distance<a class="headerlink" href="#4-sample-distance" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li>Preprocessed ATAC matrices to sample embedding: <strong>tens of minutes</strong> on moderate datasets.</li>
-<li>Full raw-data ATAC preprocessing plus downstream analysis: <strong>tens of minutes to a few hours</strong>, depending on matrix size and doublet detection.</li>
+<li><code>atac_sample_distance_calculation</code></li>
+<li><code>atac_sample_distance_methods</code></li>
+<li><code>atac_grouping_columns</code></li>
 </ul>
-<h2 id="related-references">Related references<a class="headerlink" href="#related-references" title="Permanent link">&para;</a></h2>
+<p>Main API: <code>sample_distance()</code></p>
+<p><img alt="ATAC distance (expression, cosine)" src="../../assets/images/atac/sample_distance_expression_DR_heatmap_cosine.pdf" />
+<img alt="ATAC distance (proportion, cosine)" src="../../assets/images/atac/sample_distance_proportion_DR_heatmap_cosine.pdf" /></p>
+<h2 id="5-trajectory-analysis">5) Trajectory analysis<a class="headerlink" href="#5-trajectory-analysis" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
 <ul>
-<li><a href="../config_overview/">Overview: Using Config Files</a></li>
-<li><a href="../../api/preparation/">Preparation API</a></li>
-<li><a href="../../api/embedding/">Sample Embedding API</a></li>
+<li><code>atac_trajectory_analysis</code></li>
+<li><code>atac_trajectory_supervised</code></li>
+<li><code>atac_n_cca_pcs</code></li>
+<li><code>atac_trajectory_col</code></li>
+</ul>
+<p>Main API: <code>CCA_Call()</code> or <code>TSCAN()</code></p>
+<p><img alt="ATAC CCA expression" src="../../assets/images/atac/cca_expression.pdf" />
+<img alt="ATAC CCA proportion" src="../../assets/images/atac/cca_proportion.pdf" /></p>
+<h2 id="6-sample-clustering">6) Sample clustering<a class="headerlink" href="#6-sample-clustering" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
+<ul>
+<li><code>atac_sample_cluster</code></li>
+<li><code>atac_cluster_number</code></li>
+</ul>
+<p>Main API: <code>cluster()</code></p>
+<p><img alt="ATAC kmeans expression" src="../../assets/images/atac/kmeans_expression_embedding.png" />
+<img alt="ATAC kmeans proportion" src="../../assets/images/atac/kmeans_proportion_embedding.png" /></p>
+<h2 id="7-proportion-test">7) Proportion test<a class="headerlink" href="#7-proportion-test" title="Permanent link">&para;</a></h2>
+<p>Controlled by:</p>
+<ul>
+<li><code>atac_proportion_test</code></li>
+</ul>
+<p>Main API: <code>proportion_test()</code></p>
+<p><img alt="ATAC proportion heatmap" src="../../assets/images/atac/proportion_heatmap_group_by_celltype.png" /></p>
+<h2 id="8-notes">8) Notes<a class="headerlink" href="#8-notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li>ATAC uses TF-IDF and LSI style representation before downstream analysis.</li>
+<li>Do not over-tighten feature cutoffs in preprocessing; it can remove many cells.</li>
+<li>For full shared downstream details, see <a href="../tutorial_downstream/">Downstream Analysis</a>.</li>
 </ul>
 
 

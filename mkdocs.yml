@@ -1,4 +1,4 @@
-site_name: SampleDisc Docs v0.1-dev
+site_name: SampleDisc Docs v0.2
 site_description: Documentation for SampleDisc, a pipeline for sample-level representation learning from single-cell multi-omics data.
 use_directory_urls: true
 strict: false
@@ -17,8 +17,8 @@ theme:
     - content.tabs.link
   palette:
     - scheme: default
-      primary: blue
-      accent: cyan
+      primary: teal
+      accent: amber
 
 plugins:
   - search
@@ -48,12 +48,13 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - Tutorials:
-      - "Overview: Using Config Files": tutorials/config_overview.md
-      - "Tutorial 1: scRNA-seq Analysis": tutorials/tutorial_rna.md
-      - "Tutorial 2: scATAC-seq Analysis": tutorials/tutorial_atac.md
-      - "Tutorial 3: Multi-omics Integration": tutorials/tutorial_multiomics.md
+      - "Configuration Guide": tutorials/config_guide.md
+      - "RNA Pipeline": tutorials/tutorial_rna.md
+      - "ATAC Pipeline": tutorials/tutorial_atac.md
+      - "Multi-omics Pipeline": tutorials/tutorial_multiomics.md
+      - "Downstream Analysis": tutorials/tutorial_downstream.md
   - API Reference:
-      - Preparation: api/preparation.md
-      - Sample Embedding: api/embedding.md
-      - Downstream Analysis: api/downstream.md
-  - About/Citation: about.md
+      - RNA: api/rna.md
+      - ATAC: api/atac.md
+      - Multi-omics: api/multiomics.md
+      - Downstream: api/downstream.md

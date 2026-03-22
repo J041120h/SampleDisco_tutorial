@@ -1,87 +1,110 @@
-# Tutorial 1: scRNA-seq Analysis
+# RNA Pipeline Tutorial
 
-This tutorial walks through the RNA-only branch of SampleDisc: preprocessing, cell-type clustering, sample embedding, trajectory inference, and sample-level downstream analysis.
+This tutorial follows the RNA branch of `wrapper(...)` and shows key outputs after each stage.
 
-## Recommended entry point
-
-Use the RNA-specific keys in a full config and run the main CLI:
+## Run command
 
 ```bash
 python /users/hjiang/GenoDistance/code/SampleDisc.py -m complex \
   --config /users/hjiang/GenoDistance/code/config/config_covid_rna.yaml
 ```
 
-## Pipeline stages
+## 1) Preprocessing
 
-1. Preprocess cell-level RNA counts and generate `adata_cell` / `adata_sample`.
-2. Cluster cells or reuse existing cell-type annotations.
-3. Build sample embeddings from pseudobulk expression and composition features.
-4. Run sample distance, supervised or unsupervised trajectory inference, and optional trajectory DGE.
+Controlled by:
 
-## Key parameters to review
+- `rna_preprocessing`
+- `rna_min_cells`, `rna_min_genes`, `rna_pct_mito_cutoff`
+- `rna_num_cell_hvgs`, `rna_cell_embedding_num_pcs`
+- `rna_cell_level_batch_key`
 
-| Stage | Parameters |
-| --- | --- |
-| QC and normalization | `rna_min_cells`, `rna_min_genes`, `rna_pct_mito_cutoff`, `rna_num_cell_hvgs` |
-| Cell typing | `rna_leiden_cluster_resolution`, `rna_existing_cell_types`, `rna_n_target_cell_clusters` |
-| Sample embedding | `rna_sample_hvg_number`, `rna_sample_embedding_dimension`, `rna_harmony_for_proportion` |
-| Trajectory | `rna_n_cca_pcs`, `rna_trajectory_col`, `rna_trajectory_supervised` |
+Main API: `preprocess()` / `preprocess_linux()`
 
-## Representative outputs
+## 2) Cell type clustering
 
-### Pseudotime summary
+Controlled by:
 
-The RNA tutorial example includes a small pseudotime table copied from the result directory:
+- `rna_cell_type_cluster`
+- `rna_leiden_cluster_resolution`
+- `rna_existing_cell_types`
+- `rna_n_target_cell_clusters`
+- `rna_umap`
 
-| Sample | Pseudotime |
-| --- | ---: |
-| `HD-1-Wilk` | 0.0000 |
-| `HD-20-Aruna` | 0.2483 |
-| `CoV-34-Aruna` | 0.3961 |
-| `CoV-36-Aruna` | 0.5511 |
-| `CoV-4-Wilk` | 1.0000 |
+Main API: `cell_types()`
 
-Full artifact: [pseudotime_expression.csv](../resource/data/rna/pseudotime_expression.csv)
+![RNA cell types](../assets/images/rna/preprocess_cell_type.png)
 
-### K-means sample clusters
+## 3) Sample embedding
 
-| Sample | Cluster |
-| --- | ---: |
-| `HD-1-Wilk` | 0 |
-| `HD-20-Aruna` | 0 |
-| `CoV-4-Wilk` | 1 |
-| `CoV-34-Aruna` | 2 |
-| `CoV-3-Wilk` | 3 |
+Controlled by:
 
-Full artifact: [kmeans_clusters_expression.csv](../resource/data/rna/kmeans_clusters_expression.csv)
+- `rna_derive_sample_embedding`
+- `rna_sample_hvg_number`
+- `rna_sample_embedding_dimension`
+- `rna_harmony_for_proportion`
 
-### Resolution search summary
+Main API: `calculate_sample_embedding()`
 
-Use the copied CSV below to compare candidate cell-type resolutions for expression-derived embeddings:
+## 4) Sample distance
 
-- [all_resolution_results_expression.csv](../resource/data/rna/all_resolution_results_expression.csv)
+Controlled by:
 
-### Scanpy-style documentation reference
+- `rna_sample_distance_calculation`
+- `rna_sample_distance_methods`
+- `rna_grouping_columns`
 
-The image below is included as a visual style reference for the kind of API-oriented presentation this docs site is aiming for.
+Main API: `sample_distance()`
 
-![Scanpy preprocessing reference](../resource/figures/tutorial_rna/scanpy-preprocessing-reference.png)
+![RNA distance (expression, cosine)](../assets/images/rna/sample_distance_expression_DR_heatmap_cosine.pdf)
+![RNA distance (proportion, cosine)](../assets/images/rna/sample_distance_proportion_DR_heatmap_cosine.pdf)
 
-## Notes on interpretation
+## 5) Trajectory analysis
 
-!!! note
-    The RNA path is often the easiest place to start because all downstream modules in `wrapper.py` can be run after the sample embedding stage without cross-modality dependencies.
+Controlled by:
 
-!!! warning
-    If `rna_preprocessing` is set to `false`, make sure the resume paths point to compatible `.h5ad` files. The wrapper expects preprocessed objects with the same `sample` and `cell_type` conventions used later in the pipeline.
+- `rna_trajectory_analysis`
+- `rna_trajectory_supervised`
+- `rna_n_cca_pcs`
+- `rna_trajectory_col`
+- `rna_cca_pvalue`
 
-## Runtime estimate
+Main API: `CCA_Call()`, `cca_pvalue_test()`, `TSCAN()`
 
-- Reusing preprocessed `.h5ad` files: typically **minutes to tens of minutes**.
-- End-to-end from raw data: typically **tens of minutes to over an hour**, depending on cell count and whether Harmony is applied.
+![RNA CCA expression](../assets/images/rna/cca_expression.pdf)
+![RNA CCA proportion](../assets/images/rna/cca_proportion.pdf)
+![RNA CCA p-value expression](../assets/images/rna/cca_pvalue_X_DR_expression.png)
+![RNA CCA p-value proportion](../assets/images/rna/cca_pvalue_X_DR_proportion.png)
+![RNA TSCAN clusters by cluster (expression)](../assets/images/rna/tscan_clusters_by_cluster_expression.png)
+![RNA TSCAN clusters by grouping (expression)](../assets/images/rna/tscan_clusters_by_grouping_expression.png)
+![RNA TSCAN clusters by cluster (proportion)](../assets/images/rna/tscan_clusters_by_cluster_proportion.png)
 
-## Related references
+## 6) Trajectory DGE
 
-- [Overview: Using Config Files](config_overview.md)
-- [Preparation API](../api/preparation.md)
-- [Downstream Analysis API](../api/downstream.md)
+Controlled by:
+
+- `rna_trajectory_dge`
+- `rna_fdr_threshold`, `rna_effect_size_threshold`
+- `rna_top_n_genes`, `rna_num_splines`, `rna_spline_order`
+- `rna_visualization_gene_list`
+
+Main API: `run_trajectory_gam_differential_gene_analysis()`
+
+![RNA trajectory DGE heatmap](../assets/images/rna/tde_heatmap.png)
+![RNA trajectory DGE gene curves](../assets/images/rna/gene_curves.png)
+
+## 7) Sample clustering
+
+Controlled by:
+
+- `rna_sample_cluster`
+- `rna_cluster_number`
+
+Main API: `cluster()`
+
+![RNA kmeans expression](../assets/images/rna/kmeans_expression_embedding.png)
+![RNA kmeans proportion](../assets/images/rna/kmeans_proportion_embedding.png)
+
+## 8) Additional downstream modules
+
+For proportion testing, RAISIN-based cluster DGE, and extended trajectory visualizations, see [Downstream Analysis](tutorial_downstream.md).
+

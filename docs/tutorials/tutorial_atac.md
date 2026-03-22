@@ -1,73 +1,93 @@
-# Tutorial 2: scATAC-seq Analysis
+# ATAC Pipeline Tutorial
 
-The ATAC workflow mirrors the RNA pipeline but uses ATAC-aware preprocessing and dimensionality reduction before sample embedding.
+This tutorial follows the ATAC branch of `wrapper(...)`.
 
-## What changes for ATAC
+## 1) Preprocessing
 
-- QC relies on feature counts rather than gene counts.
-- The sample embedding layer can switch to TF-IDF and LSI style features.
-- ATAC-specific parameters control feature filtering, doublet detection, and LSI behavior.
+Controlled by:
 
-## Key command
+- `atac_preprocessing`
+- `atac_min_features`, `atac_max_features`, `atac_min_cells_per_sample`
+- `atac_doublet_detection`, `atac_num_cell_hvfs`
+- `atac_tfidf_scale_factor`, `atac_log_transform`, `atac_drop_first_lsi`
 
-```bash
-python /users/hjiang/GenoDistance/code/SampleDisc.py -m complex \
-  --config path/to/atac_config.yaml
-```
+Main API: `preprocess()` / `preprocess_linux()`
 
-## ATAC-specific parameters
+## 2) Cell type clustering
 
-| Category | Parameters |
-| --- | --- |
-| Filtering | `atac_min_cells`, `atac_min_features`, `atac_max_features`, `atac_min_cells_per_sample` |
-| Preprocessing | `atac_doublet_detection`, `atac_num_cell_hvfs`, `atac_tfidf_scale_factor` |
-| Latent space | `atac_cell_embedding_num_pcs`, `atac_drop_first_lsi`, `atac_cell_embedding_column` |
-| Sample embedding | `atac_sample_hvg_number`, `atac_sample_embedding_dimension` |
+Controlled by:
 
-## Representative outputs
+- `atac_cell_type_cluster`
+- `atac_leiden_cluster_resolution`
+- `atac_existing_cell_types`
+- `atac_n_target_cell_clusters`
 
-### Sample embedding coordinates
+Main API: `cell_types()`
 
-The copied ATAC sample embedding file stores LSI coordinates per sample:
+![ATAC dendrogram](../assets/images/atac/cell_type_dendrogram.png)
 
-| Sample | LSI1 | LSI2 | LSI3 |
-| --- | ---: | ---: | ---: |
-| `SRR14466462` | 0.5133 | -0.2725 | -0.0907 |
-| `SRR14466463` | 0.2937 | -0.4944 | 0.3187 |
-| `SRR14466464` | 0.2870 | -0.2458 | -0.7417 |
-| `SRR14466470` | 0.3955 | 0.0582 | 0.5404 |
+## 3) Sample embedding
 
-Full artifact: [sample_expression_embedding.csv](../resource/data/atac/sample_expression_embedding.csv)
+Controlled by:
 
-### Sample clusters
+- `atac_derive_sample_embedding`
+- `atac_sample_hvg_number`
+- `atac_sample_embedding_dimension`
+- `atac_harmony_for_proportion`
 
-- [kmeans_clusters_expression.csv](../resource/data/atac/kmeans_clusters_expression.csv)
+Main API: `calculate_sample_embedding(..., atac=True)`
 
-### Resolution summary
+## 4) Sample distance
 
-- [all_resolution_results_expression.csv](../resource/data/atac/all_resolution_results_expression.csv)
+Controlled by:
 
-### Scanpy-style documentation reference
+- `atac_sample_distance_calculation`
+- `atac_sample_distance_methods`
+- `atac_grouping_columns`
 
-This copied screenshot is included as a design anchor for detailed parameter documentation pages.
+Main API: `sample_distance()`
 
-![Scanpy filter cells reference](../resource/figures/tutorial_atac/scanpy-filter-cells-reference.png)
+![ATAC distance (expression, cosine)](../assets/images/atac/sample_distance_expression_DR_heatmap_cosine.pdf)
+![ATAC distance (proportion, cosine)](../assets/images/atac/sample_distance_proportion_DR_heatmap_cosine.pdf)
 
-## Interpretation guidance
+## 5) Trajectory analysis
 
-!!! note
-    `calculate_sample_embedding(...)` documents that the ATAC path uses TF-IDF/LSI rather than the normalization and PCA path used in RNA mode.
+Controlled by:
 
-!!! warning
-    ATAC preprocessing is sensitive to feature-count thresholds. Overly strict `atac_min_features` or `atac_max_features` settings can remove large fractions of cells before sample embedding is constructed.
+- `atac_trajectory_analysis`
+- `atac_trajectory_supervised`
+- `atac_n_cca_pcs`
+- `atac_trajectory_col`
 
-## Runtime estimate
+Main API: `CCA_Call()` or `TSCAN()`
 
-- Preprocessed ATAC matrices to sample embedding: **tens of minutes** on moderate datasets.
-- Full raw-data ATAC preprocessing plus downstream analysis: **tens of minutes to a few hours**, depending on matrix size and doublet detection.
+![ATAC CCA expression](../assets/images/atac/cca_expression.pdf)
+![ATAC CCA proportion](../assets/images/atac/cca_proportion.pdf)
 
-## Related references
+## 6) Sample clustering
 
-- [Overview: Using Config Files](config_overview.md)
-- [Preparation API](../api/preparation.md)
-- [Sample Embedding API](../api/embedding.md)
+Controlled by:
+
+- `atac_sample_cluster`
+- `atac_cluster_number`
+
+Main API: `cluster()`
+
+![ATAC kmeans expression](../assets/images/atac/kmeans_expression_embedding.png)
+![ATAC kmeans proportion](../assets/images/atac/kmeans_proportion_embedding.png)
+
+## 7) Proportion test
+
+Controlled by:
+
+- `atac_proportion_test`
+
+Main API: `proportion_test()`
+
+![ATAC proportion heatmap](../assets/images/atac/proportion_heatmap_group_by_celltype.png)
+
+## 8) Notes
+
+- ATAC uses TF-IDF and LSI style representation before downstream analysis.
+- Do not over-tighten feature cutoffs in preprocessing; it can remove many cells.
+- For full shared downstream details, see [Downstream Analysis](tutorial_downstream.md).
