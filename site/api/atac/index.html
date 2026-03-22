@@ -621,38 +621,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#atac_wrapper" class="md-nav__link">
+  <a href="#preprocess-cpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        atac_wrapper(...)
+        preprocess(...) (CPU)
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="atac_wrapper(...)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters-by-stage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters by stage
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#preprocess-and-preprocess_linux" class="md-nav__link">
+  <a href="#preprocess_linux-gpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        preprocess(...) and preprocess_linux(...)
+        preprocess_linux(...) (GPU)
       
     </span>
   </a>
@@ -671,10 +654,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#calculate_sample_embedding-atactrue" class="md-nav__link">
+  <a href="#calculate_sample_embedding-with-atactrue" class="md-nav__link">
     <span class="md-ellipsis">
       
-        calculate_sample_embedding(..., atac=True)
+        calculate_sample_embedding(...) with atac=True
       
     </span>
   </a>
@@ -682,21 +665,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#find_optimal_cell_resolution" class="md-nav__link">
+  <a href="#find_optimal_cell_resolution-and-find_optimal_cell_resolution_linux" class="md-nav__link">
     <span class="md-ellipsis">
       
-        find_optimal_cell_resolution(...)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related
+        find_optimal_cell_resolution(...) and find_optimal_cell_resolution_linux(...)
       
     </span>
   </a>
@@ -802,38 +774,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#atac_wrapper" class="md-nav__link">
+  <a href="#preprocess-cpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        atac_wrapper(...)
+        preprocess(...) (CPU)
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="atac_wrapper(...)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters-by-stage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters by stage
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#preprocess-and-preprocess_linux" class="md-nav__link">
+  <a href="#preprocess_linux-gpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        preprocess(...) and preprocess_linux(...)
+        preprocess_linux(...) (GPU)
       
     </span>
   </a>
@@ -852,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#calculate_sample_embedding-atactrue" class="md-nav__link">
+  <a href="#calculate_sample_embedding-with-atactrue" class="md-nav__link">
     <span class="md-ellipsis">
       
-        calculate_sample_embedding(..., atac=True)
+        calculate_sample_embedding(...) with atac=True
       
     </span>
   </a>
@@ -863,21 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#find_optimal_cell_resolution" class="md-nav__link">
+  <a href="#find_optimal_cell_resolution-and-find_optimal_cell_resolution_linux" class="md-nav__link">
     <span class="md-ellipsis">
       
-        find_optimal_cell_resolution(...)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related
+        find_optimal_cell_resolution(...) and find_optimal_cell_resolution_linux(...)
       
     </span>
   </a>
@@ -902,126 +846,103 @@
 
 
 <h1 id="atac-api">ATAC API<a class="headerlink" href="#atac-api" title="Permanent link">&para;</a></h1>
-<h2 id="atac_wrapper"><code>atac_wrapper(...)</code><a class="headerlink" href="#atac_wrapper" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">atac_wrapper</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">atac_count_data_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">atac_output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">preprocessing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">cell_type_cluster</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">derive_sample_embedding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">cca_based_cell_resolution_selection</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">use_gpu</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">status_flags</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">adata_cell_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">adata_sample_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">atac_sample_meta_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">cell_meta_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">pseudo_adata_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">sample_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">sample_level_batch_col</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">celltype_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">cell_embedding_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">min_cells</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">min_features</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">max_features</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15000</span><span class="p">,</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">min_cells_per_sample</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="n">exclude_features</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="n">cell_level_batch_key</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="n">doublet_detection</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">num_cell_hvfs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50000</span><span class="p">,</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="n">cell_embedding_num_pcs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="n">num_harmony_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="n">tfidf_scale_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e4</span><span class="p">,</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="n">log_transform</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    <span class="n">drop_first_lsi</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="n">leiden_cluster_resolution</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="n">existing_cell_types</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    <span class="n">n_target_cell_clusters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    <span class="n">umap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="n">sample_hvg_number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50000</span><span class="p">,</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    <span class="n">sample_embedding_dimension</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    <span class="n">harmony_for_proportion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    <span class="n">preserve_cols_in_sample_embedding</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>    <span class="n">trajectory_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sev.level&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    <span class="n">n_cca_pcs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>    <span class="n">cca_compute_corrected_pvalues</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>    <span class="n">cca_coarse_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    <span class="n">cca_coarse_end</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    <span class="n">cca_coarse_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    <span class="n">cca_fine_range</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">,</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    <span class="n">cca_fine_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span>
+<p>This page documents core ATAC functions called by the pipeline.</p>
+<h2 id="preprocess-cpu"><code>preprocess(...)</code> (CPU)<a class="headerlink" href="#preprocess-cpu" title="Permanent link">&para;</a></h2>
+<p>Source: <code>code/preparation/atac_preprocess_cpu.py</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">preprocess</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">h5ad_path</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">sample_meta_path</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">output_dir</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">sample_column</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">cell_meta_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">sample_level_batch_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">cell_embedding_num_PCs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">num_harmony_iterations</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">num_cell_hvfs</span><span class="o">=</span><span class="mi">50000</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">min_cells</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">min_features</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">max_features</span><span class="o">=</span><span class="mi">15000</span><span class="p">,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">min_cells_per_sample</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">exclude_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">cell_level_batch_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">doublet_detection</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">tfidf_scale_factor</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">log_transform</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">drop_first_lsi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="p">)</span>
 </code></pre></div>
-<h3 id="parameters-by-stage">Parameters by stage<a class="headerlink" href="#parameters-by-stage" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Stage</th>
-<th>Key parameters</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Inputs</td>
-<td><code>atac_count_data_path</code>, <code>atac_sample_meta_path</code>, <code>atac_output_dir</code></td>
-<td>Input matrix/metadata and output root for ATAC branch</td>
-</tr>
-<tr>
-<td>QC/filtering</td>
-<td><code>min_features</code>, <code>max_features</code>, <code>min_cells_per_sample</code></td>
-<td>ATAC feature/cell filtering</td>
-</tr>
-<tr>
-<td>ATAC latent prep</td>
-<td><code>doublet_detection</code>, <code>tfidf_scale_factor</code>, <code>log_transform</code>, <code>drop_first_lsi</code>, <code>num_cell_hvfs</code></td>
-<td>ATAC-specific preprocessing</td>
-</tr>
-<tr>
-<td>Cell types</td>
-<td><code>leiden_cluster_resolution</code>, <code>existing_cell_types</code>, <code>n_target_cell_clusters</code></td>
-<td>Cluster-based annotation</td>
-</tr>
-<tr>
-<td>Sample embedding</td>
-<td><code>sample_hvg_number</code>, <code>sample_embedding_dimension</code>, <code>harmony_for_proportion</code></td>
-<td>Sample-level embedding settings</td>
-</tr>
-<tr>
-<td>Resolution selection</td>
-<td><code>cca_*</code>, <code>trajectory_col</code>, <code>n_cca_pcs</code></td>
-<td>Optional CCA resolution search</td>
-</tr>
-</tbody>
-</table>
-<p>Returns <code>adata_cell</code>, <code>adata_sample</code>, <code>pseudo_adata</code>, <code>status_flags</code>.</p>
-<h2 id="preprocess-and-preprocess_linux"><code>preprocess(...)</code> and <code>preprocess_linux(...)</code><a class="headerlink" href="#preprocess-and-preprocess_linux" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Source: <code>preparation/atac_preprocess_cpu.py</code> and <code>preparation/atac_preprocess_gpu.py</code></li>
-<li>Purpose: preprocess scATAC data (feature QC, TF-IDF/LSI style workflow, optional doublet detection).</li>
-</ul>
+<p>Preprocess ATAC data, including feature QC and LSI-ready representation.</p>
+<h2 id="preprocess_linux-gpu"><code>preprocess_linux(...)</code> (GPU)<a class="headerlink" href="#preprocess_linux-gpu" title="Permanent link">&para;</a></h2>
+<p>Source: <code>code/preparation/atac_preprocess_gpu.py</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">preprocess_linux</span><span class="p">(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">h5ad_path</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">sample_meta_path</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">output_dir</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">sample_column</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">cell_meta_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">sample_level_batch_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">cell_embedding_num_PCs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">num_harmony_iterations</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">num_cell_hvfs</span><span class="o">=</span><span class="mi">50000</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">min_cells</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">min_features</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">max_features</span><span class="o">=</span><span class="mi">15000</span><span class="p">,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="n">min_cells_per_sample</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="n">exclude_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">cell_level_batch_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">doublet_detection</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="n">tfidf_scale_factor</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="n">log_transform</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="n">drop_first_lsi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="p">)</span>
+</code></pre></div>
+<p>GPU equivalent of ATAC preprocessing.</p>
 <h2 id="cell_types-and-cell_types_linux"><code>cell_types(...)</code> and <code>cell_types_linux(...)</code><a class="headerlink" href="#cell_types-and-cell_types_linux" title="Permanent link">&para;</a></h2>
+<p>Sources:</p>
 <ul>
-<li>Source: <code>preparation/cell_type_cpu.py</code> and <code>preparation/cell_type_gpu.py</code></li>
-<li>Purpose: cell clustering and cell type labeling.</li>
+<li><code>code/preparation/cell_type_cpu.py</code></li>
+<li><code>code/preparation/cell_type_gpu.py</code></li>
 </ul>
-<h2 id="calculate_sample_embedding-atactrue"><code>calculate_sample_embedding(..., atac=True)</code><a class="headerlink" href="#calculate_sample_embedding-atactrue" title="Permanent link">&para;</a></h2>
+<p>Same function family used in RNA, applied to ATAC preprocessed embeddings.</p>
+<h2 id="calculate_sample_embedding-with-atactrue"><code>calculate_sample_embedding(...)</code> with <code>atac=True</code><a class="headerlink" href="#calculate_sample_embedding-with-atactrue" title="Permanent link">&para;</a></h2>
+<p>Source: <code>code/sample_embedding/calculate_sample_embedding.py</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">calculate_sample_embedding</span><span class="p">(</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">adata</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">sample_col</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">celltype_col</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">batch_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">sample_hvg_number</span><span class="o">=</span><span class="mi">50000</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">n_expression_components</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">n_proportion_components</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">harmony_for_proportion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">preserve_cols_in_sample_embedding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">use_gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">atac</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="p">)</span>
+</code></pre></div>
+<p>Build sample-level expression/proportion embeddings for ATAC.</p>
+<h2 id="find_optimal_cell_resolution-and-find_optimal_cell_resolution_linux"><code>find_optimal_cell_resolution(...)</code> and <code>find_optimal_cell_resolution_linux(...)</code><a class="headerlink" href="#find_optimal_cell_resolution-and-find_optimal_cell_resolution_linux" title="Permanent link">&para;</a></h2>
+<p>Sources:</p>
 <ul>
-<li>Source: <code>sample_embedding/calculate_sample_embedding.py</code></li>
-<li>Purpose: derive expression/proportion sample embeddings for ATAC branch.</li>
+<li><code>code/parameter_selection/cpu_optimal_resolution.py</code></li>
+<li><code>code/parameter_selection/gpu_optimal_resolution.py</code></li>
 </ul>
-<h2 id="find_optimal_cell_resolution"><code>find_optimal_cell_resolution(...)</code><a class="headerlink" href="#find_optimal_cell_resolution" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Source: <code>parameter_selection/cpu_optimal_resolution.py</code> (GPU: <code>gpu_optimal_resolution.py</code>)</li>
-<li>Purpose: optimize cell type resolution by downstream CCA behavior.</li>
-</ul>
-<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../rna/">RNA API</a></li>
-<li><a href="../multiomics/">Multi-omics API</a></li>
-<li><a href="../downstream/">Downstream API</a></li>
-</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">find_optimal_cell_resolution</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">adata_cell</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">adata_sample</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">output_dir</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">column</span><span class="p">,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">modality</span><span class="o">=</span><span class="s2">&quot;atac&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">trajectory_col</span><span class="o">=</span><span class="s2">&quot;sev.level&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="o">...</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">)</span>
+</code></pre></div>
+<p>Optimize cell type resolution using CCA-based downstream signal.</p>
 
 
 

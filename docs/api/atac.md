@@ -1,95 +1,121 @@
 # ATAC API
 
-## `atac_wrapper(...)`
+This page documents core ATAC functions called by the pipeline.
+
+## `preprocess(...)` (CPU)
+
+Source: `code/preparation/atac_preprocess_cpu.py`
 
 ```python
-atac_wrapper(
-    atac_count_data_path: str = None,
-    atac_output_dir: str = None,
-    preprocessing: bool = True,
-    cell_type_cluster: bool = True,
-    derive_sample_embedding: bool = True,
-    cca_based_cell_resolution_selection: bool = False,
-    use_gpu: bool = False,
-    verbose: bool = True,
-    status_flags: dict = None,
-    adata_cell_path: str = None,
-    adata_sample_path: str = None,
-    atac_sample_meta_path: str = None,
-    cell_meta_path: str = None,
-    pseudo_adata_path: str = None,
-    sample_col: str = "sample",
-    sample_level_batch_col: Optional[List[str]] = None,
-    celltype_col: str = "cell_type",
-    cell_embedding_column: str = None,
-    min_cells: int = 1,
-    min_features: int = 2000,
-    max_features: int = 15000,
-    min_cells_per_sample: int = 1,
-    exclude_features: list = None,
-    cell_level_batch_key: list = None,
-    doublet_detection: bool = True,
-    num_cell_hvfs: int = 50000,
-    cell_embedding_num_pcs: int = 50,
-    num_harmony_iterations: int = 30,
-    tfidf_scale_factor: float = 1e4,
-    log_transform: bool = True,
-    drop_first_lsi: bool = True,
-    leiden_cluster_resolution: float = 0.8,
-    existing_cell_types: bool = False,
-    n_target_cell_clusters: int = None,
-    umap: bool = False,
-    sample_hvg_number: int = 50000,
-    sample_embedding_dimension: int = 30,
-    harmony_for_proportion: bool = True,
-    preserve_cols_in_sample_embedding: list = None,
-    trajectory_col: str = "sev.level",
-    n_cca_pcs: int = 2,
-    cca_compute_corrected_pvalues: bool = True,
-    cca_coarse_start: float = 0.1,
-    cca_coarse_end: float = 1.0,
-    cca_coarse_step: float = 0.1,
-    cca_fine_range: float = 0.02,
-    cca_fine_step: float = 0.01,
-) -> dict
+preprocess(
+    h5ad_path,
+    sample_meta_path,
+    output_dir,
+    sample_column="sample",
+    cell_meta_path=None,
+    sample_level_batch_key=None,
+    cell_embedding_num_PCs=50,
+    num_harmony_iterations=30,
+    num_cell_hvfs=50000,
+    min_cells=1,
+    min_features=2000,
+    max_features=15000,
+    min_cells_per_sample=1,
+    exclude_features=None,
+    cell_level_batch_key=None,
+    doublet_detection=True,
+    tfidf_scale_factor=1e4,
+    log_transform=True,
+    drop_first_lsi=True,
+    verbose=True,
+)
 ```
 
-### Parameters by stage
+Preprocess ATAC data, including feature QC and LSI-ready representation.
 
-| Stage | Key parameters | Meaning |
-| --- | --- | --- |
-| Inputs | `atac_count_data_path`, `atac_sample_meta_path`, `atac_output_dir` | Input matrix/metadata and output root for ATAC branch |
-| QC/filtering | `min_features`, `max_features`, `min_cells_per_sample` | ATAC feature/cell filtering |
-| ATAC latent prep | `doublet_detection`, `tfidf_scale_factor`, `log_transform`, `drop_first_lsi`, `num_cell_hvfs` | ATAC-specific preprocessing |
-| Cell types | `leiden_cluster_resolution`, `existing_cell_types`, `n_target_cell_clusters` | Cluster-based annotation |
-| Sample embedding | `sample_hvg_number`, `sample_embedding_dimension`, `harmony_for_proportion` | Sample-level embedding settings |
-| Resolution selection | `cca_*`, `trajectory_col`, `n_cca_pcs` | Optional CCA resolution search |
+## `preprocess_linux(...)` (GPU)
 
-Returns `adata_cell`, `adata_sample`, `pseudo_adata`, `status_flags`.
+Source: `code/preparation/atac_preprocess_gpu.py`
 
-## `preprocess(...)` and `preprocess_linux(...)`
+```python
+preprocess_linux(
+    h5ad_path,
+    sample_meta_path,
+    output_dir,
+    sample_column="sample",
+    cell_meta_path=None,
+    sample_level_batch_key=None,
+    cell_embedding_num_PCs=50,
+    num_harmony_iterations=30,
+    num_cell_hvfs=50000,
+    min_cells=1,
+    min_features=2000,
+    max_features=15000,
+    min_cells_per_sample=1,
+    exclude_features=None,
+    cell_level_batch_key=None,
+    doublet_detection=True,
+    tfidf_scale_factor=1e4,
+    log_transform=True,
+    drop_first_lsi=True,
+    verbose=True,
+)
+```
 
-- Source: `preparation/atac_preprocess_cpu.py` and `preparation/atac_preprocess_gpu.py`
-- Purpose: preprocess scATAC data (feature QC, TF-IDF/LSI style workflow, optional doublet detection).
+GPU equivalent of ATAC preprocessing.
 
 ## `cell_types(...)` and `cell_types_linux(...)`
 
-- Source: `preparation/cell_type_cpu.py` and `preparation/cell_type_gpu.py`
-- Purpose: cell clustering and cell type labeling.
+Sources:
 
-## `calculate_sample_embedding(..., atac=True)`
+- `code/preparation/cell_type_cpu.py`
+- `code/preparation/cell_type_gpu.py`
 
-- Source: `sample_embedding/calculate_sample_embedding.py`
-- Purpose: derive expression/proportion sample embeddings for ATAC branch.
+Same function family used in RNA, applied to ATAC preprocessed embeddings.
 
-## `find_optimal_cell_resolution(...)`
+## `calculate_sample_embedding(...)` with `atac=True`
 
-- Source: `parameter_selection/cpu_optimal_resolution.py` (GPU: `gpu_optimal_resolution.py`)
-- Purpose: optimize cell type resolution by downstream CCA behavior.
+Source: `code/sample_embedding/calculate_sample_embedding.py`
 
-## Related
+```python
+calculate_sample_embedding(
+    adata,
+    sample_col="sample",
+    celltype_col="cell_type",
+    batch_col=None,
+    output_dir="./",
+    sample_hvg_number=50000,
+    n_expression_components=30,
+    n_proportion_components=30,
+    harmony_for_proportion=True,
+    preserve_cols_in_sample_embedding=None,
+    use_gpu=False,
+    atac=True,
+    save=True,
+    verbose=True,
+)
+```
 
-- [RNA API](rna.md)
-- [Multi-omics API](multiomics.md)
-- [Downstream API](downstream.md)
+Build sample-level expression/proportion embeddings for ATAC.
+
+## `find_optimal_cell_resolution(...)` and `find_optimal_cell_resolution_linux(...)`
+
+Sources:
+
+- `code/parameter_selection/cpu_optimal_resolution.py`
+- `code/parameter_selection/gpu_optimal_resolution.py`
+
+```python
+find_optimal_cell_resolution(
+    adata_cell,
+    adata_sample,
+    output_dir,
+    column,
+    modality="atac",
+    trajectory_col="sev.level",
+    ...
+)
+```
+
+Optimize cell type resolution using CCA-based downstream signal.
 

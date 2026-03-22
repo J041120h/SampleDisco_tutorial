@@ -593,38 +593,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rna_wrapper" class="md-nav__link">
+  <a href="#preprocess-cpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        rna_wrapper(...)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="rna_wrapper(...)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters-by-stage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters by stage
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#preprocess-and-preprocess_linux" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        preprocess(...) and preprocess_linux(...)
+        preprocess(...) (CPU)
       
     </span>
   </a>
@@ -632,10 +604,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cell_types-and-cell_types_linux" class="md-nav__link">
+  <a href="#preprocess_linux-gpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        cell_types(...) and cell_types_linux(...)
+        preprocess_linux(...) (GPU)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cell_types-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cell_types(...) (CPU)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cell_types_linux-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cell_types_linux(...) (GPU)
       
     </span>
   </a>
@@ -654,21 +648,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#find_optimal_cell_resolution" class="md-nav__link">
+  <a href="#find_optimal_cell_resolution-and-find_optimal_cell_resolution_linux" class="md-nav__link">
     <span class="md-ellipsis">
       
-        find_optimal_cell_resolution(...)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related
+        find_optimal_cell_resolution(...) and find_optimal_cell_resolution_linux(...)
       
     </span>
   </a>
@@ -802,38 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rna_wrapper" class="md-nav__link">
+  <a href="#preprocess-cpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        rna_wrapper(...)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="rna_wrapper(...)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters-by-stage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters by stage
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#preprocess-and-preprocess_linux" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        preprocess(...) and preprocess_linux(...)
+        preprocess(...) (CPU)
       
     </span>
   </a>
@@ -841,10 +796,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cell_types-and-cell_types_linux" class="md-nav__link">
+  <a href="#preprocess_linux-gpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        cell_types(...) and cell_types_linux(...)
+        preprocess_linux(...) (GPU)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cell_types-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cell_types(...) (CPU)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cell_types_linux-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cell_types_linux(...) (GPU)
       
     </span>
   </a>
@@ -863,21 +840,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#find_optimal_cell_resolution" class="md-nav__link">
+  <a href="#find_optimal_cell_resolution-and-find_optimal_cell_resolution_linux" class="md-nav__link">
     <span class="md-ellipsis">
       
-        find_optimal_cell_resolution(...)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related
+        find_optimal_cell_resolution(...) and find_optimal_cell_resolution_linux(...)
       
     </span>
   </a>
@@ -902,125 +868,131 @@
 
 
 <h1 id="rna-api">RNA API<a class="headerlink" href="#rna-api" title="Permanent link">&para;</a></h1>
-<h2 id="rna_wrapper"><code>rna_wrapper(...)</code><a class="headerlink" href="#rna_wrapper" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">rna_wrapper</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">rna_count_data_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">rna_output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">preprocessing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">cell_type_cluster</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">derive_sample_embedding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">cca_based_cell_resolution_selection</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">use_gpu</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">status_flags</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">adata_cell_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">adata_sample_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">rna_sample_meta_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">cell_meta_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">pseudo_adata_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">sample_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">sample_level_batch_col</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">celltype_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">min_cells</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">min_genes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">pct_mito_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">exclude_genes</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">num_cell_hvgs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="n">cell_embedding_num_pcs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="n">num_harmony_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="n">cell_level_batch_key</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">leiden_cluster_resolution</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="n">cell_embedding_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="n">existing_cell_types</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="n">n_target_cell_clusters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="n">umap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    <span class="n">sample_hvg_number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="n">sample_embedding_dimension</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="n">harmony_for_proportion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    <span class="n">preserve_cols_in_sample_embedding</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    <span class="n">trajectory_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sev.level&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="n">n_cca_pcs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    <span class="n">cca_compute_corrected_pvalues</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    <span class="n">cca_coarse_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    <span class="n">cca_coarse_end</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>    <span class="n">cca_coarse_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    <span class="n">cca_fine_range</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">,</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>    <span class="n">cca_fine_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span>
+<p>This page documents core RNA functions called by the pipeline.</p>
+<h2 id="preprocess-cpu"><code>preprocess(...)</code> (CPU)<a class="headerlink" href="#preprocess-cpu" title="Permanent link">&para;</a></h2>
+<p>Source: <code>code/preparation/rna_preprocess_cpu.py</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">preprocess</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">h5ad_path</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">sample_meta_path</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">output_dir</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">sample_column</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">cell_meta_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">sample_level_batch_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">cell_embedding_num_PCs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">num_harmony_iterations</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">num_cell_hvgs</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">min_cells</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">min_genes</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">pct_mito_cutoff</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">exclude_genes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">cell_level_batch_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="p">)</span>
 </code></pre></div>
-<h3 id="parameters-by-stage">Parameters by stage<a class="headerlink" href="#parameters-by-stage" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Stage</th>
-<th>Key parameters</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Inputs</td>
-<td><code>rna_count_data_path</code>, <code>rna_sample_meta_path</code>, <code>rna_output_dir</code></td>
-<td>Input matrix/metadata and output root for RNA branch</td>
-</tr>
-<tr>
-<td>Preprocessing</td>
-<td><code>min_cells</code>, <code>min_genes</code>, <code>pct_mito_cutoff</code>, <code>num_cell_hvgs</code></td>
-<td>QC and feature-selection settings</td>
-</tr>
-<tr>
-<td>Batch handling</td>
-<td><code>sample_level_batch_col</code>, <code>cell_level_batch_key</code>, <code>num_harmony_iterations</code></td>
-<td>Batch columns and correction iterations</td>
-</tr>
-<tr>
-<td>Cell types</td>
-<td><code>leiden_cluster_resolution</code>, <code>existing_cell_types</code>, <code>n_target_cell_clusters</code></td>
-<td>Cell label inference/reuse</td>
-</tr>
-<tr>
-<td>Sample embedding</td>
-<td><code>sample_hvg_number</code>, <code>sample_embedding_dimension</code>, <code>harmony_for_proportion</code></td>
-<td>Sample-level DR settings</td>
-</tr>
-<tr>
-<td>Resolution selection</td>
-<td><code>cca_*</code>, <code>n_cca_pcs</code>, <code>trajectory_col</code></td>
-<td>Optional CCA-based optimal resolution search</td>
-</tr>
-</tbody>
-</table>
-<p>Returns <code>adata_cell</code>, <code>adata_sample</code>, <code>pseudo_adata</code>, <code>status_flags</code>.</p>
-<h2 id="preprocess-and-preprocess_linux"><code>preprocess(...)</code> and <code>preprocess_linux(...)</code><a class="headerlink" href="#preprocess-and-preprocess_linux" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Source: <code>preparation/rna_preprocess_cpu.py</code> and <code>preparation/rna_preprocess_gpu.py</code></li>
-<li>Purpose: preprocess cell-level RNA data and generate preprocessed <code>adata_cell</code>/<code>adata_sample</code>.</li>
-<li>Typical config keys: <code>rna_min_cells</code>, <code>rna_min_genes</code>, <code>rna_pct_mito_cutoff</code>, <code>rna_num_cell_hvgs</code>.</li>
-</ul>
-<h2 id="cell_types-and-cell_types_linux"><code>cell_types(...)</code> and <code>cell_types_linux(...)</code><a class="headerlink" href="#cell_types-and-cell_types_linux" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Source: <code>preparation/cell_type_cpu.py</code> and <code>preparation/cell_type_gpu.py</code></li>
-<li>Purpose: cell clustering/cell type assignment on preprocessed data.</li>
-<li>Typical config keys: <code>rna_leiden_cluster_resolution</code>, <code>rna_existing_cell_types</code>, <code>rna_umap</code>.</li>
-</ul>
+<p>Preprocess RNA data and generate preprocessed <code>adata_cell</code> and <code>adata_sample</code>.</p>
+<h2 id="preprocess_linux-gpu"><code>preprocess_linux(...)</code> (GPU)<a class="headerlink" href="#preprocess_linux-gpu" title="Permanent link">&para;</a></h2>
+<p>Source: <code>code/preparation/rna_preprocess_gpu.py</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">preprocess_linux</span><span class="p">(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">h5ad_path</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">sample_meta_path</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">output_dir</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">sample_column</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">cell_meta_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">sample_level_batch_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">cell_embedding_num_PCs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">num_harmony_iterations</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">num_cell_hvgs</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">min_cells</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">min_genes</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">pct_mito_cutoff</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="n">exclude_genes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="n">cell_level_batch_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="p">)</span>
+</code></pre></div>
+<p>GPU equivalent of RNA preprocessing.</p>
+<h2 id="cell_types-cpu"><code>cell_types(...)</code> (CPU)<a class="headerlink" href="#cell_types-cpu" title="Permanent link">&para;</a></h2>
+<p>Source: <code>code/preparation/cell_type_cpu.py</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">cell_types</span><span class="p">(</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">anndata_cell</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">anndata_sample</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">cell_type_column</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">existing_cell_types</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">n_target_clusters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">umap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">defined_output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">defined_sample_output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">leiden_cluster_resolution</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">cell_embedding_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">cell_embedding_num_PCs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">umap_plots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="n">_recursion_depth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="p">)</span>
+</code></pre></div>
+<p>Assign cell types from cell-level embedding and update sample-level object.</p>
+<h2 id="cell_types_linux-gpu"><code>cell_types_linux(...)</code> (GPU)<a class="headerlink" href="#cell_types_linux-gpu" title="Permanent link">&para;</a></h2>
+<p>Source: <code>code/preparation/cell_type_gpu.py</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">cell_types_linux</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">anndata_cell</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">anndata_sample</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">cell_type_column</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">existing_cell_types</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">n_target_clusters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">umap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">defined_output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">defined_sample_output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">leiden_cluster_resolution</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">cell_embedding_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="n">cell_embedding_num_PCs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="n">umap_plots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="n">_recursion_depth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="p">)</span>
+</code></pre></div>
+<p>GPU equivalent of cell type assignment.</p>
 <h2 id="calculate_sample_embedding"><code>calculate_sample_embedding(...)</code><a class="headerlink" href="#calculate_sample_embedding" title="Permanent link">&para;</a></h2>
+<p>Source: <code>code/sample_embedding/calculate_sample_embedding.py</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">calculate_sample_embedding</span><span class="p">(</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">adata</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">sample_col</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">celltype_col</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">batch_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">sample_hvg_number</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">combat_timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">n_expression_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">n_proportion_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">harmony_for_proportion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="n">preserve_cols_in_sample_embedding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">use_gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="n">atac</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="p">)</span>
+</code></pre></div>
+<p>Create expression/proportion sample embeddings from preprocessed single-cell data.</p>
+<h2 id="find_optimal_cell_resolution-and-find_optimal_cell_resolution_linux"><code>find_optimal_cell_resolution(...)</code> and <code>find_optimal_cell_resolution_linux(...)</code><a class="headerlink" href="#find_optimal_cell_resolution-and-find_optimal_cell_resolution_linux" title="Permanent link">&para;</a></h2>
+<p>Sources:</p>
 <ul>
-<li>Source: <code>sample_embedding/calculate_sample_embedding.py</code></li>
-<li>Purpose: create pseudobulk expression/proportion representations and sample embeddings.</li>
-<li>Typical config keys: <code>rna_sample_hvg_number</code>, <code>rna_sample_embedding_dimension</code>, <code>rna_harmony_for_proportion</code>.</li>
+<li><code>code/parameter_selection/cpu_optimal_resolution.py</code></li>
+<li><code>code/parameter_selection/gpu_optimal_resolution.py</code></li>
 </ul>
-<h2 id="find_optimal_cell_resolution"><code>find_optimal_cell_resolution(...)</code><a class="headerlink" href="#find_optimal_cell_resolution" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Source: <code>parameter_selection/cpu_optimal_resolution.py</code> (GPU: <code>gpu_optimal_resolution.py</code>)</li>
-<li>Purpose: resolution search by maximizing trajectory-related CCA signal.</li>
-<li>Typical config keys: <code>rna_cca_coarse_*</code>, <code>rna_cca_fine_*</code>, <code>rna_cca_compute_corrected_pvalues</code>.</li>
-</ul>
-<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../atac/">ATAC API</a></li>
-<li><a href="../multiomics/">Multi-omics API</a></li>
-<li><a href="../downstream/">Downstream API</a></li>
-</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">find_optimal_cell_resolution</span><span class="p">(</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">adata_cell</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">adata_sample</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">output_dir</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">column</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">modality</span><span class="o">=</span><span class="s2">&quot;rna&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">trajectory_col</span><span class="o">=</span><span class="s2">&quot;sev.level&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="o">...</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">)</span>
+</code></pre></div>
+<p>Search for a clustering resolution maximizing CCA-based trajectory concordance.</p>
 
 
 
