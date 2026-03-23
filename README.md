@@ -37,6 +37,14 @@ Push the repository to GitHub, then use one of these two deployment modes:
 The included workflow will build MkDocs and publish the generated HTML, so the
 documentation appears directly at your GitHub Pages URL.
 
+### If deploy job fails with `HttpError: Not Found`
+
+If `actions/deploy-pages@v4` fails while polling deployment status:
+
+1. Confirm `Settings` -> `Pages` -> **Source** is set to **GitHub Actions**.
+2. Confirm repository Actions permissions allow `GITHUB_TOKEN` to write Pages deployments.
+3. Re-run the workflow after the source change (first run after enabling Pages may fail once).
+
 ### Fallback: Branch deployment
 
 If you prefer **Deploy from a branch**:
