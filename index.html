@@ -4,68 +4,44 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SampleDisc</title>
+    <meta http-equiv="refresh" content="0; url=./site/" />
+    <link rel="canonical" href="./site/" />
+    <script>
+      window.location.replace("./site/");
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="notice-page">
+    <noscript>
+      <main class="notice-page">
+        <section class="notice-card">
+          <p class="eyebrow">SampleDisc documentation</p>
+          <h1>Open the documentation</h1>
+          <p>
+            Your browser did not follow the automatic redirect. Click the button
+            below to open the built MkDocs site.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="./site/">Open docs</a>
+          </div>
+        </section>
+      </main>
+    </noscript>
+    <main class="notice-page" id="fallback" hidden>
       <section class="notice-card">
         <p class="eyebrow">SampleDisc documentation</p>
-        <h1 id="status-title">Preparing documentation site</h1>
-        <p id="status-text">
-          Checking whether the built MkDocs site is available from this GitHub
-          Pages deployment.
+        <h1>Redirecting&hellip;</h1>
+        <p>
+          If you are not redirected automatically,
+          <a href="./site/">open the documentation</a>.
         </p>
-
-        <div class="actions">
-          <a class="button primary" href="./site/">Open built docs</a>
-          <a class="button secondary" href="./README.md">Deployment notes</a>
-        </div>
-
-        <div class="info-block" id="info-block">
-          <p>
-            If this page stays visible on GitHub Pages, the repository is
-            serving the source files instead of the generated MkDocs output.
-          </p>
-          <ul>
-            <li>Preferred: set GitHub Pages source to <code>GitHub Actions</code>.</li>
-            <li>Fallback: run <code>mkdocs build</code> and commit the <code>site/</code> folder.</li>
-          </ul>
-        </div>
       </section>
     </main>
-
-    <script>
-      (async function () {
-        const title = document.getElementById("status-title");
-        const text = document.getElementById("status-text");
-
-        try {
-          const response = await fetch("./site/index.html", {
-            method: "GET",
-            cache: "no-store",
-          });
-
-          if (response.ok) {
-            title.textContent = "Redirecting to the built docs";
-            text.textContent =
-              "The generated MkDocs site was found. Redirecting now.";
-            window.location.replace("./site/");
-            return;
-          }
-        } catch (error) {
-          // Fall through to the deployment help state.
-        }
-
-        title.textContent = "GitHub Pages is serving the source repo";
-        text.textContent =
-          "The built MkDocs output was not found at ./site/. Follow the deployment notes below to publish the actual documentation pages.";
-      })();
-    </script>
   </body>
 </html>
