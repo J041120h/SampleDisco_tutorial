@@ -1,67 +1,90 @@
 # `find_optimal_cell_resolution_linux`
 
-**Module**: `code/parameter_selection/gpu_optimal_resolution.py`
+Two-pass grid search for the Leiden clustering resolution that maximizes the CCA correlation between the sample embedding and a phenotype/trajectory column. The algorithm first sweeps a coarse range (`coarse_start`..`coarse_end` by `coarse_step`), re-running clustering and `calculate_sample_embedding` at every resolution; it then zooms in by `±fine_range` at `fine_step` around the coarse winner. Optionally computes permutation-corrected p-values and writes per-resolution trial artifacts for reproducibility. Works for both RNA and ATAC via the `modality` argument.
+
+**Source:** `parameter_selection/gpu_optimal_resolution.py:33`
+
+## Signature
 
 ```python
-find_optimal_cell_resolution_linux(
-    adata_cell,
-    adata_sample,
-    output_dir,
-    column,
-    modality="rna",
-    trajectory_col="sev.level",
-    batch_col=None,
-    sample_col="sample",
-    celltype_col="cell_type",
-    cell_embedding_column="X_pca_harmony",
-    cell_embedding_num_pcs=20,
-    n_hvg_features=2000,
-    sample_embedding_dimension=10,
-    harmony_for_proportion=True,
-    preserve_cols_in_sample_embedding=None,
-    n_cca_pcs=2,
-    compute_corrected_pvalues=True,
-    coarse_start=0.1,
-    coarse_end=1.0,
-    coarse_step=0.1,
-    fine_range=0.02,
-    fine_step=0.01,
-    verbose=True,
-)
+def find_optimal_cell_resolution_linux(
+    adata_cell: AnnData,
+    adata_sample: AnnData,
+    output_dir: str,
+    column: str,
+    modality: Literal["rna", "atac"] = "rna",
+    trajectory_col: str = "sev.level",
+    batch_col: Optional[Union[str, List[str]]] = None,
+    sample_col: str = "sample",
+    celltype_col: str = "cell_type",
+    cell_embedding_column: str = "X_pca",
+    cell_embedding_num_pcs: int = 20,
+    n_hvg_features: int = 2000,
+    sample_embedding_dimension: int = 10,
+    harmony_for_proportion: bool = True,
+    preserve_cols_in_sample_embedding: Optional[Union[str, List[str]]] = None,
+    n_cca_pcs: int = 10,
+    compute_corrected_pvalues: bool = True,
+    coarse_start: float = 0.1,
+    coarse_end: float = 1.0,
+    coarse_step: float = 0.1,
+    fine_range: float = 0.02,
+    fine_step: float = 0.01,
+    verbose: bool = True,
+) -> Tuple[float, pd.DataFrame]
 ```
-
-GPU/Linux resolution search for RNA/ATAC cell type clustering.
 
 ## Parameters
 
-| Parameter | Default | Controls |
-| --- | --- | --- |
-| `adata_cell` | required | Cell-level AnnData used for clustering. |
-| `adata_sample` | required | Sample-level AnnData used for embedding/CCA scoring. |
-| `output_dir` | required | Directory for optimization outputs. |
-| `column` | required | DR key to optimize (`X_DR_expression` or `X_DR_proportion`). |
-| `modality` | `"rna"` | Pipeline mode (`"rna"` or `"atac"`). |
-| `trajectory_col` | `"sev.level"` | Trajectory supervision column for CCA scoring. |
-| `batch_col` | `None` | Batch covariate(s) used in sample embedding. |
-| `sample_col` | `"sample"` | Sample ID column. |
-| `celltype_col` | `"cell_type"` | Cell type column name. |
-| `cell_embedding_column` | `"X_pca_harmony"` | Cell embedding key used for Leiden clustering. |
-| `cell_embedding_num_pcs` | `20` | Number of PCs for neighbor graph construction. |
-| `n_hvg_features` | `2000` | HVG/HVF count used during sample embedding recomputation. |
-| `sample_embedding_dimension` | `10` | Target sample DR dimension. |
-| `harmony_for_proportion` | `True` | Harmony on proportion embedding branch. |
-| `preserve_cols_in_sample_embedding` | `None` | Metadata columns preserved during embedding. |
-| `n_cca_pcs` | `2` | CCA components used for trajectory score. |
-| `compute_corrected_pvalues` | `True` | Compute corrected p-values for resolution scan. |
-| `coarse_start` | `0.1` | Coarse search start resolution. |
-| `coarse_end` | `1.0` | Coarse search end resolution. |
-| `coarse_step` | `0.1` | Coarse search step size. |
-| `fine_range` | `0.02` | Fine search range around coarse optimum. |
-| `fine_step` | `0.01` | Fine search step size. |
-| `verbose` | `True` | Print progress logs. |
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `adata_cell` | AnnData | — | Cell-level AnnData (output of preprocessing). |
+| `adata_sample` | AnnData | — | Sample-level AnnData (output of preprocessing). |
+| `output_dir` | str | — | Parent output directory; results go under `{output_dir}/{MODALITY}_resolution_optimization_{dr_type}/`. |
+| `column` | str | — | DR column to optimize, either `"X_DR_expression"` or `"X_DR_proportion"`. |
+| `modality` | `"rna"` or `"atac"` | `"rna"` | Chooses the appropriate HVG / LSI path. |
+| `trajectory_col` | str | `"sev.level"` | Phenotype column in `adata_sample.obs` that CCA is tested against. |
+| `batch_col` | str or list, optional | `None` | Batch column for sample embedding. |
+| `sample_col` | str | `"sample"` | Sample identifier. |
+| `celltype_col` | str | `"cell_type"` | Target column where new cluster labels are written. |
+| `cell_embedding_column` | str | `"X_pca"` | Cell-level embedding used by the neighbourhood graph. |
+| `cell_embedding_num_pcs` | int | `20` | Number of PCs/LSI components. |
+| `n_hvg_features` | int | `2000` | HVGs/HVFs per cell type during sample embedding. |
+| `sample_embedding_dimension` | int | `10` | DR components for the sample embedding. |
+| `harmony_for_proportion` | bool | `True` | Harmony on the proportion embedding. |
+| `preserve_cols_in_sample_embedding` | str or list, optional | `None` | Metadata carried into the pseudobulk. |
+| `n_cca_pcs` | int | `10` | Number of leading PCs used by CCA. |
+| `compute_corrected_pvalues` | bool | `True` | Run permutation-corrected p-values. |
+| `coarse_start` / `coarse_end` / `coarse_step` | float | `0.1 / 1.0 / 0.1` | Coarse search grid. |
+| `fine_range` / `fine_step` | float | `0.02 / 0.01` | Fine search band around the coarse winner. |
+| `verbose` | bool | `True` | Print progress. |
 
 ## Returns
 
-- `optimal_resolution`
-- `results_df`
+`Tuple[float, pd.DataFrame]` — `(best_resolution, trials_df)`. `trials_df` has columns including `resolution`, `cca_score`, `pvalue`, and `corrected_pvalue` (when enabled).
 
+## Output files
+
+Under `{output_dir}/{MODALITY}_resolution_optimization_{expression|proportion}/`:
+
+- `resolutions/{res}/` — per-trial AnnData and diagnostics.
+- `summary/optimal.h5ad` — AnnData at the winning resolution.
+- `summary/trials.csv` — the returned `trials_df`.
+
+## Usage
+
+```python
+from genodistance.parameter_selection import find_optimal_cell_resolution_linux
+
+best_res, trials = find_optimal_cell_resolution_linux(
+    adata_cell=adata_cluster,
+    adata_sample=adata_sample,
+    output_dir="/results/rna",
+    column="X_DR_expression",
+    modality="rna",
+    trajectory_col="sev.level",
+    n_cca_pcs=10,
+    coarse_start=0.1, coarse_end=1.0, coarse_step=0.1,
+    fine_range=0.02,  fine_step=0.01,
+)
+```

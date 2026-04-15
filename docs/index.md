@@ -1,37 +1,39 @@
-# SampleDisc: sample-level representation learning for single-cell multi-omics
+# SampleDisc
 
 <div class="hero" markdown>
-SampleDisc is a config-driven Python pipeline that learns **sample-level embeddings** from scRNA-seq, scATAC-seq, or combined multi-omics data. The package supports preprocessing, cell type annotation, sample distance analysis, trajectory inference, differential analysis, and visualization in one workflow.
+**Sample-level representation learning for single-cell multi-omics.**
 
-[Get Started](tutorials/config_guide.md){ .md-button .md-button--primary }
-[Browse API](api/rna.md){ .md-button }
+SampleDisc is a config-driven Python pipeline that turns single-cell RNA, ATAC, or unpaired multi-omics data into dual sample-level embeddings — one capturing expression signal, one capturing cell-type composition — and runs the full downstream stack of distance analysis, trajectory inference, differential testing, clustering, and visualization in a single call.
+
+[Get started](tutorials/configuration.md){ .md-button .md-button--primary }
+[Browse the API](api/index.md){ .md-button }
 </div>
 
 <div class="grid cards" markdown>
 
--   __Unpaired multi-omics integration__
+-   **Three pipelines, one wrapper**
 
     ---
 
-    Integrate RNA and ATAC data from unmatched studies into a shared analytical framework.
+    Point `wrapper(...)` at a YAML config and run scRNA, scATAC, or integrated multi-omics end-to-end without glue code.
 
--   __Dual sample representation__
-
-    ---
-
-    Learn both expression-based and cell-type-composition-based sample embeddings.
-
--   __Cross-study batch handling__
+-   **Dual sample representation**
 
     ---
 
-    Correct study effects while preserving biological structure needed for downstream analysis.
+    Every run produces `X_DR_expression` (pseudobulk signal) and `X_DR_proportion` (cell-type composition) embeddings, giving you two complementary views of each sample.
 
--   __End-to-end workflow__
+-   **Batch-aware, trajectory-aware**
 
     ---
 
-    Move from preprocessing to trajectory and clustering through one consistent wrapper pipeline.
+    Harmony integration on both cell and sample levels, optional CCA-driven resolution search against a phenotype, and supervised or unsupervised pseudotime.
+
+-   **Downstream out of the box**
+
+    ---
+
+    Shared downstream module runs sample distance (six metrics), CCA/TSCAN, GAM-based trajectory DGE, K-means sample clustering, proportion tests, and RAISIN cluster DGE.
 
 </div>
 
@@ -39,23 +41,21 @@ SampleDisc is a config-driven Python pipeline that learns **sample-level embeddi
 
 ![SampleDisc workflow](resource/overview.jpg)
 
-<div class="figure-caption">Overview of the SampleDisc workflow from preprocessing to downstream sample-level analyses.</div>
+<div class="figure-caption">From cell-level input to sample-level embeddings and downstream trajectory, clustering, and differential analyses.</div>
 
-## General workflow
+## Four stages
 
-SampleDisc organizes analysis into four stages:
+1. **Preprocessing and QC.** Filter cells and features, correct batch, build cell-level embeddings (PCA/Harmony for RNA, TF-IDF/LSI/Harmony for ATAC, GLUE for unpaired multi-omics).
+2. **Cell-type assignment.** Leiden clustering with optional target cluster count, or reuse of existing labels.
+3. **Sample embedding.** Pseudobulk per cell type + PCA → expression embedding. Cell-type proportions + PCA (optionally Harmony) → proportion embedding.
+4. **Downstream analysis.** Distance, trajectory, differential genes, clustering, visualization — all running off the same pseudobulk object.
 
-1. **Preprocessing and QC** to filter cells/features and build robust cell-level representations.
-2. **Cell type assignment** through clustering or reuse of existing labels.
-3. **Sample embedding** from pseudobulk expression and cell-type proportion signals.
-4. **Downstream analysis** including sample distance, trajectory, differential testing, clustering, and visualization.
+## Supported inputs
 
-## Supported modes
-
-- `scRNA-seq`
-- `scATAC-seq`
-- `Unpaired multi-omics (RNA + ATAC)`
-- `Paired multi-omics`
+- `scRNA-seq` — a single `.h5ad` + sample metadata CSV.
+- `scATAC-seq` — a peak/fragment `.h5ad` + sample metadata CSV.
+- `Unpaired multi-omics (RNA + ATAC)` — two `.h5ad` files integrated via GLUE.
+- `Paired multi-omics` — same two-file entry point; GLUE still anchors the joint embedding.
 
 ## Quick start
 
@@ -77,3 +77,14 @@ SampleDisc organizes analysis into four stages:
 
     wrapper(**config)
     ```
+
+Continue to the [Configuration guide](tutorials/configuration.md) for a walkthrough of the YAML, or jump into one of the pipeline tutorials:
+
+- [RNA pipeline](tutorials/rna.md)
+- [ATAC pipeline](tutorials/atac.md)
+- [Multi-omics pipeline](tutorials/multiomics.md)
+- [Downstream analysis](tutorials/downstream.md)
+
+## Citation
+
+A manuscript describing SampleDisc is in preparation. A citation block will be added here once the preprint is posted.

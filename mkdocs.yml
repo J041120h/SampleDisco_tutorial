@@ -1,24 +1,46 @@
-site_name: SampleDisc Docs v0.2
-site_description: Documentation for SampleDisc, a pipeline for sample-level representation learning from single-cell multi-omics data.
+site_name: SampleDisc
+site_description: A config-driven pipeline for sample-level representation learning from single-cell RNA, ATAC, and unpaired multi-omics data.
 use_directory_urls: true
 strict: false
 
 theme:
   name: material
   language: en
+  font:
+    text: Inter
+    code: JetBrains Mono
   features:
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
-    - navigation.expand
+    - navigation.indexes
     - navigation.top
+    - navigation.tracking
     - toc.follow
     - search.suggest
     - search.highlight
+    - search.share
     - content.code.copy
+    - content.code.annotate
     - content.tabs.link
   palette:
-    - scheme: default
-      primary: teal
-      accent: amber
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  icon:
+    logo: material/dna
+    repo: fontawesome/brands/github
 
 plugins:
   - search
@@ -35,11 +57,17 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.keys
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
 
 extra_css:
   - assets/stylesheets/extra.css
@@ -48,25 +76,20 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - Tutorials:
-      - "Configuration Guide": tutorials/config_guide.md
-      - "RNA Pipeline": tutorials/tutorial_rna.md
-      - "ATAC Pipeline": tutorials/tutorial_atac.md
-      - "Multi-omics Pipeline": tutorials/tutorial_multiomics.md
-      - "Downstream Analysis": tutorials/tutorial_downstream.md
-  - API Reference:
+      - "Configuration guide": tutorials/configuration.md
+      - "RNA pipeline": tutorials/rna.md
+      - "ATAC pipeline": tutorials/atac.md
+      - "Multi-omics pipeline": tutorials/multiomics.md
+      - "Downstream analysis": tutorials/downstream.md
+  - API reference:
       - Overview: api/index.md
       - RNA:
           - Overview: api/rna.md
           - preprocess_linux: api/rna/preprocess_linux.md
           - cell_types_linux: api/rna/cell_types_linux.md
-          - calculate_sample_embedding: api/shared/calculate_sample_embedding.md
-          - find_optimal_cell_resolution_linux: api/shared/find_optimal_cell_resolution_linux.md
       - ATAC:
           - Overview: api/atac.md
           - preprocess_linux: api/atac/preprocess_linux.md
-          - cell_types_linux: api/rna/cell_types_linux.md
-          - calculate_sample_embedding: api/shared/calculate_sample_embedding.md
-          - find_optimal_cell_resolution_linux: api/shared/find_optimal_cell_resolution_linux.md
       - Multi-omics:
           - Overview: api/multiomics.md
           - multiomics_preparation: api/multiomics/multiomics_preparation.md
@@ -75,6 +98,9 @@ nav:
           - calculate_multiomics_sample_embedding: api/multiomics/calculate_multiomics_sample_embedding.md
           - find_optimal_cell_resolution_multiomics_linux: api/multiomics/find_optimal_cell_resolution_multiomics_linux.md
           - replace_optimal_dimension_reduction: api/multiomics/replace_optimal_dimension_reduction.md
+      - Shared:
+          - calculate_sample_embedding: api/shared/calculate_sample_embedding.md
+          - find_optimal_cell_resolution_linux: api/shared/find_optimal_cell_resolution_linux.md
       - Downstream:
           - Overview: api/downstream.md
           - sample_distance: api/downstream/sample_distance.md

@@ -1,9 +1,13 @@
 # `raisinfit`
 
-**Module**: `code/sample_clustering/RAISIN.py`
+Python port of the RAISIN hierarchical generalized linear model for differential expression. `raisinfit` estimates mean expression and both cell-level and sample-level variance components given a sample × cell-type design, optionally correcting for batch with ComBat before fitting. The returned `fit` object is consumed by [`run_pairwise_tests`](run_pairwise_tests.md), which runs the actual pairwise contrasts and emits volcano plots. Supports unpaired, paired, continuous, and custom designs.
+
+**Source:** `sample_clustering/RAISIN.py:244`
+
+## Signature
 
 ```python
-raisinfit(
+def raisinfit(
     adata,
     sample_col,
     testtype="unpaired",
@@ -20,27 +24,58 @@ raisinfit(
 )
 ```
 
-Fits RAISIN differential model for cluster/group comparisons.
-
 ## Parameters
 
-| Parameter | Default | Controls |
-| --- | --- | --- |
-| `adata` | required | Input AnnData for RAISIN fitting. |
-| `sample_col` | required | Sample ID column. |
-| `testtype` | `"unpaired"` | Design type (`paired`, `unpaired`, `continuous`, `custom`). |
-| `group_col` | `None` | Group column in `obs` (preferred). |
-| `individual_col` | `None` | Subject/individual ID column for paired designs. |
-| `batch_col` | `None` | Batch column for optional ComBat correction. |
-| `sample_to_clade` | `None` | Sample -> group mapping (used if `group_col` absent). |
-| `custom_design` | `None` | Custom design matrices when `testtype="custom"`. |
-| `intercept` | `True` | Include intercept in fixed-effects model. |
-| `filtergene` | `False` | Enable low-expression gene filtering. |
-| `filtergenequantile` | `0.5` | Quantile cutoff for gene filtering. |
-| `n_jobs` | `None` | Parallel worker count (`None`/`-1` uses all cores). |
-| `verbose` | `True` | Print progress logs. |
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `adata` | AnnData | — | Single-cell or pseudobulk AnnData. |
+| `sample_col` | str | — | Sample identifier column. |
+| `testtype` | str | `"unpaired"` | One of `"unpaired"`, `"paired"`, `"continuous"`, `"custom"`. |
+| `group_col` | str, optional | `None` | Column with grouping/feature variable. Takes precedence over `sample_to_clade` when present. |
+| `individual_col` | str, optional | `None` | Subject column for paired designs. |
+| `batch_col` | str, optional | `None` | Triggers ComBat before fitting. |
+| `sample_to_clade` | dict, optional | `None` | `{sample_id: group_label}` — used when `group_col` is absent. |
+| `custom_design` | dict, optional | `None` | Required when `testtype="custom"`; keys `"X"`, `"Z"`, `"group"`. |
+| `intercept` | bool | `True` | Include intercept in the fixed-effect design. |
+| `filtergene` | bool | `False` | Drop lowly expressed genes before fitting. |
+| `filtergenequantile` | float | `0.5` | Quantile threshold used when `filtergene=True`. |
+| `n_jobs` | int, optional | `None` | CPU cores for parallel fitting (default: all cores). |
+| `verbose` | bool | `True` | Print progress. |
 
 ## Returns
 
-- Fit dictionary consumed by `run_pairwise_tests`.
+`dict` — the fit object with keys:
 
+| Key | Meaning |
+| --- | --- |
+| `"mean"` | gene × sample expression mean matrix |
+| `"sigma2"` | gene × group between-sample variance |
+| `"omega2"` | gene × sample within-sample variance |
+| `"X"` | fixed-effect design matrix |
+| `"Z"` | random-effect design matrix |
+| `"group"` | group assignment per sample |
+| `"failgroup"` | groups where variance estimation failed |
+| `"sample_names"` | ordered sample identifiers |
+| `"batch_corrected"` | whether ComBat was applied |
+
+## Usage
+
+```python
+from genodistance.sample_clustering import raisinfit, run_pairwise_tests
+
+fit = raisinfit(
+    adata=adata_cell,
+    sample_col="sample",
+    sample_to_clade=expr_clusters,
+    testtype="unpaired",
+    batch_col=None,
+    intercept=True,
+    n_jobs=8,
+)
+
+run_pairwise_tests(
+    fit=fit,
+    output_dir="/results/rna/raisin_results_expression",
+    fdr_threshold=0.05,
+)
+```
