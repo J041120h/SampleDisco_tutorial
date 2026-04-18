@@ -9,34 +9,6 @@ SampleDisc is a config-driven Python pipeline that turns single-cell RNA, ATAC, 
 [Browse the API](api/index.md){ .md-button }
 </div>
 
-<div class="grid cards" markdown>
-
--   **Three pipelines, one wrapper**
-
-    ---
-
-    Point `wrapper(...)` at a YAML config and run scRNA, scATAC, or integrated multi-omics end-to-end without glue code.
-
--   **Dual sample representation**
-
-    ---
-
-    Every run produces `X_DR_expression` (pseudobulk signal) and `X_DR_proportion` (cell-type composition) embeddings, giving you two complementary views of each sample.
-
--   **Batch-aware, trajectory-aware**
-
-    ---
-
-    Harmony integration on both cell and sample levels, optional CCA-driven resolution search against a phenotype, and supervised or unsupervised pseudotime.
-
--   **Downstream out of the box**
-
-    ---
-
-    Shared downstream module runs sample distance (six metrics), CCA/TSCAN, GAM-based trajectory DGE, K-means sample clustering, proportion tests, and RAISIN cluster DGE.
-
-</div>
-
 ## Workflow overview
 
 ![SampleDisc workflow](resource/overview.jpg)
@@ -83,7 +55,7 @@ Continue to the [Configuration guide](tutorials/configuration.md) for a walkthro
 - [RNA pipeline](tutorials/rna.md)
 - [ATAC pipeline](tutorials/atac.md)
 - [Multi-omics pipeline](tutorials/multiomics.md)
-- [Downstream analysis](tutorials/downstream.md)
+- [Downstream analysis](tutorials/downstream/index.md)
 
 ## Citation
 

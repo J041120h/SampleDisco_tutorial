@@ -80,7 +80,17 @@ nav:
       - "RNA pipeline": tutorials/rna.md
       - "ATAC pipeline": tutorials/atac.md
       - "Multi-omics pipeline": tutorials/multiomics.md
-      - "Downstream analysis": tutorials/downstream.md
+      - "Downstream analysis":
+          - Overview: tutorials/downstream/index.md
+          - Resolution selection: tutorials/downstream/resolution_selection.md
+          - Sample distance: tutorials/downstream/sample_distance.md
+          - "Trajectory — CCA": tutorials/downstream/trajectory_cca.md
+          - "Trajectory — TSCAN": tutorials/downstream/trajectory_tscan.md
+          - Trajectory DGE: tutorials/downstream/trajectory_dge.md
+          - Sample clustering: tutorials/downstream/cluster.md
+          - Proportion test: tutorials/downstream/proportion_test.md
+          - RAISIN cluster DGE: tutorials/downstream/raisin_dge.md
+          - Visualization: tutorials/downstream/visualization.md
   - API reference:
       - Overview: api/index.md
       - RNA:

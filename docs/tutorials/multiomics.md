@@ -159,44 +159,8 @@ visualize_multimodal_embedding(
 )
 ```
 
-**Writes** → `/results/multiomics/visualization/`.
+**Writes** → per-grouping PNGs under `/results/multiomics/visualization/`. The severity-colored views of these embeddings are shown in the downstream CCA step (see [Downstream analysis](downstream/index.md)), so no separate embedding panel is reproduced here.
 
-![All samples in the expression embedding](../resource/multiomics/all_samples_expression.png)
-![All samples in the proportion embedding](../resource/multiomics/all_samples_proportion.png)
-<div class="figure-caption">Step 5 — Default visualization: every sample placed in the two sample-level embeddings.</div>
+---
 
-![Expression embedding colored by severity](../resource/multiomics/all_samples_expression_by_sev_level.png)
-![Proportion embedding colored by severity](../resource/multiomics/all_samples_proportion_by_sev_level.png)
-<div class="figure-caption">Same plots, points colored by the severity phenotype supplied through `visualization_grouping_column`.</div>
-
-![Combined side-by-side, severity-colored](../resource/multiomics/all_samples_combined_by_sev_level.png)
-<div class="figure-caption">Combined panel used for figures: both embeddings with a shared colorbar.</div>
-
-## 6. Downstream
-
-The distance, trajectory, DGE, and clustering modules are the same as single modality — feed them `pseudo_adata` from step 4. Example for sample distance:
-
-```python
-from genodistance.sample_distance import sample_distance
-
-sample_distance(
-    adata=pseudo_adata,
-    output_dir="/results/multiomics",
-    method="cosine",
-    data_type="RNA",                   # DR-priority hint; not modality-restrictive
-    grouping_columns=["sev.level"],
-)
-```
-
-![Sample distance heatmap (expression, cosine)](../resource/multiomics/sample_distance_expression_DR_heatmap_cosine.png)
-<div class="figure-caption">Step 6 — Multi-omics sample distance on the joint expression embedding.</div>
-
-For CCA, TSCAN, K-means, and TSCAN-colored trajectories, see the [Downstream analysis tutorial](downstream.md). Representative outputs from this dataset:
-
-![CCA expression](../resource/multiomics/cca_expression.png)
-![TSCAN trajectory colored by severity](../resource/multiomics/tscan_clusters_by_grouping_expression.png)
-![K-means on expression embedding](../resource/multiomics/kmeans_expression_embedding.png)
-
-## Advanced: optimal-resolution search
-
-Setting `multiomics_find_optimal_resolution: true` enables a CCA-guided two-pass search (`find_optimal_cell_resolution_multiomics_linux`) that sweeps Leiden resolutions and picks the value maximizing CCA correlation with your phenotype. See the [API page](../api/multiomics/find_optimal_cell_resolution_multiomics_linux.md) — the result is written back into the pseudobulk via `replace_optimal_dimension_reduction`.
+Once `pseudo_adata` is in hand, every remaining analysis — sample distance, CCA / TSCAN, trajectory DGE, sample clustering, proportion test, RAISIN cluster DGE, and the optional CCA-guided resolution search — is shared across modalities. Continue to the [Downstream analysis tutorials](downstream/index.md).
