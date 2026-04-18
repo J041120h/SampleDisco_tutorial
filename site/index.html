@@ -667,9 +667,50 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="tutorials/downstream/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="tutorials/downstream/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -683,7 +724,283 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Downstream analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/downstream/resolution_selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolution selection
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/downstream/sample_distance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sample distance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/downstream/trajectory_cca/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trajectory — CCA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/downstream/trajectory_tscan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trajectory — TSCAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/downstream/trajectory_dge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trajectory DGE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/downstream/cluster/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sample clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/downstream/proportion_test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proportion test
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/downstream/raisin_dge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAISIN cluster DGE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/downstream/visualization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visualization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1974,30 +2291,6 @@
 <p>SampleDisc is a config-driven Python pipeline that turns single-cell RNA, ATAC, or unpaired multi-omics data into dual sample-level embeddings — one capturing expression signal, one capturing cell-type composition — and runs the full downstream stack of distance analysis, trajectory inference, differential testing, clustering, and visualization in a single call.</p>
 <p><a class="md-button md-button--primary" href="tutorials/configuration/">Get started</a>
 <a class="md-button" href="api/">Browse the API</a></p>
-</div>
-<div class="grid cards">
-<ul>
-<li>
-<p><strong>Three pipelines, one wrapper</strong></p>
-<hr />
-<p>Point <code>wrapper(...)</code> at a YAML config and run scRNA, scATAC, or integrated multi-omics end-to-end without glue code.</p>
-</li>
-<li>
-<p><strong>Dual sample representation</strong></p>
-<hr />
-<p>Every run produces <code>X_DR_expression</code> (pseudobulk signal) and <code>X_DR_proportion</code> (cell-type composition) embeddings, giving you two complementary views of each sample.</p>
-</li>
-<li>
-<p><strong>Batch-aware, trajectory-aware</strong></p>
-<hr />
-<p>Harmony integration on both cell and sample levels, optional CCA-driven resolution search against a phenotype, and supervised or unsupervised pseudotime.</p>
-</li>
-<li>
-<p><strong>Downstream out of the box</strong></p>
-<hr />
-<p>Shared downstream module runs sample distance (six metrics), CCA/TSCAN, GAM-based trajectory DGE, K-means sample clustering, proportion tests, and RAISIN cluster DGE.</p>
-</li>
-</ul>
 </div>
 <h2 id="workflow-overview">Workflow overview<a class="headerlink" href="#workflow-overview" title="Permanent link">&para;</a></h2>
 <p><img alt="SampleDisc workflow" src="resource/overview.jpg" /></p>

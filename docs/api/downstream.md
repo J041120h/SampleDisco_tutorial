@@ -33,4 +33,4 @@ Everything in this section runs off a `pseudobulk_sample.h5ad` — the sample-le
 | [`visualization`](downstream/visualization.md) | Cell-type dendrogram, proportion PCA, expression UMAP — toggle which panels you want. |
 | [`visualize_multimodal_embedding`](downstream/visualize_multimodal_embedding.md) | Side-by-side scatter of the two embeddings with flexible coloring; multi-omics only. |
 
-For an end-to-end walkthrough that chains these functions together, see the [Downstream tutorial](../tutorials/downstream.md).
+For an end-to-end walkthrough that chains these functions together, see the [Downstream tutorials](../tutorials/downstream/index.md).
