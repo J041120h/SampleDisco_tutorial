@@ -84,6 +84,7 @@ nav:
           - Overview: tutorials/downstream/index.md
           - Resolution selection: tutorials/downstream/resolution_selection.md
           - Sample distance: tutorials/downstream/sample_distance.md
+          - Dimension association: tutorials/downstream/sample_association.md
           - "Trajectory — CCA": tutorials/downstream/trajectory_cca.md
           - "Trajectory — TSCAN": tutorials/downstream/trajectory_tscan.md
           - Trajectory DGE: tutorials/downstream/trajectory_dge.md
@@ -114,6 +115,7 @@ nav:
       - Downstream:
           - Overview: api/downstream.md
           - sample_distance: api/downstream/sample_distance.md
+          - run_dimension_association_analysis: api/downstream/sample_association.md
           - CCA_Call: api/downstream/trajectory_cca_call.md
           - cca_pvalue_test: api/downstream/trajectory_cca_pvalue_test.md
           - TSCAN: api/downstream/trajectory_tscan.md

@@ -22,6 +22,7 @@ Each function has its own page with the call, parameters, outputs, and represent
 | --- | --- | --- |
 | [Resolution selection](resolution_selection.md) | `find_optimal_cell_resolution_linux` | CCA-guided two-pass search for the Leiden resolution that best aligns with a phenotype. |
 | [Sample distance](sample_distance.md) | `sample_distance` | Pairwise distance matrices on either embedding with multiple metrics. |
+| [Dimension association](sample_association.md) | `run_dimension_association_analysis` | Per-PC variance-explained decomposition against every metadata variable — confounder / leading-covariate check. |
 | [Trajectory — CCA](trajectory_cca.md) | `CCA_Call`, `cca_pvalue_test` | Supervised pseudotime and its permutation significance. |
 | [Trajectory — TSCAN](trajectory_tscan.md) | `TSCAN` | Unsupervised pseudotime via GMM + MST. |
 | [Trajectory DGE](trajectory_dge.md) | `run_trajectory_gam_differential_gene_analysis` | GAM-based differential expression along pseudotime. |
@@ -30,4 +31,4 @@ Each function has its own page with the call, parameters, outputs, and represent
 | [RAISIN cluster DGE](raisin_dge.md) | `raisinfit`, `run_pairwise_tests` | Hierarchical GLM for cluster-level differential expression. |
 | [General visualization](visualization.md) | `visualization` | Cell-type dendrogram, proportion PCA, expression UMAP. |
 
-Recommended reading order: resolution selection (optional) → sample distance → trajectory (CCA or TSCAN) → trajectory DGE → sample clustering → proportion test / RAISIN → general visualization.
+Recommended reading order: resolution selection (optional) → sample distance → dimension association → trajectory (CCA or TSCAN) → trajectory DGE → sample clustering → proportion test / RAISIN → general visualization.

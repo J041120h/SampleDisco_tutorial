@@ -8,6 +8,12 @@ Everything in this section runs off a `pseudobulk_sample.h5ad` — the sample-le
 | --- | --- |
 | [`sample_distance`](downstream/sample_distance.md) | Unified entry point for vector metrics (cosine, correlation, euclidean, ...), EMD, chi-square, Jensen–Shannon. |
 
+## Dimension association
+
+| Function | Purpose |
+| --- | --- |
+| [`run_dimension_association_analysis`](downstream/sample_association.md) | Per-PC variance-explained decomposition against every sample-level metadata variable, with permutation p-values — confounder / leading-covariate diagnostic. |
+
 ## Trajectory analysis
 
 | Function | Purpose | When to use |
