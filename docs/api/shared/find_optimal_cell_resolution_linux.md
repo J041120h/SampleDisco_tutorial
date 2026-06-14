@@ -1,90 +1,119 @@
 # `find_optimal_cell_resolution_linux`
 
-Two-pass grid search for the Leiden clustering resolution that maximizes the CCA correlation between the sample embedding and a phenotype/trajectory column. The algorithm first sweeps a coarse range (`coarse_start`..`coarse_end` by `coarse_step`), re-running clustering and `calculate_sample_embedding` at every resolution; it then zooms in by `±fine_range` at `fine_step` around the coarse winner. Optionally computes permutation-corrected p-values and writes per-resolution trial artifacts for reproducibility. Works for both RNA and ATAC via the `modality` argument.
+!!! danger "Removed"
+    `find_optimal_cell_resolution_linux` has been **removed** from `sampledisco` and has **no drop-in replacement**. The CCA-driven, two-pass Leiden-resolution sweep no longer exists, and the legacy two-key embedding it optimized (`X_DR_expression` / `X_DR_proportion`) is gone — the current pipeline produces a single sample embedding at `adata.uns['X_DR_sample']`. Parameter selection is now an **alpha / block-weight autotune** (`sampledisco.parameter_selection.autotune.run_autotune`), wired into the config-driven wrapper. This page is retained only as a migration pointer.
 
-**Source:** `parameter_selection/gpu_optimal_resolution.py:33`
+## What it used to do
 
-## Signature
+The old function ran a two-pass grid search for the Leiden clustering resolution that maximized the CCA correlation between the sample embedding and a phenotype/trajectory column, re-running clustering and the (now-removed) `calculate_sample_embedding` at every resolution. That entire mechanism — coarse/fine resolution sweeps, per-resolution trial artifacts, and the `X_DR_expression`/`X_DR_proportion` columns it tuned — has been deleted.
+
+## What to use instead
+
+Instead of sweeping Leiden resolution, the current package tunes the blend weight (alpha) between the composition blocks and the RMD displacement block of the single-key embedding. Two ways to use it:
+
+### 1. Via the config-driven wrapper (recommended)
+
+Enable autotune per modality with the `*_autotune_enable` flags in your YAML config, then run the standard entry point:
+
+```bash
+sampledisco -m complex --config config.yaml
+```
+
+```yaml
+# config.yaml (excerpt)
+rna_autotune_enable: true        # RNA
+atac_autotune_enable: true       # ATAC
+multiomics_autotune_enable: true # multi-omics
+```
+
+The wrapper calls `run_autotune` internally after the sample embedding step and writes the tuned result in place.
+
+### 2. Calling `run_autotune` directly
+
+**Source:** `parameter_selection/autotune.py`
 
 ```python
-def find_optimal_cell_resolution_linux(
-    adata_cell: AnnData,
-    adata_sample: AnnData,
+from sampledisco.parameter_selection.autotune import run_autotune
+
+result = run_autotune(
+    adata,                       # cell-level AnnData carrying Z_clust / Z_rmd
+    output_dir="/results/rna",
+    sample_col="sample",
+    celltype_col="cell_type",
+    cluster_emb_key="Z_clust",
+    scoring="auto",
+    search="bayesian",
+    scope="alpha_only",
+)
+```
+
+For multi-omics, restrict the search to one modality:
+
+```python
+result = run_autotune(
+    adata,
+    output_dir="/results/multiomics",
+    modality_col="modality",
+    tune_on_modality="RNA",
+)
+```
+
+## Signature (`run_autotune`)
+
+```python
+def run_autotune(
+    adata: AnnData,
     output_dir: str,
-    column: str,
-    modality: Literal["rna", "atac"] = "rna",
-    trajectory_col: str = "sev.level",
-    batch_col: Optional[Union[str, List[str]]] = None,
+    *,
     sample_col: str = "sample",
     celltype_col: str = "cell_type",
-    cell_embedding_column: str = "X_pca",
-    cell_embedding_num_pcs: int = 20,
-    n_hvg_features: int = 2000,
-    sample_embedding_dimension: int = 10,
-    harmony_for_proportion: bool = True,
-    preserve_cols_in_sample_embedding: Optional[Union[str, List[str]]] = None,
-    n_cca_pcs: int = 10,
-    compute_corrected_pvalues: bool = True,
-    coarse_start: float = 0.1,
-    coarse_end: float = 1.0,
-    coarse_step: float = 0.1,
-    fine_range: float = 0.02,
-    fine_step: float = 0.01,
+    cluster_emb_key: str = "Z_clust",
+    rmd_emb_key: Optional[str] = None,
+    modality_col: Optional[str] = None,
+    batch_col: Optional[Union[str, List[str]]] = None,
+    grouping_col: Optional[str] = None,
+    medium_K: int = 120,
+    fine_K: int = 300,
+    rmd_dim: int = 8,
+    pca_components: int = 10,
+    batch_method: str = "harmony",
+    scoring: str = "auto",
+    search: str = "bayesian",
+    scope: str = "alpha_only",
+    alpha_bounds: Tuple[float, float] = DEFAULT_ALPHA_BOUNDS,  # (0.1, 10.0)
+    seed: int = 42,
+    save: bool = True,
     verbose: bool = True,
-) -> Tuple[float, pd.DataFrame]
+    tune_on_modality: Optional[str] = None,
+) -> Dict
 ```
 
 ## Parameters
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `adata_cell` | AnnData | — | Cell-level AnnData (output of preprocessing). |
-| `adata_sample` | AnnData | — | Sample-level AnnData (output of preprocessing). |
-| `output_dir` | str | — | Parent output directory; results go under `{output_dir}/{MODALITY}_resolution_optimization_{dr_type}/`. |
-| `column` | str | — | DR column to optimize, either `"X_DR_expression"` or `"X_DR_proportion"`. |
-| `modality` | `"rna"` or `"atac"` | `"rna"` | Chooses the appropriate HVG / LSI path. |
-| `trajectory_col` | str | `"sev.level"` | Phenotype column in `adata_sample.obs` that CCA is tested against. |
-| `batch_col` | str or list, optional | `None` | Batch column for sample embedding. |
-| `sample_col` | str | `"sample"` | Sample identifier. |
-| `celltype_col` | str | `"cell_type"` | Target column where new cluster labels are written. |
-| `cell_embedding_column` | str | `"X_pca"` | Cell-level embedding used by the neighbourhood graph. |
-| `cell_embedding_num_pcs` | int | `20` | Number of PCs/LSI components. |
-| `n_hvg_features` | int | `2000` | HVGs/HVFs per cell type during sample embedding. |
-| `sample_embedding_dimension` | int | `10` | DR components for the sample embedding. |
-| `harmony_for_proportion` | bool | `True` | Harmony on the proportion embedding. |
-| `preserve_cols_in_sample_embedding` | str or list, optional | `None` | Metadata carried into the pseudobulk. |
-| `n_cca_pcs` | int | `10` | Number of leading PCs used by CCA. |
-| `compute_corrected_pvalues` | bool | `True` | Run permutation-corrected p-values. |
-| `coarse_start` / `coarse_end` / `coarse_step` | float | `0.1 / 1.0 / 0.1` | Coarse search grid. |
-| `fine_range` / `fine_step` | float | `0.02 / 0.01` | Fine search band around the coarse winner. |
+| `adata` | AnnData | — | Cell-level AnnData carrying `Z_clust` (sample-removed) and `Z_rmd` (sample-preserved). |
+| `output_dir` | str | — | Output directory for the autotune report and tuned embedding. |
+| `sample_col` | str | `"sample"` | Sample identifier column in `adata.obs`. |
+| `celltype_col` | str | `"cell_type"` | Cell-type label column. |
+| `cluster_emb_key` | str | `"Z_clust"` | Sample-removed cell embedding used for the composition blocks. |
+| `rmd_emb_key` | str, optional | `None` | RMD (sample-preserved) embedding key; resolves to `Z_rmd` when `None`. |
+| `modality_col` | str, optional | `None` | Modality column (set for multi-omics, e.g. `"modality"`). |
+| `batch_col` | str or list, optional | `None` | Batch column(s) for sample-level Harmony correction. |
+| `grouping_col` | str, optional | `None` | Optional grouping used by some scoring proxies. |
+| `medium_K` / `fine_K` | int | `120` / `300` | Medium- and fine-resolution composition block sizes. |
+| `rmd_dim` | int | `8` | RMD displacement dimensions per cluster. |
+| `pca_components` | int | `10` | Sample-embedding DR components. |
+| `batch_method` | str | `"harmony"` | Sample-level batch-correction method. |
+| `scoring` | str | `"auto"` | Scoring objective driving the search. |
+| `search` | str | `"bayesian"` | Search strategy (`bayesian`, `grid`, `golden`). |
+| `scope` | str | `"alpha_only"` | Tuning scope (currently `alpha_only`). |
+| `alpha_bounds` | tuple | `(0.1, 10.0)` | Search bounds for the blend weight alpha. |
+| `seed` | int | `42` | Random seed. |
+| `save` | bool | `True` | Write the tuned embedding and report. |
 | `verbose` | bool | `True` | Print progress. |
+| `tune_on_modality` | str, optional | `None` | Restrict the search proxies to one modality (e.g. `"RNA"`); final embedding still built on all units. |
 
 ## Returns
 
-`Tuple[float, pd.DataFrame]` — `(best_resolution, trials_df)`. `trials_df` has columns including `resolution`, `cca_score`, `pvalue`, and `corrected_pvalue` (when enabled).
-
-## Output files
-
-Under `{output_dir}/{MODALITY}_resolution_optimization_{expression|proportion}/`:
-
-- `resolutions/{res}/` — per-trial AnnData and diagnostics.
-- `summary/optimal.h5ad` — AnnData at the winning resolution.
-- `summary/trials.csv` — the returned `trials_df`.
-
-## Usage
-
-```python
-from genodistance.parameter_selection import find_optimal_cell_resolution_linux
-
-best_res, trials = find_optimal_cell_resolution_linux(
-    adata_cell=adata_cluster,
-    adata_sample=adata_sample,
-    output_dir="/results/rna",
-    column="X_DR_expression",
-    modality="rna",
-    trajectory_col="sev.level",
-    n_cca_pcs=10,
-    coarse_start=0.1, coarse_end=1.0, coarse_step=0.1,
-    fine_range=0.02,  fine_step=0.01,
-)
-```
+`Dict` — the best parameters (including the tuned alpha) plus the final autotuned sample-level result. The tuned embedding is written in place to `adata.uns['X_DR_sample']` (units × PCs).

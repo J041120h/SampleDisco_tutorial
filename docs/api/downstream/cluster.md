@@ -1,8 +1,11 @@
 # `cluster`
 
-K-means clustering on the sample-level embeddings. Runs once on `X_DR_expression` and once on `X_DR_proportion` (each independently toggleable) and writes both the CSV mapping and a 2D scatter of the first two components colored by cluster. The cluster assignments can be fed directly into [`proportion_test`](proportion_test.md) and [`raisinfit`](raisinfit.md) via the `sample_to_clade` argument.
+K-means clustering on the single-key sample-level embedding `obsm['X_DR_sample']`. Writes the CSV mapping of samples to clusters and a 2D scatter of the first two embedding dimensions colored by cluster. The cluster assignments can be fed directly into [`proportion_test`](proportion_test.md) and [`raisinfit`](raisinfit.md) via the `sample_to_clade` argument.
 
-**Source:** `cluster.py:11`
+!!! note "Single-key embedding"
+    The current pipeline produces **one** sample embedding, `X_DR_sample`. The legacy `use_expression` / `use_proportion` flags and the old `X_DR_expression` / `X_DR_proportion` keys are gone — both flags are accepted for backward compatibility but **ignored**, and the returned tuple has the same mapping in both slots.
+
+**Source:** `sampledisco/sample_clustering/cluster.py:11`
 
 ## Signature
 
@@ -21,34 +24,32 @@ def cluster(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `pseudobulk_adata` | AnnData | — | Sample-level AnnData with `X_DR_expression` and/or `X_DR_proportion` in `.obsm`. |
+| `pseudobulk_adata` | AnnData | — | Sample-level AnnData with `X_DR_sample` in `.obsm`. |
 | `output_dir` | str | — | Writes under `{output_dir}/sample_cluster/`. |
 | `number_of_clusters` | int | `5` | K for K-means. |
-| `use_expression` | bool | `True` | Cluster on `X_DR_expression`. |
-| `use_proportion` | bool | `True` | Cluster on `X_DR_proportion`. |
+| `use_expression` | bool | `True` | Legacy argument — **accepted but ignored**. |
+| `use_proportion` | bool | `True` | Legacy argument — **accepted but ignored**. |
 | `random_state` | int | `0` | Seed for reproducibility. |
 
 ## Returns
 
-`Tuple[Dict, Dict]` — `(expr_results, prop_results)`, each mapping `{sample_id: cluster_label}`. Either element is `None` if the corresponding flag was disabled.
+`Tuple[Dict, Dict]` — `(expr_results, prop_results)`, kept for backward compatibility. Both slots contain the **same** `{sample_id: cluster_label}` mapping computed on `X_DR_sample`.
 
 ## Output files
 
 Under `{output_dir}/sample_cluster/`:
 
-- `kmeans_clusters_expression.csv`
-- `kmeans_clusters_proportion.csv`
-- `kmeans_expression_embedding.png`
-- `kmeans_proportion_embedding.png`
+- `kmeans_clusters_sample.csv`
+- `kmeans_sample_embedding.png`
 
-The returned AnnData also gets `cluster_expression_kmeans` and `cluster_proportion_kmeans` columns in `.obs`.
+The passed-in AnnData also gets a `cluster_sample_kmeans` column in `.obs`.
 
 ## Usage
 
 ```python
-from genodistance import cluster
+from sampledisco.sample_clustering.cluster import cluster
 
-expr_clusters, prop_clusters = cluster(
+sample_clusters, _ = cluster(
     pseudobulk_adata=pseudo_adata,
     output_dir="/results/rna",
     number_of_clusters=4,

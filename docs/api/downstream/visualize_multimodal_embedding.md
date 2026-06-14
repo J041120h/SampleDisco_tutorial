@@ -1,8 +1,12 @@
 # `visualize_multimodal_embedding`
 
-Flexible scatter-plot visualization of the multi-omics sample embeddings. When called with `show_default=True` (the default), renders side-by-side plots of `X_DR_expression` and `X_DR_proportion` with every sample visible. When `modality_col`, `color_col`, and `target_modality` are all provided, highlights one modality and colors by an arbitrary `.obs` column. `visualization_grouping_column` fans out additional colored panels — one per column — on top of whatever base layout you requested.
+Flexible scatter-plot visualization of the multi-omics sample embeddings. When called with `show_default=True` (the default), renders side-by-side plots of the single-key sample embedding `X_DR_sample` with every sample visible. When `modality_col`, `color_col`, and `target_modality` are all provided, highlights one modality and colors by an arbitrary `.obs` column. `visualization_grouping_column` fans out additional colored panels — one per column — on top of whatever base layout you requested.
 
-**Source:** `visualization/multi_omics_visualization.py:628`
+The `expression_key` / `proportion_key` arguments survive for backward compatibility but now both default to the same single key, `X_DR_sample` (the unified sample embedding produced by `compute_sample_embedding`); the two-key `X_DR_expression` / `X_DR_proportion` layout no longer exists.
+
+**Import:** `from sampledisco.visualization.multi_omics_visualization import visualize_multimodal_embedding`
+
+**Source:** `sampledisco/visualization/multi_omics_visualization.py:497`
 
 ## Signature
 
@@ -12,8 +16,8 @@ def visualize_multimodal_embedding(
     modality_col=None,
     color_col=None,
     target_modality=None,
-    expression_key="X_DR_expression",
-    proportion_key="X_DR_proportion",
+    expression_key="X_DR_sample",
+    proportion_key="X_DR_sample",
     figsize=(20, 8),
     point_size=60,
     alpha=0.8,
@@ -32,12 +36,12 @@ def visualize_multimodal_embedding(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `adata` | AnnData | — | Sample-level AnnData with the two DR embeddings in `.obsm`. |
+| `adata` | AnnData | — | Sample-level AnnData with the sample embedding in `.obsm` or `.uns` (`X_DR_sample`). |
 | `modality_col` | str, optional | `None` | `.obs` column marking modality (required for modality-specific plots). |
 | `color_col` | str, optional | `None` | `.obs` column for point coloring (required when not using default plot). |
 | `target_modality` | str, optional | `None` | Which modality to highlight in modality-specific plots. |
-| `expression_key` | str | `"X_DR_expression"` | Key in `.obsm` for the expression embedding. |
-| `proportion_key` | str | `"X_DR_proportion"` | Key in `.obsm` for the proportion embedding. |
+| `expression_key` | str | `"X_DR_sample"` | Key in `.obsm`/`.uns` for the "Expression" panel. Back-compat alias — now the single sample-embedding key. |
+| `proportion_key` | str | `"X_DR_sample"` | Key in `.obsm`/`.uns` for the "Proportion" panel. Back-compat alias — now the same single key. |
 | `figsize` | tuple | `(20, 8)` | Matplotlib figure size. |
 | `point_size` | int | `60` | Scatter marker size. |
 | `alpha` | float | `0.8` | Marker opacity. |
@@ -58,7 +62,8 @@ def visualize_multimodal_embedding(
 
 Under `{output_dir}/`:
 
-- `all_samples_expression.png`, `all_samples_proportion.png` — default panel pair.
+- `all_samples_expression.png`, `all_samples_proportion.png` — default panel pair (both drawn from the single `X_DR_sample` key).
+- `all_samples_combined.png` — default side-by-side combined panel.
 - `all_samples_expression_by_{col}.png`, `all_samples_proportion_by_{col}.png` — per grouping column.
 - `all_samples_combined_by_{col}.png` — combined side-by-side with shared colorbar.
 - `{target_modality}_modality_split_by_{col}.png` — modality-specific view when all of `modality_col`, `color_col`, `target_modality` are supplied.
@@ -66,15 +71,15 @@ Under `{output_dir}/`:
 ## Usage
 
 ```python
-from genodistance.visualization import visualize_multimodal_embedding
+from sampledisco.visualization.multi_omics_visualization import visualize_multimodal_embedding
 
 visualize_multimodal_embedding(
     adata=pseudo_adata,
     modality_col="modality",
     target_modality="ATAC",
     color_col=None,
-    expression_key="X_DR_expression",
-    proportion_key="X_DR_proportion",
+    expression_key="X_DR_sample",
+    proportion_key="X_DR_sample",
     visualization_grouping_column=["sev.level"],
     figsize=(20, 8),
     point_size=60,

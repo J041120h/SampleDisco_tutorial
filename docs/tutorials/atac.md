@@ -1,6 +1,6 @@
 # ATAC pipeline tutorial
 
-The scATAC-seq pipeline mirrors the RNA pipeline but switches preprocessing and clustering to TF-IDF normalization and LSI dimension reduction. It ends at the same dual sample embedding; everything downstream of that is shared with RNA and lives in the [Downstream analysis tutorials](downstream/index.md). Parameter values follow the canonical [`config_covid_rna.yaml`](https://github.com/) (ATAC block).
+The scATAC-seq pipeline mirrors the RNA pipeline but switches preprocessing and clustering to TF-IDF normalization and LSI dimension reduction. It ends at the same single sample embedding (`uns['X_DR_sample']`); everything downstream of that is shared with RNA and lives in the [Downstream analysis tutorials](downstream/index.md). Parameter values follow the canonical config (`atac_*` block).
 
 ## Inputs
 
@@ -11,12 +11,13 @@ Output lands under `output_dir/atac/`.
 
 ## 1. Preprocessing
 
-TF-IDF normalization, LSI projection, optional doublet removal, and Harmony integration. ATAC typically uses a high feature count (50,000) and 50 LSI components.
+TF-IDF normalization, LSI projection, optional doublet removal, and a two-pass Harmony integration. ATAC typically uses a high feature count (50,000) and 50 LSI components.
 
 ```python
-from genodistance.preparation import preprocess_linux  # ATAC version
+from sampledisco.preparation.atac_preprocess_cpu import preprocess  # ATAC version
+# GPU: from sampledisco.preparation.atac_preprocess_gpu import preprocess_gpu
 
-adata_cluster, adata_sample = preprocess_linux(
+adata = preprocess(
     h5ad_path="/data/test_ATAC.h5ad",
     sample_meta_path="/data/sample_meta.csv",
     output_dir="/results/atac",
@@ -35,27 +36,32 @@ adata_cluster, adata_sample = preprocess_linux(
 )
 ```
 
-**Writes** → `/results/atac/preprocess/adata_cell.h5ad`, `adata_sample.h5ad`.
+A single file is written carrying both cell embeddings — `obsm['Z_clust']` (sample-removed) and `obsm['Z_rmd']` (sample-preserved) — and the function returns the `AnnData`.
+
+**Writes** → `/results/atac/preprocess/adata_preprocessed.h5ad`.
 
 ## 2. Cell-type clustering
 
-`cell_types_linux` auto-detects `X_lsi_harmony` in `.obsm` and switches to cosine-metric neighborhood graphs for ATAC.
+`cell_types_atac` clusters on the ATAC DR embedding (`use_rep='X_DM_harmony'`) and builds a dendrogram / diff-peaks view of the resulting types.
 
 ```python
-from genodistance.preparation import cell_types_linux
+from sampledisco.preparation.ATAC_cell_type import cell_types_atac
+# GPU: from sampledisco.preparation.ATAC_cell_type_gpu import cell_types_atac_gpu
 
-adata_cluster, adata_sample = cell_types_linux(
-    anndata_cell=adata_cluster,
-    anndata_sample=adata_sample,
-    leiden_cluster_resolution=0.8,
+adata = cell_types_atac(
+    adata,
+    cell_column="cell_type",
+    existing_cell_types=False,
     n_target_clusters=None,
+    cluster_resolution=0.8,
+    use_rep="X_DM_harmony",
     umap=False,
-    save=True,
+    Save=True,
     output_dir="/results/atac",
 )
 ```
 
-**Writes** → updated h5ad files.
+**Writes** → updated h5ad file; returns the labeled cell-level `AnnData`.
 
 A hierarchical view of the resulting cell types helps sanity-check the granularity:
 
@@ -64,29 +70,29 @@ A hierarchical view of the resulting cell types helps sanity-check the granulari
 
 ## 3. Sample embedding
 
-Set `atac=True` so that pseudobulk aggregation and dimension reduction use LSI-style processing instead of log-normalized PCA.
+The unified `compute_sample_embedding` handles RNA, ATAC, and multi-omics — there is no ATAC-specific flag. It combines multi-resolution composition blocks (computed on `Z_clust`) with an RMD displacement block (on `Z_rmd`), then PCA-reduces and Harmony-corrects at the sample level.
 
 ```python
-from genodistance.sample_embedding import calculate_sample_embedding
+from sampledisco.sample_embedding import compute_sample_embedding
 
-pseudo_dict, pseudo_adata = calculate_sample_embedding(
-    adata=adata_sample,
+adata = compute_sample_embedding(
+    adata,
+    output_dir="/results/atac",
     sample_col="sample",
     celltype_col="cell_type",
+    cluster_emb_key="Z_clust",
+    rmd_emb_key=None,        # defaults to Z_rmd
     batch_col=None,
-    output_dir="/results/atac",
-    sample_hvg_number=50000,
-    n_expression_components=30,
-    n_proportion_components=10,
-    harmony_for_proportion=True,
     use_gpu=True,
-    atac=True,
     save=True,
 )
 ```
 
-**Writes** → `/results/atac/pseudobulk/pseudobulk_sample.h5ad` with the two embeddings in `.obsm`.
+**Writes** the single sample embedding into `adata.uns['X_DR_sample']` (a `pandas.DataFrame`, units × PCs) and returns the modified `AnnData`.
+
+!!! note "One key replaces the old two-key embedding"
+    The current pipeline produces a single embedding, `uns['X_DR_sample']`. The legacy `X_DR_expression` / `X_DR_proportion` pair (and the old `(pseudo_dict, pseudo_adata)` return, `atac=True`, `sample_hvg_number`, `n_expression_components`, `n_proportion_components`, `harmony_for_proportion` arguments) no longer exists.
 
 ---
 
-Everything after sample embedding (sample distance, trajectory, DGE, clustering, RAISIN, visualization, optional resolution search) is a downstream task and is documented under [Downstream analysis](downstream/index.md).
+Everything after sample embedding (sample distance, trajectory, DGE, clustering, RAISIN, visualization, optional parameter autotune) is a downstream task and is documented under [Downstream analysis](downstream/index.md).

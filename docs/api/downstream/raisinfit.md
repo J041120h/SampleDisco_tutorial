@@ -2,7 +2,7 @@
 
 Python port of the RAISIN hierarchical generalized linear model for differential expression. `raisinfit` estimates mean expression and both cell-level and sample-level variance components given a sample × cell-type design, optionally correcting for batch with ComBat before fitting. The returned `fit` object is consumed by [`run_pairwise_tests`](run_pairwise_tests.md), which runs the actual pairwise contrasts and emits volcano plots. Supports unpaired, paired, continuous, and custom designs.
 
-**Source:** `sample_clustering/RAISIN.py:244`
+**Source:** `sample_clustering/RAISIN.py:202`
 
 ## Signature
 
@@ -21,6 +21,7 @@ def raisinfit(
     filtergenequantile=0.5,
     n_jobs=None,
     verbose=True,
+    seed=42,
 )
 ```
 
@@ -41,6 +42,7 @@ def raisinfit(
 | `filtergenequantile` | float | `0.5` | Quantile threshold used when `filtergene=True`. |
 | `n_jobs` | int, optional | `None` | CPU cores for parallel fitting (default: all cores). |
 | `verbose` | bool | `True` | Print progress. |
+| `seed` | int | `42` | Random seed for reproducible fitting. |
 
 ## Returns
 
@@ -61,7 +63,8 @@ def raisinfit(
 ## Usage
 
 ```python
-from genodistance.sample_clustering import raisinfit, run_pairwise_tests
+from sampledisco.sample_clustering.RAISIN import raisinfit
+from sampledisco.sample_clustering.RAISIN_TEST import run_pairwise_tests
 
 fit = raisinfit(
     adata=adata_cell,

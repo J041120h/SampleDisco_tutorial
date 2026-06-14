@@ -1,90 +1,107 @@
 # `find_optimal_cell_resolution_multiomics_linux`
 
-Two-pass resolution search for the integrated RNA + ATAC object. For a chosen `optimization_target` (RNA or ATAC) and `dr_type` (expression or proportion), the function sweeps Leiden resolutions on the joint embedding, rebuilds the multi-omics sample embedding at each resolution, and picks the value that maximizes CCA correlation with the trajectory column. GPU-accelerated throughout via [`cell_types_multiomics_linux`](cell_types_multiomics_linux.md) and [`calculate_multiomics_sample_embedding`](calculate_multiomics_sample_embedding.md).
+!!! danger "Removed"
+    `find_optimal_cell_resolution_multiomics_linux` has been **removed** from `sampledisco`. The CCA-driven cell-resolution sweep for the integrated RNA + ATAC object no longer exists, and there is no drop-in replacement that re-clusters at many Leiden resolutions. Parameter selection is now an **alpha / block-weight autotune** that does not touch the clustering resolution. This page is retained only as a migration guide.
 
-**Source:** `parameter_selection/multi_omics_optimal_resolution_gpu.py:543`
+## What replaced it
 
-## Signature
+The old function rebuilt the multi-omics sample embedding at every Leiden resolution and kept the resolution that maximized CCA correlation with a trajectory column. The current pipeline fixes the clustering and instead tunes how the composition and RMD blocks are blended, via [`run_autotune`](#current-approach-run_autotune). For most users this runs automatically inside the config-driven wrapper — you do not call it directly.
 
-```python
-def find_optimal_cell_resolution_multiomics_linux(
-    AnnData_integrated: AnnData,
-    output_dir: str,
-    optimization_target: Literal["rna", "atac"] = "rna",
-    dr_type: Literal["expression", "proportion"] = "expression",
-    sev_col: str = "sev.level",
-    batch_col: Optional[Union[str, List[str]]] = None,
-    sample_col: str = "sample",
-    celltype_col: str = "cell_type",
-    modality_col: str = "modality",
-    use_rep: str = "X_glue",
-    sample_hvg_number: int = 2000,
-    n_expression_components: int = 10,
-    n_proportion_components: int = 10,
-    harmony_for_proportion: bool = True,
-    preserve_cols: Optional[Union[str, List[str]]] = None,
-    hvg_modality: str = "RNA",
-    coarse_start: float = 0.1,
-    coarse_end: float = 1.0,
-    coarse_step: float = 0.1,
-    fine_range: float = 0.05,
-    fine_step: float = 0.01,
-    visualize_cell_types: bool = True,
-    analyze_modality_alignment: bool = True,
-    compute_corrected_pvalues: bool = False,
-    verbose: bool = True,
-) -> Tuple[float, pd.DataFrame]
+### Preferred path — the wrapper
+
+Multi-omics autotune is enabled with a single flag in your config:
+
+```yaml
+multiomics_autotune_enable: true
 ```
 
-## Parameters
+Then run the pipeline as usual:
+
+```bash
+sampledisco -m complex --config config.yaml
+```
+
+The wrapper preprocesses each modality, builds the integrated embedding (`Z_clust` sample-removed, `Z_rmd` sample-preserved), runs the autotune to pick the block-blending weight, and writes the final sample embedding to `adata.uns['X_DR_sample']`.
+
+## Current approach: `run_autotune`
+
+For direct control, call the autotune yourself. It searches the composition-vs-RMD blend (`alpha` / block weights) rather than the clustering resolution.
+
+**Source:** `parameter_selection/autotune.py`
+
+### Signature
+
+```python
+from sampledisco.parameter_selection.autotune import run_autotune, DEFAULT_ALPHA_BOUNDS
+
+def run_autotune(
+    adata: AnnData,
+    output_dir: str,
+    *,
+    sample_col: str = "sample",
+    celltype_col: str = "cell_type",
+    cluster_emb_key: str = "Z_clust",
+    rmd_emb_key: Optional[str] = None,
+    modality_col: Optional[str] = None,
+    batch_col: Optional[Union[str, List[str]]] = None,
+    grouping_col: Optional[str] = None,
+    medium_K: int = 120,
+    fine_K: int = 300,
+    rmd_dim: int = 8,
+    pca_components: int = 10,
+    batch_method: str = "harmony",
+    scoring: str = "auto",
+    search: str = "bayesian",
+    scope: str = "alpha_only",
+    alpha_bounds: Tuple[float, float] = DEFAULT_ALPHA_BOUNDS,  # (0.1, 10.0)
+    seed: int = 42,
+    save: bool = True,
+    verbose: bool = True,
+    tune_on_modality: Optional[str] = None,
+) -> Dict
+```
+
+### Parameters
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `AnnData_integrated` | AnnData | — | Integrated RNA + ATAC object with the joint embedding in `use_rep`. |
-| `output_dir` | str | — | Results land under `{output_dir}/resolution_optimization_{dr_type}/`. |
-| `optimization_target` | `"rna"` or `"atac"` | `"rna"` | Which modality's phenotype is used for CCA. |
-| `dr_type` | `"expression"` or `"proportion"` | `"expression"` | Which sample embedding to optimize. |
-| `sev_col` | str | `"sev.level"` | Trajectory/phenotype column. |
-| `batch_col` | str or list, optional | `None` | Batch column(s) for sample embedding. |
+| `adata` | AnnData | — | Integrated multi-omics object carrying `Z_clust` and `Z_rmd`. |
+| `output_dir` | str | — | Where autotune artifacts are written. |
 | `sample_col` | str | `"sample"` | Sample identifier. |
-| `celltype_col` | str | `"cell_type"` | Cell-type label column (rewritten per resolution). |
-| `modality_col` | str | `"modality"` | Column identifying modality. |
-| `use_rep` | str | `"X_glue"` | Representation for clustering. |
-| `sample_hvg_number` | int | `2000` | HVGs per cell type in pseudobulk. |
-| `n_expression_components` / `n_proportion_components` | int | `10 / 10` | DR components. |
-| `harmony_for_proportion` | bool | `True` | Harmony on the proportion embedding. |
-| `preserve_cols` | str or list, optional | `None` | Metadata carried into pseudobulk. |
-| `hvg_modality` | str | `"RNA"` | Which modality's HVGs feed the pseudobulk. |
-| `coarse_start` / `coarse_end` / `coarse_step` | float | `0.1 / 1.0 / 0.1` | Coarse grid. |
-| `fine_range` / `fine_step` | float | `0.05 / 0.01` | Fine grid around the coarse winner. |
-| `visualize_cell_types` | bool | `True` | Save per-resolution cell-type UMAPs. |
-| `analyze_modality_alignment` | bool | `True` | Report modality alignment quality. |
-| `compute_corrected_pvalues` | bool | `False` | Permutation-corrected p-values. |
+| `celltype_col` | str | `"cell_type"` | Cell-type label column. |
+| `cluster_emb_key` | str | `"Z_clust"` | Sample-removed embedding for the composition blocks. |
+| `rmd_emb_key` | str, optional | `None` | Sample-preserved (RMD) embedding; resolved automatically when `None`. |
+| `modality_col` | str, optional | `None` | Column identifying modality — set to `"modality"` for multi-omics. |
+| `batch_col` | str or list, optional | `None` | Batch column(s) for the sample-level correction. |
+| `grouping_col` | str, optional | `None` | Grouping used by the leave-one-out RMD reference. |
+| `medium_K` / `fine_K` | int | `120 / 300` | Medium- and fine-resolution composition block sizes. |
+| `rmd_dim` | int | `8` | RMD displacement dimensions per cluster. |
+| `pca_components` | int | `10` | PCA components for the final sample embedding. |
+| `batch_method` | str | `"harmony"` | Sample-level batch-correction method. |
+| `scoring` | str | `"auto"` | Objective used to score candidate blends. |
+| `search` | str | `"bayesian"` | Search strategy over the blend space. |
+| `scope` | str | `"alpha_only"` | What to tune (alpha-only by default). |
+| `alpha_bounds` | tuple | `(0.1, 10.0)` | Bounds on the block-blend weight. |
+| `seed` | int | `42` | Random seed. |
+| `save` | bool | `True` | Persist autotune artifacts. |
 | `verbose` | bool | `True` | Print progress. |
+| `tune_on_modality` | str, optional | `None` | Restrict the bio-preservation/batch proxies to one modality (e.g. `"RNA"`) during the search, while the final embedding is still built on all units. |
 
-## Returns
+### Returns
 
-`Tuple[float, pd.DataFrame]` — `(best_resolution, trials_df)` with per-resolution CCA scores, p-values, and diagnostics.
-
-## Output files
-
-- `{output_dir}/resolution_optimization_{expression|proportion}/Integration_optimization_{target}_{dr_type}/` — per-resolution artifacts.
-- `.../summary/optimal_{target}_{dr_type}.h5ad` — AnnData at the winning resolution.
-- `.../summary/trials.csv`.
+`Dict` — the best parameters plus the final sample-level AnnData (with `uns['X_DR_sample']` populated).
 
 ## Usage
 
 ```python
-from genodistance.parameter_selection import find_optimal_cell_resolution_multiomics_linux
+from sampledisco.parameter_selection.autotune import run_autotune
 
-best_res, trials = find_optimal_cell_resolution_multiomics_linux(
-    AnnData_integrated=adata_integrated,
+result = run_autotune(
+    adata_integrated,
     output_dir="/results/multiomics",
-    optimization_target="rna",
-    dr_type="expression",
-    sev_col="sev.level",
-    use_rep="X_glue",
+    modality_col="modality",
+    tune_on_modality="RNA",
 )
 ```
 
-After running, call [`replace_optimal_dimension_reduction`](replace_optimal_dimension_reduction.md) to fold the winning embedding back into `pseudobulk_sample.h5ad`.
+To fold a previously selected optimal embedding back into the merged object, see [`replace_optimal_dimension_reduction`](replace_optimal_dimension_reduction.md).

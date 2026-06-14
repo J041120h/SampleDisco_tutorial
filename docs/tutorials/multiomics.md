@@ -1,6 +1,6 @@
 # Multi-omics pipeline tutorial
 
-The multi-omics branch integrates unpaired (or paired) scRNA + scATAC data via [GLUE](https://www.nature.com/articles/s41587-022-01284-4), computes cell-type labels on the joint embedding, and then produces the same dual sample embedding (`X_DR_expression`, `X_DR_proportion`) as the single-modality pipelines. Downstream analyses (distance, trajectory, DGE, clustering) reuse the shared modules.
+The multi-omics branch integrates unpaired (or paired) scRNA + scATAC data via [GLUE](https://www.nature.com/articles/s41587-022-01284-4), computes cell-type labels on the joint embedding, and then produces the same single sample embedding (`uns['X_DR_sample']`) as the single-modality pipelines. Downstream analyses (distance, trajectory, DGE, clustering) reuse the shared modules.
 
 ## Inputs
 
@@ -12,10 +12,10 @@ Output lands under `output_dir/multiomics/`.
 
 ## 1. GLUE integration
 
-`multiomics_preparation` runs four sub-stages: RNA/ATAC preprocessing, GLUE adversarial training, gene-activity computation, and optional visualization. Each can be toggled via a flag.
+`multiomics_preparation` runs the full GLUE pipeline as toggleable sub-stages: scGLUE preprocessing (`run_preprocessing`), adversarial training (`run_training`), cell-union merge into a single integrated object (`run_merge`), per-modality QC + normalize (`run_preprocess_per_modality`), and optional visualization (`run_visualization`). Set `run_second_glue_for_sample_removal=True` to train scGLUE a second time and also obtain the sample-REMOVED cluster embedding (`obsm['Z_clust']`); the primary run's `X_glue` is aliased to the sample-PRESERVED `obsm['Z_rmd']`.
 
 ```python
-from genodistance.preparation import multiomics_preparation
+from sampledisco.preparation.multi_omics_glue import multiomics_preparation
 
 multiomics_preparation(
     rna_file="/data/test_RNA.h5ad",
@@ -24,11 +24,18 @@ multiomics_preparation(
     atac_sample_meta_file=None,
     additional_hvg_file="/data/unique_genes.txt",
     output_dir="/results/multiomics",
+    # Process control flags
+    run_preprocessing=True,
+    run_training=True,
+    run_merge=True,
+    run_preprocess_per_modality=True,
+    run_visualization=True,
     # GLUE preprocessing
     ensembl_release=98,
     species="homo_sapiens",
     use_highly_variable=True,
     n_top_genes=2000,
+    n_top_peaks=50000,
     n_pca_comps=50,
     n_lsi_comps=50,
     gtf_by="gene_name",
@@ -38,17 +45,13 @@ multiomics_preparation(
     atac_sample_column="sample",
     # GLUE training
     consistency_threshold=0.05,
-    treat_sample_as_batch=True,
+    treat_sample_as_batch=False,
     save_prefix="glue",
-    # Gene activity
-    k_neighbors=1,
-    use_rep="X_glue",
-    metric="cosine",
-    use_gpu=True,
+    run_second_glue_for_sample_removal=True,
 )
 ```
 
-**Writes** → `/results/multiomics/integration/glue/` (trained model + integrated objects) and `/results/multiomics/preprocess/adata_sample.h5ad` with the joint embedding in `.obsm["X_glue"]`.
+**Writes** → `/results/multiomics/integration/glue/` (trained model + integrated objects), `/results/multiomics/preprocess/adata_sample.h5ad` (the cell-union object), and per-modality `preprocess/adata_{rna,atac}_preprocessed.h5ad`. The integrated cells carry `obsm['Z_rmd']` (primary `X_glue`) and, with the second run enabled, `obsm['Z_clust']`.
 
 ![GLUE joint UMAP colored by modality](../resource/multiomics/scglue_umap_modality.png)
 ![UMAP split by modality](../resource/multiomics/umap_split_by_modality.png)
@@ -56,50 +59,35 @@ multiomics_preparation(
 
 ## 2. Integration QC
 
-After GLUE, `integrate_preprocess` performs additional QC on the merged object: min cells/genes filters, mito cutoff, and optional doublet detection (min-cells bumps to 30 automatically when doublet detection is on).
-
-```python
-from genodistance.preparation import integrate_preprocess
-
-integrate_preprocess(
-    output_dir="/results/multiomics",
-    sample_column="sample",
-    modality_col="modality",
-    min_cells_sample=1,
-    min_cell_gene=10,
-    min_features=500,
-    pct_mito_cutoff=20,
-    exclude_genes=None,
-    doublet=True,
-    verbose=True,
-)
-```
-
-**Writes** → updated `/results/multiomics/preprocess/adata_sample.h5ad`. No standalone figure; check the logs for kept/dropped cell counts.
+!!! warning "Removed — folded into `multiomics_preparation`"
+    The standalone `integrate_preprocess` function (which performed post-GLUE QC on the merged object) has been **removed**. Its work — per-modality QC filters, normalization, and the cell-union build — is now performed inside `multiomics_preparation` via the `run_preprocess_per_modality` and `run_merge` flags shown in step 1. The relevant QC knobs (`rna_min_cells`, `rna_min_genes`, `rna_pct_mito_cutoff`, `atac_min_features`, `atac_doublet_detection`, …) are now parameters of `multiomics_preparation`. The low-level helpers live in `sampledisco.preparation.multi_omics_merge` (`build_embedding_union`, `preprocess_rna_for_downstream`, `preprocess_atac_for_downstream`). No separate call is needed.
 
 ## 3. Joint cell typing
 
-`cell_types_multiomics_linux` clusters RNA cells with Leiden on `X_glue`, then transfers labels to ATAC via k-NN on the joint embedding.
+`cell_types_multiomics` clusters RNA cells with Leiden on the joint embedding, then transfers labels to ATAC via a Jaccard-weighted shared-nearest-neighbor (SNN) graph. `use_rep` should point at the sample-removed `Z_clust`; the wrapper resolves this automatically, and the default `'X_glue'` is a fallback.
 
 ```python
-from genodistance.preparation import cell_types_multiomics_linux
+from sampledisco.preparation.multi_omics_cell_type_cpu import cell_types_multiomics
 
-adata_integrated = cell_types_multiomics_linux(
+adata_integrated = cell_types_multiomics(
     adata=adata_integrated,                # loaded from preprocess/adata_sample.h5ad
     modality_column="modality",
     rna_modality_value="RNA",
     atac_modality_value="ATAC",
     cell_type_column="cell_type",
     cluster_resolution=0.8,
-    use_rep="X_glue",
+    use_rep="Z_clust",
     num_PCs=50,
-    k_neighbors=1,
+    k_neighbors=15,
     transfer_metric="cosine",
     compute_umap=True,
     save=True,
     output_dir="/results/multiomics",
 )
 ```
+
+!!! tip "GPU"
+    A GPU-accelerated equivalent is available as `cell_types_multiomics_gpu` in `sampledisco.preparation.multi_omics_cell_type_gpu`.
 
 **Writes** → `preprocess/adata_sample.h5ad` with a unified `cell_type` column, plus UMAPs.
 
@@ -109,45 +97,47 @@ adata_integrated = cell_types_multiomics_linux(
 
 ## 4. Sample embedding
 
-Identical to the single-modality version but also accepts a `modality_col` and `hvg_modality` so the pseudobulk picks HVGs from a chosen modality and includes the modality tag in batch correction.
+The unified `compute_sample_embedding` handles RNA, ATAC, and multi-omics — there is no separate multi-omics entry point. For multi-omics, pass `modality_col="modality"`; the units of the resulting embedding are `<sample>_RNA` / `<sample>_ATAC`. The composition blocks are built on the sample-removed `Z_clust`, and the RMD displacement block on the sample-preserved `Z_rmd`.
 
 ```python
-from genodistance.sample_embedding import calculate_multiomics_sample_embedding
+from sampledisco.sample_embedding import compute_sample_embedding
 
-pseudo_dict, pseudo_adata = calculate_multiomics_sample_embedding(
-    adata=adata_integrated,
+adata_integrated = compute_sample_embedding(
+    adata_integrated,
+    output_dir="/results/multiomics",
+    use_gpu=True,
     sample_col="sample",
     celltype_col="cell_type",
-    batch_col=None,
+    cluster_emb_key="Z_clust",
+    rmd_emb_key=None,            # defaults to Z_rmd
     modality_col="modality",
-    hvg_modality="RNA",
-    output_dir="/results/multiomics",
-    sample_hvg_number=2000,
-    n_expression_components=10,
-    n_proportion_components=10,
-    harmony_for_proportion=True,
-    use_gpu=True,
-    atac=False,
+    batch_col=None,
+    medium_K=120,
+    fine_K=300,
+    rmd_dim_per_cluster=8,
+    rmd_weight=0.60,
+    pca_components=10,
+    batch_method="harmony",
     save=True,
 )
 ```
 
-**Writes** → `/results/multiomics/pseudobulk/pseudobulk_sample.h5ad` with `X_DR_expression` and `X_DR_proportion` on the sample level.
+**Writes** → the single sample embedding into `adata_integrated.uns['X_DR_sample']` (a pandas DataFrame, units × PCs) and persists the updated object under `/results/multiomics/`. The function **returns the modified `AnnData`**. This single key replaces the legacy two-key `X_DR_expression` / `X_DR_proportion` layout and is consumed by every downstream module.
 
 ## 5. Embedding visualization
 
-`visualize_multimodal_embedding` produces side-by-side scatter plots of the two embeddings with optional coloring by metadata.
+`visualize_multimodal_embedding` produces scatter plots of the sample embedding with optional coloring by metadata. With the single-key embedding, both `expression_key` and `proportion_key` survive only for back-compat and should be set to `'X_DR_sample'`.
 
 ```python
-from genodistance.visualization import visualize_multimodal_embedding
+from sampledisco.visualization.multi_omics_visualization import visualize_multimodal_embedding
 
 visualize_multimodal_embedding(
-    adata=pseudo_adata,
+    adata=adata_integrated,
     modality_col="modality",
     color_col=None,
     target_modality="ATAC",
-    expression_key="X_DR_expression",
-    proportion_key="X_DR_proportion",
+    expression_key="X_DR_sample",
+    proportion_key="X_DR_sample",
     visualization_grouping_column=["sev.level"],
     figsize=(20, 8),
     point_size=60,
@@ -163,4 +153,4 @@ visualize_multimodal_embedding(
 
 ---
 
-Once `pseudo_adata` is in hand, every remaining analysis — sample distance, CCA / TSCAN, trajectory DGE, sample clustering, proportion test, RAISIN cluster DGE, and the optional CCA-guided resolution search — is shared across modalities. Continue to the [Downstream analysis tutorials](downstream/index.md).
+Once `uns['X_DR_sample']` is populated, every remaining analysis — sample distance, CCA / TSCAN, trajectory DGE, sample clustering, proportion test, and RAISIN cluster DGE — is shared across modalities. (The old CCA-guided resolution search has been removed; parameter selection is now the alpha / block-weight autotune, enabled via `multiomics_autotune_enable` in the config-driven wrapper.) Continue to the [Downstream analysis tutorials](downstream/index.md).

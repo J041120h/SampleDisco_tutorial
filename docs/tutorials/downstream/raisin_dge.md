@@ -5,7 +5,8 @@ Two-step cluster-level differential expression: `raisinfit` fits the RAISIN hier
 ## Call
 
 ```python
-from genodistance.sample_clustering import raisinfit, run_pairwise_tests
+from sampledisco.sample_clustering.RAISIN import raisinfit
+from sampledisco.sample_clustering.RAISIN_TEST import run_pairwise_tests
 
 fit = raisinfit(
     adata=adata_cell,

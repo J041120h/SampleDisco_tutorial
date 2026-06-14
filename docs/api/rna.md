@@ -1,23 +1,25 @@
 # RNA API
 
-The RNA branch of SampleDisc takes a cell-level `.h5ad` with raw counts and turns it into two sample-level embeddings. Two RNA-specific functions live in this section; sample embedding and resolution search are shared across modalities and live under **Shared**.
+The RNA branch of SampleDisco takes a cell-level `.h5ad` with raw counts and turns it into a single sample-level embedding (`uns['X_DR_sample']`). Two RNA-specific functions live in this section; sample embedding is shared across modalities and lives under **Shared**.
 
 | Function | Purpose |
 | --- | --- |
-| [`preprocess_linux`](rna/preprocess_linux.md) | QC filter, normalize, log-transform, select HVGs, PCA, Harmony. Produces `adata_cell.h5ad` (Harmony-integrated for clustering) and `adata_sample.h5ad` (minimally processed for pseudobulk). |
-| [`cell_types_linux`](rna/cell_types_linux.md) | Leiden clustering on the Harmony embedding, with optional recursive resolution tuning to hit a target cluster count and optional UMAP. Writes labels into `.obs["cell_type"]`. |
+| [`preprocess`](rna/preprocess_linux.md) | QC filter, normalize, log-transform, select HVGs, PCA, 2-pass Harmony. Writes one `adata_preprocessed.h5ad` carrying `obsm['Z_clust']` (sample-removed) and `obsm['Z_rmd']` (sample-preserved). |
+| [`cell_types`](rna/cell_types_linux.md) | Leiden clustering on the sample-removed `Z_clust` embedding, with optional adaptive resolution tuning to hit a target cluster count and optional UMAP. Writes labels into `.obs["cell_type"]`. |
 
 ## Shared with ATAC
 
-- [`calculate_sample_embedding`](shared/calculate_sample_embedding.md) — pseudobulk + dual DR.
-- [`find_optimal_cell_resolution_linux`](shared/find_optimal_cell_resolution_linux.md) — CCA-guided resolution search.
+- [`compute_sample_embedding`](shared/calculate_sample_embedding.md) — composition blocks on `Z_clust` + RMD displacement block on `Z_rmd`, reduced to the single key `uns['X_DR_sample']`.
+
+!!! warning "Removed: CCA resolution search"
+    `find_optimal_cell_resolution_linux` has been **removed**. The CCA-driven cell-resolution sweep no longer exists; parameter selection is now alpha / block-weight **autotune** (`sampledisco.parameter_selection.autotune.run_autotune`), enabled via the `rna_autotune_enable` flag in the config-driven wrapper. See the [shared page](shared/find_optimal_cell_resolution_linux.md) for details.
 
 ## Typical order
 
 ```
-preprocess_linux
-   └─> cell_types_linux
-          └─> calculate_sample_embedding
+preprocess
+   └─> cell_types
+          └─> compute_sample_embedding
                  └─> downstream analyses (see Downstream section)
 ```
 

@@ -3,7 +3,7 @@
 <div class="hero" markdown>
 **Sample-level representation learning for single-cell multi-omics.**
 
-SampleDisc is a config-driven Python pipeline that turns single-cell RNA, ATAC, or unpaired multi-omics data into dual sample-level embeddings — one capturing expression signal, one capturing cell-type composition — and runs the full downstream stack of distance analysis, trajectory inference, differential testing, clustering, and visualization in a single call.
+SampleDisco is a config-driven Python pipeline that turns single-cell RNA, ATAC, or unpaired multi-omics data into a unified sample-level embedding — combining multi-resolution cell-type composition with within-cell-type state shifts (RMD displacement) — and runs the full downstream stack of distance analysis, trajectory inference, differential testing, clustering, and visualization in a single call.
 
 [Get started](tutorials/configuration.md){ .md-button .md-button--primary }
 [Browse the API](api/index.md){ .md-button }
@@ -13,14 +13,14 @@ SampleDisc is a config-driven Python pipeline that turns single-cell RNA, ATAC, 
 
 ![SampleDisc workflow](resource/overview.jpg)
 
-<div class="figure-caption">From cell-level input to sample-level embeddings and downstream trajectory, clustering, and differential analyses.</div>
+<div class="figure-caption">From cell-level input to a sample-level embedding and downstream trajectory, clustering, and differential analyses.</div>
 
 ## Four stages
 
-1. **Preprocessing and QC.** Filter cells and features, correct batch, build cell-level embeddings (PCA/Harmony for RNA, TF-IDF/LSI/Harmony for ATAC, GLUE for unpaired multi-omics).
+1. **Preprocessing and QC.** Filter cells and features, correct batch, build cell-level embeddings — a sample-removed view (`Z_clust`) and a sample-preserved view (`Z_rmd`) — via PCA/Harmony for RNA, TF-IDF/LSI/Harmony for ATAC, and scGLUE for unpaired multi-omics.
 2. **Cell-type assignment.** Leiden clustering with optional target cluster count, or reuse of existing labels.
-3. **Sample embedding.** Pseudobulk per cell type + PCA → expression embedding. Cell-type proportions + PCA (optionally Harmony) → proportion embedding.
-4. **Downstream analysis.** Distance, trajectory, differential genes, clustering, visualization — all running off the same pseudobulk object.
+3. **Sample embedding.** Multi-resolution cell-type composition blocks on `Z_clust` are combined with a reference-relative mean displacement (RMD) block on `Z_rmd`; the blocks are inverse-variance weighted, stacked, PCA-reduced, and Harmony-corrected at the sample level into a single embedding stored as `adata.uns['X_DR_sample']`.
+4. **Downstream analysis.** Distance, trajectory, differential genes, clustering, visualization — all running off the same sample embedding.
 
 ## Supported inputs
 
@@ -34,15 +34,15 @@ SampleDisc is a config-driven Python pipeline that turns single-cell RNA, ATAC, 
 === "CLI"
 
     ```bash
-    python /users/hjiang/GenoDistance/code/SampleDisc.py -m complex \
-      --config /users/hjiang/GenoDistance/code/config/config_covid_rna.yaml
+    sampledisco -m complex --config config.yaml
+    # equivalent: python -m sampledisco.cli -m complex --config config.yaml
     ```
 
 === "Python"
 
     ```python
     import yaml
-    from wrapper.wrapper import wrapper
+    from sampledisco import wrapper
 
     with open("config.yaml", "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
