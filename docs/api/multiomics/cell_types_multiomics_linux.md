@@ -1,13 +1,13 @@
-# `cell_types_multiomics_linux`
+# `cell_types_multiomics`
 
-Assigns cell-type labels on the integrated RNA + ATAC object. RNA cells are clustered with Leiden on the joint embedding (`X_glue` by default); ATAC cells then receive labels via cosine-metric k-nearest neighbors in the same embedding. The k-NN graph is Jaccard-weighted (SNN) and imbalanced clusters can be dropped automatically to keep label transfer robust. Optionally computes a UMAP on the joint space.
+Assigns cell-type labels on the integrated RNA + ATAC object. RNA cells are clustered with Leiden on the joint embedding (the sample-removed `Z_clust`, with `X_glue` as a fallback default); ATAC cells then receive labels via cosine-metric k-nearest neighbors in the same embedding. The k-NN graph is Jaccard-weighted (SNN) and imbalanced clusters can be dropped automatically to keep label transfer robust. Optionally computes a UMAP on the joint space.
 
-**Source:** `preparation/multi_omics_cell_type_gpu.py:19`
+**Source:** `preparation/multi_omics_cell_type_cpu.py:19` (GPU: `multi_omics_cell_type_gpu.cell_types_multiomics_gpu`)
 
 ## Signature
 
 ```python
-def cell_types_multiomics_linux(
+def cell_types_multiomics(
     adata,
     modality_column="modality",
     rna_modality_value="RNA",
@@ -37,7 +37,7 @@ def cell_types_multiomics_linux(
 | `atac_modality_value` | str | `"ATAC"` | Value identifying ATAC cells. |
 | `cell_type_column` | str | `"cell_type"` | Destination column for labels. |
 | `cluster_resolution` | float | `0.8` | Leiden resolution for RNA clustering. |
-| `use_rep` | str | `"X_glue"` | Key in `.obsm` used for clustering and k-NN transfer. |
+| `use_rep` | str | `"X_glue"` | Key in `.obsm` used for clustering and k-NN transfer. Should be the sample-removed `Z_clust`; the wrapper resolves this automatically, and `X_glue` is the fallback when `Z_clust` is absent. |
 | `num_PCs` | int, optional | `50` | Trim the joint embedding to this many components before processing. |
 | `k_neighbors` | int | `15` | Nearest RNA neighbors per ATAC cell during label transfer. |
 | `transfer_metric` | str | `"cosine"` | Distance metric used in the k-NN search. |
@@ -54,15 +54,16 @@ The input AnnData, now carrying `.obs[cell_type_column]` and (when requested) `X
 
 ## Output files
 
-- `{output_dir}/preprocess/adata_sample.h5ad` (when `save=True`).
-- UMAP and diagnostic PNGs under `{output_dir}/preprocess/`.
+- `{output_dir}/preprocess/adata_preprocessed.h5ad` (when `save=True` and `output_dir` is set), or the exact path given by `defined_output_path`.
+- `{output_dir}/preprocess/cell_type.csv` — per-cell labels.
+- UMAP and diagnostic PNGs under `{output_dir}/visualization/`.
 
 ## Usage
 
 ```python
-from genodistance.preparation import cell_types_multiomics_linux
+from sampledisco.preparation.multi_omics_cell_type_cpu import cell_types_multiomics
 
-adata = cell_types_multiomics_linux(
+adata = cell_types_multiomics(
     adata=adata_integrated,
     modality_column="modality",
     cluster_resolution=0.8,

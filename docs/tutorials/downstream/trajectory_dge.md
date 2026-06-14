@@ -4,24 +4,30 @@ Given a pseudotime (from [CCA](trajectory_cca.md) or [TSCAN](trajectory_tscan.md
 
 ## Call
 
+The pseudobulk is built **on the fly** from the cell-level `AnnData` (aggregating cells per sample × cell type), so you pass the preprocessed cell-level `adata` — not a separate sample-level object. `pseudotime_source` accepts a dict, a DataFrame, or a path to a CSV/TSV emitted by [CCA](trajectory_cca.md) or [TSCAN](trajectory_tscan.md).
+
 ```python
-from genodistance.sample_trajectory import run_trajectory_gam_differential_gene_analysis
+from sampledisco.sample_trajectory.trajectory_diff_gene import (
+    run_trajectory_gam_differential_gene_analysis,
+)
 
 results_df = run_trajectory_gam_differential_gene_analysis(
-    pseudobulk_adata=pseudo_adata,
-    pseudotime_source=expr_pseudotime,   # dict or DataFrame from CCA/TSCAN
+    adata,                               # cell-level preprocessed AnnData
+    pseudotime_source=expr_pseudotime,   # dict, DataFrame, or CSV/TSV path from CCA/TSCAN
     sample_col="sample",
+    celltype_col="cell_type",
     pseudotime_col="pseudotime",
     covariate_columns=None,
-    fdr_threshold=0.05,
+    fdr_threshold=0.01,
     effect_size_threshold=1.0,
     top_n_genes=100,
     num_splines=5,
-    spline_order=2,
+    spline_order=3,
     output_dir="/results/rna/trajectoryDEG/expression",
     generate_visualizations=True,
     n_clusters=3,
     top_n_genes_for_curves=20,
+    anchor_col=None,                     # orient pseudotime so UP/DOWN are stable
 )
 ```
 

@@ -2,7 +2,7 @@
 
 Runs all pairwise RAISIN contrasts for the groups in a fitted model and generates the volcano plots, per-pair results CSVs, and summary figures. Internally calls `raisintest` once per pair (or once per non-control group when `control_group` is set) and aggregates the outputs into a `summary_plots/` folder with a cross-cluster pseudobulk heatmap and a summary dotplot of DE gene counts.
 
-**Source:** `sample_clustering/RAISIN_TEST.py:635`
+**Source:** `sampledisco/sample_clustering/RAISIN_TEST.py:609`
 
 ## Signature
 
@@ -18,6 +18,7 @@ def run_pairwise_tests(
     top_n_genes: int = 50,
     make_summary_plots: bool = True,
     verbose=True,
+    random_state: int = 42,
 )
 ```
 
@@ -33,12 +34,13 @@ def run_pairwise_tests(
 | `n_permutations` | int | `100` | Number of permutations used by `raisintest` for empirical calibration. |
 | `fdr_threshold` | float | `0.05` | Cutoff used when drawing volcano significance bands and counting DE genes. |
 | `top_n_genes` | int | `50` | How many top genes to annotate in the volcano and heatmap. |
-| `make_summary_plots` | bool | `True` | Emit `summary_plots/pseudobulk_heatmap.png`, `summary_plots/summary_dotplot.png`. |
+| `make_summary_plots` | bool | `True` | Emit `summary_plots/pseudobulk_heatmap.png`, `summary_plots/summary_dotplot.png`, `summary_plots/cluster_gene_zscore.png`. |
 | `verbose` | bool | `True` | Print progress. |
+| `random_state` | int | `42` | Seed passed to `raisintest` for the permutation calibration of each pair. |
 
 ## Returns
 
-`None`. Writes per-pair CSVs and PNGs plus the summary folder.
+`(results_summary, all_results)` — a 2-tuple. `results_summary` is a `dict` mapping each `{group1}_vs_{group2}` comparison to its count of significant genes (`FDR < fdr_threshold`); `all_results` is a `dict` mapping each comparison to its per-pair RAISIN results `DataFrame`. The function also writes the per-pair CSVs/PNGs and the summary folder described below.
 
 ## Output files
 
@@ -48,20 +50,23 @@ Per pair:
 - `{group1}_vs_{group2}/volcano.png`
 - `{group1}_vs_{group2}/volcano_labeled.png`
 
-Across all pairs (when `make_summary_plots=True`):
+Across all pairs (a `summary_plots/` folder is always written; the PNG plots require `make_summary_plots=True`):
 
+- `summary_plots/raisin_summary.csv`
+- `summary_plots/raisin_summary.txt`
 - `summary_plots/pseudobulk_heatmap.png`
 - `summary_plots/summary_dotplot.png`
+- `summary_plots/cluster_gene_zscore.png`
 - `summary_plots/all_results_combined.csv`
 
 ## Usage
 
 ```python
-from genodistance.sample_clustering import run_pairwise_tests
+from sampledisco.sample_clustering.RAISIN_TEST import run_pairwise_tests
 
-run_pairwise_tests(
+results_summary, all_results = run_pairwise_tests(
     fit=fit,
-    output_dir="/results/rna/raisin_results_expression",
+    output_dir="/results/rna/raisin_results",
     groups_to_compare=None,
     control_group=None,
     fdr_threshold=0.05,

@@ -1,6 +1,6 @@
 # Downstream API
 
-Everything in this section runs off a `pseudobulk_sample.h5ad` — the sample-level AnnData with `X_DR_expression` and `X_DR_proportion` in `.obsm`. The functions are identical across RNA, ATAC, and multi-omics, and most share a common wrapper invocation inside `downstream_analysis()`.
+Everything in this section runs off the single sample embedding `uns['X_DR_sample']` — the final sample-level DataFrame (units × PCs) written in place by `compute_sample_embedding`. The functions are identical across RNA, ATAC, and multi-omics, and most share a common wrapper invocation inside `downstream_analysis()`.
 
 ## Sample distance
 
@@ -27,7 +27,7 @@ Everything in this section runs off a `pseudobulk_sample.h5ad` — the sample-le
 
 | Function | Purpose | When to use |
 | --- | --- | --- |
-| [`cluster`](downstream/cluster.md) | K-means on the two sample embeddings. | Want a discrete sample grouping when no phenotype is available. |
+| [`cluster`](downstream/cluster.md) | K-means on the sample embedding. | Want a discrete sample grouping when no phenotype is available. |
 | [`proportion_test`](downstream/proportion_test.md) | eBayes moderated test on per-sample cell-type proportions across groups. | Ask whether cluster/group differences are driven by cell-type composition. |
 | [`raisinfit`](downstream/raisinfit.md) | Fit the RAISIN hierarchical GLM. | Step 1 of cluster-level differential expression. |
 | [`run_pairwise_tests`](downstream/run_pairwise_tests.md) | Run every pairwise contrast on a fitted RAISIN model, emit volcanos + summary plots. | Step 2 of cluster-level DE. |
@@ -37,6 +37,6 @@ Everything in this section runs off a `pseudobulk_sample.h5ad` — the sample-le
 | Function | Purpose |
 | --- | --- |
 | [`visualization`](downstream/visualization.md) | Cell-type dendrogram, proportion PCA, expression UMAP — toggle which panels you want. |
-| [`visualize_multimodal_embedding`](downstream/visualize_multimodal_embedding.md) | Side-by-side scatter of the two embeddings with flexible coloring; multi-omics only. |
+| [`visualize_multimodal_embedding`](downstream/visualize_multimodal_embedding.md) | Scatter of the sample embedding with flexible coloring; multi-omics only. |
 
 For an end-to-end walkthrough that chains these functions together, see the [Downstream tutorials](../tutorials/downstream/index.md).

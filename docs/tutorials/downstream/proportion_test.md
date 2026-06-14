@@ -1,11 +1,11 @@
 # Proportion test
 
-Tests whether cell-type proportions differ across groups. Logit-transforms per-sample proportions, then applies a limma-style empirical-Bayes moderated F-test. Groups can be supplied either via a `.obs` column (`group_col`) or via a `{sample_id: cluster}` mapping (`sample_to_clade`) from [`cluster`](cluster.md).
+Tests whether cell-type proportions differ across groups. CLR-transforms (centered log-ratio) per-sample proportions, then applies a limma-style empirical-Bayes moderated t-test for every pair of groups, with Benjamini–Hochberg FDR applied globally across all (pair × cell-type) hypotheses. Groups can be supplied either via a `.obs` column (`group_col`) or via a `{sample_id: cluster}` mapping (`sample_to_clade`) from [`cluster`](cluster.md).
 
 ## Call
 
 ```python
-from genodistance.sample_clustering import proportion_test
+from sampledisco.sample_clustering.proportion_test import proportion_test
 
 proportion_test(
     adata=adata_cell,
@@ -18,11 +18,13 @@ proportion_test(
 
 ## Output
 
-**Writes** → `/results/rna/sample_cluster/expression/proportion_test/`:
+**Writes** → the directory given by `output_dir`:
 
-- `proportion_test_results.csv` — per cell-type F, p-value, FDR, effect size.
-- `proportion_heatmap_group_by_celltype.png` — sample × cell-type proportion heatmap grouped by cluster.
-- `proportion_significance_matrix.png` — cluster × cell-type significance grid.
+- `proportion_test_<g1>_vs_<g2>.csv` — one file per group pair: per cell-type `logFC`, `p_value`, `FDR`.
+- `proportion_test_significant_summary.txt` — text summary of cell types with `FDR < 0.01`, per comparison.
+- `proportion_heatmap_group_by_celltype.png` — group-averaged cell-type proportion heatmap (plus CLR-scale and z-score variants).
+- `proportion_significance_matrix.png` — cell-type × comparison significance grid.
+- `proportion_boxplot_<g1>_vs_<g2>.png` — proportion boxplots for the top significant cell types of each comparison.
 
 ## Result
 

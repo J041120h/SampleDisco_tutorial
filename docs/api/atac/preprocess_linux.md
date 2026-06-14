@@ -1,19 +1,19 @@
-# `preprocess_linux` (ATAC)
+# `preprocess` (ATAC)
 
-End-to-end preprocessing for scATAC-seq on the GPU/Linux code path. The function reads a peak-count `.h5ad`, merges metadata, applies quality-control filters, runs TF-IDF normalization, projects via LSI, and applies Harmony for batch correction on the clustering track. It also optionally runs scDblFinder-style doublet detection and can drop the first LSI component (which typically reflects sequencing depth). Returns the same two-AnnData pair as the RNA version: a Harmony-integrated object for clustering and a minimally processed object for sample-level analysis.
+End-to-end preprocessing for scATAC-seq. The function reads a peak-count `.h5ad`, merges metadata, applies quality-control filters, runs TF-IDF normalization, projects via LSI, and applies a two-pass Harmony correction. It also optionally runs Scrublet doublet detection and can drop the first LSI component (which typically reflects sequencing depth). Like the RNA version, it writes a single preprocessed AnnData carrying both a sample-removed clustering embedding (`obsm['Z_clust']`) and a sample-preserved displacement embedding (`obsm['Z_rmd']`), and returns that AnnData.
 
-**Source:** `preparation/atac_preprocess_gpu.py:204`
+The CPU implementation lives in `preparation/atac_preprocess_cpu.py`; the GPU-accelerated variant `preprocess_gpu` lives in `preparation/atac_preprocess_gpu.py` and activates only when the RAPIDS stack is importable.
 
 ## Signature
 
 ```python
-def preprocess_linux(
+def preprocess(
     h5ad_path,
     sample_meta_path,
     output_dir,
-    cell_meta_path=None,
     sample_column="sample",
-    sample_level_batch_key="batch",
+    cell_meta_path=None,
+    sample_level_batch_key=None,
     cell_embedding_num_PCs=50,
     num_harmony_iterations=30,
     num_cell_hvfs=50000,
@@ -28,7 +28,7 @@ def preprocess_linux(
     log_transform=True,
     drop_first_lsi=True,
     verbose=True,
-) -> Tuple[AnnData, AnnData]
+) -> AnnData
 ```
 
 ## Parameters
@@ -38,9 +38,9 @@ def preprocess_linux(
 | `h5ad_path` | str | — | Cell × peak `.h5ad`. |
 | `sample_meta_path` | str | — | Per-sample metadata CSV. |
 | `output_dir` | str | — | Writes to `{output_dir}/preprocess/`. |
-| `cell_meta_path` | str, optional | `None` | Per-cell metadata CSV merged into `.obs`. |
 | `sample_column` | str | `"sample"` | Sample identifier column. |
-| `sample_level_batch_key` | str or list, optional | `"batch"` | Sample-level Harmony batch. Set `None` to skip. |
+| `cell_meta_path` | str, optional | `None` | Per-cell metadata CSV (indexed by `barcode`) merged into `.obs`. |
+| `sample_level_batch_key` | str or list, optional | `None` | Sample-level Harmony batch. Leave `None` to skip. |
 | `cell_embedding_num_PCs` | int | `50` | Number of LSI components. |
 | `num_harmony_iterations` | int | `30` | Max Harmony iterations. |
 | `num_cell_hvfs` | int | `50000` | Number of highly variable features for the clustering track. |
@@ -50,7 +50,7 @@ def preprocess_linux(
 | `min_cells_per_sample` | int | `1` | Drop samples with fewer than this many surviving cells. |
 | `exclude_features` | list, optional | `None` | Feature IDs to drop before HVF selection. |
 | `cell_level_batch_key` | list, optional | `None` | Cell-level Harmony batch keys; sample id is always included. |
-| `doublet_detection` | bool | `True` | Run doublet detection before clustering. |
+| `doublet_detection` | bool | `True` | Run Scrublet doublet detection before clustering. |
 | `tfidf_scale_factor` | float | `1e4` | Scaling factor inside TF-IDF normalization. |
 | `log_transform` | bool | `True` | Apply `log1p` after TF-IDF. |
 | `drop_first_lsi` | bool | `True` | Discard LSI component 1 (typically depth-correlated). |
@@ -58,22 +58,22 @@ def preprocess_linux(
 
 ## Returns
 
-`Tuple[AnnData, AnnData]` — `(adata_cluster, adata_sample)`:
+`AnnData` — a single preprocessed object. The raw peak counts are kept in `.layers['counts']`, `.X` holds the TF-IDF + `log1p` normalized matrix, and `.obsm` carries:
 
-- `adata_cluster` carries `X_lsi_harmony` in `.obsm`.
-- `adata_sample` preserves raw peak counts for downstream pseudobulk.
+- `X_lsi` — LSI on the HVF subset (with the first component dropped when `drop_first_lsi=True`).
+- `Z_clust` — sample-removed Harmony embedding (clustering / composition view).
+- `Z_rmd` — sample-preserved Harmony embedding (RMD / displacement view).
 
 ## Output files
 
-- `{output_dir}/preprocess/adata_cell.h5ad`
-- `{output_dir}/preprocess/adata_sample.h5ad`
+- `{output_dir}/preprocess/adata_preprocessed.h5ad`
 
 ## Usage
 
 ```python
-from genodistance.preparation import preprocess_linux  # ATAC build
+from sampledisco.preparation.atac_preprocess_cpu import preprocess  # GPU: atac_preprocess_gpu.preprocess_gpu
 
-adata_cluster, adata_sample = preprocess_linux(
+adata = preprocess(
     h5ad_path="/data/test_ATAC.h5ad",
     sample_meta_path="/data/sample_meta.csv",
     output_dir="/results/atac",
@@ -84,5 +84,8 @@ adata_cluster, adata_sample = preprocess_linux(
 )
 ```
 
-!!! note "Cell typing is shared with RNA"
-    ATAC does not have its own `cell_types_linux` — the RNA version auto-detects `X_lsi_harmony` and switches to cosine neighborhood metrics. See [`cell_types_linux`](../rna/cell_types_linux.md).
+!!! note "Prefer the config-driven wrapper"
+    These low-level functions are the building blocks. The supported entry point is the YAML-config wrapper, which runs ATAC preprocessing → cell typing → sample embedding → downstream analysis in one call: `sampledisco -m complex --config <config.yaml>` (set `run_atac_pipeline: true`).
+
+!!! note "ATAC cell typing"
+    ATAC has its own cell-typing routine, `cell_types_atac` (`from sampledisco.preparation.ATAC_cell_type import cell_types_atac`), which builds a dendrogram and differential peaks on the ATAC DR embedding. The shared RNA typing routine `cell_types` operates on `Z_clust`. See [`cell_types_linux`](../rna/cell_types_linux.md).

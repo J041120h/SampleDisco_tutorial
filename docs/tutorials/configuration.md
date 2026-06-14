@@ -1,6 +1,6 @@
 # Configuration guide
 
-SampleDisc is driven by a single YAML configuration file. At runtime the file is parsed into a flat dictionary and handed to [`wrapper(**config)`](../api/index.md) — every key in the YAML matches a parameter name of a wrapper function.
+SampleDisco is driven by a single YAML configuration file. At runtime the file is parsed into a flat dictionary and handed to [`wrapper(**config)`](../api/index.md) — every key in the YAML matches a parameter name of the wrapper function, and in `complex` mode the CLI validates the YAML **exactly** against `wrapper()`'s signature (every parameter must be present, no extra keys allowed).
 
 The canonical reference is [`code/config/config_covid_rna.yaml`](https://github.com/). This page walks through the same file, block by block, so you can build your own.
 
@@ -9,15 +9,25 @@ The canonical reference is [`code/config/config_covid_rna.yaml`](https://github.
 === "CLI"
 
     ```bash
-    python /users/hjiang/GenoDistance/code/SampleDisc.py -m complex \
+    sampledisco -m complex \
       --config /path/to/your_config.yaml
     ```
+
+    The `sampledisco` console script is installed with the package. An equivalent invocation is:
+
+    ```bash
+    python -m sampledisco.cli -m complex \
+      --config /path/to/your_config.yaml
+    ```
+
+    !!! note
+        `python -m sampledisco` does **not** work (there is no package-level `__main__`); use `python -m sampledisco.cli`.
 
 === "Python"
 
     ```python
     import yaml
-    from wrapper.wrapper import wrapper
+    from sampledisco import wrapper
 
     with open("/path/to/your_config.yaml") as f:
         config = yaml.safe_load(f)
@@ -27,7 +37,7 @@ The canonical reference is [`code/config/config_covid_rna.yaml`](https://github.
 
 ## How the config is organized
 
-A SampleDisc config is a flat YAML file with six logical blocks. Read it top-to-bottom; every key follows the same naming rule:
+A SampleDisco config is a flat YAML file with six logical blocks. Read it top-to-bottom; every key follows the same naming rule:
 
 > **`rna_*`** keys feed the RNA wrapper, **`atac_*`** keys feed the ATAC wrapper, **`multiomics_*`** keys feed the multi-omics wrapper. Anything without a prefix is a global setting.
 
@@ -36,7 +46,7 @@ Example mapping:
 | Config key | Becomes | In function |
 | --- | --- | --- |
 | `rna_preprocessing: true` | `preprocessing=True` | `rna_wrapper(...)` |
-| `atac_leiden_cluster_resolution: 0.8` | `leiden_cluster_resolution=0.8` | ATAC `cell_types_linux(...)` |
+| `atac_leiden_cluster_resolution: 0.8` | `leiden_cluster_resolution=0.8` | ATAC `cell_types_atac(...)` |
 | `multiomics_consistency_threshold: 0.05` | `consistency_threshold=0.05` | `multiomics_preparation(...)` |
 
 ---
@@ -51,7 +61,7 @@ These are top-level keys that apply to the whole run.
 | `run_rna_pipeline` | bool | `false` | Run the RNA wrapper branch. |
 | `run_atac_pipeline` | bool | `false` | Run the ATAC wrapper branch. |
 | `run_multiomics_pipeline` | bool | `false` | Run the multi-omics wrapper branch. |
-| `use_gpu` | bool | `false` | Use the `_linux`/GPU-accelerated implementations. Requires RAPIDS + scanpy CUDA wheels. |
+| `use_gpu` | bool | `false` | Use the RAPIDS-accelerated code paths. Activates automatically only when the RAPIDS stack is importable; otherwise SampleDisco falls back cleanly to the CPU equivalents. |
 | `initialization` | bool | `false` | If `true`, clears existing result folders before running. Use only when you want a clean slate. |
 | `verbose` | bool | `true` | Print progress messages. |
 | `save_intermediate` | bool | `true` | Write intermediate `.h5ad` outputs to disk. |
@@ -109,10 +119,10 @@ Every pipeline is broken into discrete stages, each guarded by a boolean flag. *
 === "RNA / ATAC"
 
     ```yaml
-    rna_preprocessing: true            # preprocess_linux → adata_cell.h5ad, adata_sample.h5ad
-    rna_cell_type_cluster: true        # cell_types_linux  → cell_type column
-    rna_derive_sample_embedding: true  # calculate_sample_embedding → pseudobulk_sample.h5ad
-    rna_cca_based_cell_resolution_selection: false  # advanced; API-only
+    rna_preprocessing: true            # preprocess → adata_preprocessed.h5ad
+    rna_cell_type_cluster: true        # cell_types  → cell_type column
+    rna_derive_sample_embedding: true  # compute_sample_embedding → uns['X_DR_sample']
+    rna_autotune_enable: false         # alpha / block-weight autotune (advanced)
     rna_sample_distance_calculation: true
     rna_trajectory_analysis: true
     rna_trajectory_dge: true
@@ -120,16 +130,16 @@ Every pipeline is broken into discrete stages, each guarded by a boolean flag. *
     rna_proportion_test: false
     rna_cluster_dge: false
     rna_visualize_data: true
+    rna_dimension_association_analysis: false
     ```
 
 === "Multi-omics"
 
     ```yaml
-    multiomics_integration: true                # multiomics_preparation (GLUE)
-    multiomics_integration_preprocessing: true  # integrate_preprocess
-    multiomics_cell_type_cluster: true          # cell_types_multiomics_linux
-    multiomics_dimensionality_reduction: true   # calculate_multiomics_sample_embedding
-    multiomics_find_optimal_resolution: false   # advanced; API-only
+    multiomics_integration: true                # multiomics_preparation (scGLUE)
+    multiomics_cell_type_cluster: true          # cell_types_multiomics
+    multiomics_derive_sample_embedding: true    # compute_sample_embedding → uns['X_DR_sample']
+    multiomics_autotune_enable: false           # alpha / block-weight autotune (advanced)
     multiomics_sample_distance_calculation: true
     multiomics_trajectory_analysis: true
     multiomics_trajectory_dge: true
@@ -137,10 +147,12 @@ Every pipeline is broken into discrete stages, each guarded by a boolean flag. *
     multiomics_proportion_test: false
     multiomics_cluster_dge: false
     multiomics_visualize_embedding: true        # visualize_multimodal_embedding
-    # GLUE sub-steps (only relevant while multiomics_integration: true)
+    multiomics_dimension_association_analysis: false
+    # scGLUE sub-steps (only relevant while multiomics_integration: true)
     multiomics_run_glue_preprocessing: true
     multiomics_run_glue_training: true
-    multiomics_run_glue_gene_activity: true
+    multiomics_run_glue_merge: true                  # build the integrated embedding union
+    multiomics_run_glue_preprocess_per_modality: true  # per-modality QC + normalize
     multiomics_run_glue_visualization: true
     ```
 
@@ -153,7 +165,7 @@ If you set a stage flag to `false`, point the next stage at the h5ad it expects:
 | `rna_preprocessing` (or ATAC) | `rna_adata_cell_path`, `rna_adata_sample_path` |
 | `rna_derive_sample_embedding` | `rna_pseudo_adata_path` |
 | `multiomics_integration` | `multiomics_integrated_h5ad_path` |
-| `multiomics_dimensionality_reduction` | `multiomics_pseudobulk_h5ad_path` |
+| `multiomics_derive_sample_embedding` | `multiomics_pseudobulk_h5ad_path` |
 
 Leave these as `null` when the matching stage is enabled.
 
@@ -175,18 +187,18 @@ Each stage exposes a small set of numeric/string parameters. The key prefix matc
 
 | Stage | Common keys | API reference |
 | --- | --- | --- |
-| Preprocess (RNA) | `rna_min_cells`, `rna_min_genes`, `rna_pct_mito_cutoff`, `rna_num_cell_hvgs`, `rna_cell_embedding_num_pcs`, `rna_num_harmony_iterations` | [preprocess_linux](../api/rna/preprocess_linux.md) |
-| Preprocess (ATAC) | `atac_min_features`, `atac_max_features`, `atac_num_cell_hvfs`, `atac_cell_embedding_num_pcs`, `atac_tfidf_scale_factor`, `atac_drop_first_lsi`, `atac_doublet_detection` | [preprocess_linux (ATAC)](../api/atac/preprocess_linux.md) |
-| Cell types | `*_leiden_cluster_resolution`, `*_n_target_cell_clusters`, `*_existing_cell_types`, `*_umap` | [cell_types_linux](../api/rna/cell_types_linux.md) |
-| Sample embedding | `*_sample_hvg_number`, `*_sample_embedding_dimension`, `*_harmony_for_proportion` | [calculate_sample_embedding](../api/shared/calculate_sample_embedding.md) |
-| Optimal resolution *(advanced)* | `*_cca_coarse_start/end/step`, `*_cca_fine_range/step`, `*_n_cca_pcs`, `*_cca_compute_corrected_pvalues` | [find_optimal_cell_resolution_linux](../api/shared/find_optimal_cell_resolution_linux.md) |
+| Preprocess (RNA) | `rna_min_cells`, `rna_min_genes`, `rna_pct_mito_cutoff`, `rna_num_cell_hvgs`, `rna_cell_embedding_num_pcs`, `rna_num_harmony_iterations` | [preprocess](../api/rna/preprocess_linux.md) |
+| Preprocess (ATAC) | `atac_min_features`, `atac_max_features`, `atac_num_cell_hvfs`, `atac_cell_embedding_num_pcs`, `atac_tfidf_scale_factor`, `atac_drop_first_lsi`, `atac_doublet_detection` | [preprocess (ATAC)](../api/atac/preprocess_linux.md) |
+| Cell types | `*_leiden_cluster_resolution`, `*_n_target_cell_clusters`, `*_existing_cell_types`, `*_umap` | [cell_types](../api/rna/cell_types_linux.md) |
+| Sample embedding | `*_sample_embedding_medium_K`, `*_sample_embedding_fine_K`, `*_sample_embedding_rmd_dim`, `*_sample_embedding_rmd_weight`, `*_sample_embedding_use_rmd`, `*_sample_embedding_use_clr`, `*_sample_embedding_block_weights`, `*_sample_embedding_pca_components`, `*_sample_embedding_batch_method` | [compute_sample_embedding](../api/shared/calculate_sample_embedding.md) |
+| Autotune *(advanced)* | `*_autotune_enable`, `*_autotune_search`, `*_autotune_scoring`, `*_autotune_scope`, `*_autotune_alpha_bounds`, `*_autotune_grouping_col` | [run_autotune](../api/shared/run_autotune.md) — RMD-weight α tuning |
 | Sample distance | `*_sample_distance_methods`, `*_grouping_columns` | [sample_distance](../api/downstream/sample_distance.md) |
 | Trajectory | `*_trajectory_supervised`, `*_trajectory_col`, `*_n_cca_pcs`, `*_cca_pvalue`, `*_tscan_origin` | [CCA_Call](../api/downstream/trajectory_cca_call.md) · [TSCAN](../api/downstream/trajectory_tscan.md) |
 | Trajectory DGE | `*_fdr_threshold`, `*_effect_size_threshold`, `*_top_n_genes`, `*_num_splines`, `*_spline_order`, `*_trajectory_diff_gene_covariate` | [trajectory GAM DGE](../api/downstream/trajectory_gam_dge.md) |
 | Sample clustering | `*_cluster_number` | [cluster](../api/downstream/cluster.md) |
 | Proportion test | `*_cluster_differential_gene_group_col` | [proportion_test](../api/downstream/proportion_test.md) |
 | Visualization | `*_plot_dendrogram_flag`, `*_plot_cell_type_proportions_pca_flag`, `*_plot_cell_type_expression_umap_flag`, `*_grouping_columns` | [visualization](../api/downstream/visualization.md) |
-| Multi-omics integration | `multiomics_ensembl_release`, `multiomics_species`, `multiomics_n_top_genes`, `multiomics_n_pca_comps`, `multiomics_n_lsi_comps`, `multiomics_consistency_threshold`, `multiomics_treat_sample_as_batch`, `multiomics_k_neighbors`, `multiomics_use_rep`, `multiomics_metric` | [multiomics_preparation](../api/multiomics/multiomics_preparation.md) |
+| Multi-omics integration | `multiomics_ensembl_release`, `multiomics_species`, `multiomics_n_top_genes`, `multiomics_n_top_peaks`, `multiomics_n_pca_comps`, `multiomics_n_lsi_comps`, `multiomics_consistency_threshold`, `multiomics_treat_sample_as_batch`, `multiomics_metric` | [multiomics_preparation](../api/multiomics/multiomics_preparation.md) |
 | Multi-omics embedding viz | `multiomics_color_col`, `multiomics_visualization_grouping_column`, `multiomics_target_modality`, `multiomics_figsize`, `multiomics_point_size`, `multiomics_alpha`, `multiomics_colormap` | [visualize_multimodal_embedding](../api/downstream/visualize_multimodal_embedding.md) |
 
 ## Block F — Output layout
@@ -195,9 +207,9 @@ Under `{output_dir}/{modality}/` you will find:
 
 | Directory | Produced by | What's inside |
 | --- | --- | --- |
-| `preprocess/` | `preprocess_linux` | `adata_cell.h5ad`, `adata_sample.h5ad`, QC summary |
-| `pseudobulk/` | `calculate_sample_embedding` | `pseudobulk_sample.h5ad` with `X_DR_expression`, `X_DR_proportion` in `.obsm` |
-| `embeddings/` | `calculate_sample_embedding` | CSV exports of the two embeddings |
+| `preprocess/` | `preprocess` | `adata_preprocessed.h5ad` (with `obsm['Z_clust']` and `obsm['Z_rmd']`), QC summary |
+| `pseudobulk/` | `compute_sample_embedding` | sample-level `.h5ad` carrying the single embedding `uns['X_DR_sample']` |
+| `embeddings/` | `compute_sample_embedding` | CSV export of the `X_DR_sample` embedding |
 | `Sample_distance/` | `sample_distance` | Per-metric subdirs with CSVs and heatmap PDFs |
 | `CCA/` | `CCA_Call` | 2D CCA plots, contribution plots, pseudotime CSVs |
 | `CCA_test/` | `cca_pvalue_test` | Null-distribution plots and p-values |
@@ -236,8 +248,8 @@ Under `{output_dir}/{modality}/` you will find:
     rna_pct_mito_cutoff: 20
     rna_num_cell_hvgs: 2000
     rna_leiden_cluster_resolution: 0.99
-    rna_sample_hvg_number: 2000
-    rna_sample_embedding_dimension: 10
+    rna_sample_embedding_rmd_weight: 0.60
+    rna_sample_embedding_pca_components: 10
 
     rna_trajectory_supervised: true
     rna_trajectory_col: "sev.level"
@@ -279,11 +291,11 @@ Under `{output_dir}/{modality}/` you will find:
 
 ## Pitfalls
 
-!!! warning "Unknown keys abort the run"
-    `SampleDisc.py` validates every config key against the wrapper signatures. A typo like `rna_leden_cluster_resolution` raises an immediate `TypeError` instead of being silently ignored.
+!!! warning "Unknown or missing keys abort the run"
+    In `complex` mode the CLI validates the YAML **exactly** against `wrapper()`'s signature: a typo like `rna_leden_cluster_resolution` (an unexpected key) or any omitted parameter raises an immediate `ValueError` instead of being silently ignored. Every wrapper parameter must be present.
 
 !!! warning "Resume paths must match the upstream schema"
     If you disable `rna_preprocessing` you also must keep `rna_sample_col`, `rna_celltype_col`, and any `rna_*_batch_*` keys consistent with what was set when the files were originally written — the pseudobulk reads those columns from `.obs`.
 
-!!! warning "use_gpu=true needs CUDA wheels"
-    The `_linux` code path imports `rapids_singlecell`. If your environment only has CPU scanpy, set `use_gpu: false` and the wrapper will fall back to the CPU implementations.
+!!! warning "use_gpu=true needs the RAPIDS stack"
+    The GPU code path imports `rapids_singlecell` (RAPIDS, conda-only and CUDA-driver-specific). If RAPIDS is missing or the driver is too old, SampleDisco falls back cleanly to the CPU implementations even with `use_gpu: true` — but for a deliberate CPU run set `use_gpu: false`. See the [installation guide](../installation.md) for the RAPIDS pins.

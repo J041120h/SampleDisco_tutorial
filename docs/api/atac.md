@@ -1,24 +1,32 @@
 # ATAC API
 
-The ATAC branch replaces RNA-style log-normalization with TF-IDF + LSI. Only one function is ATAC-specific; cell typing and sample embedding are shared with RNA.
+The ATAC branch replaces RNA-style log-normalization with TF-IDF + LSI. Preprocessing and cell typing are ATAC-specific; the sample embedding is shared with RNA.
 
 | Function | Purpose |
 | --- | --- |
-| [`preprocess_linux`](atac/preprocess_linux.md) *(ATAC)* | TF-IDF normalization, LSI projection, optional doublet detection, Harmony on LSI. Drops the first LSI component (depth-correlated) by default. |
+| [`preprocess`](atac/preprocess_linux.md) *(ATAC)* | TF-IDF normalization, LSI projection, optional doublet detection, Harmony on LSI. Drops the first LSI component (depth-correlated) by default. Imported as `from sampledisco.preparation.atac_preprocess_cpu import preprocess`. |
+| [`cell_types_atac`](rna/cell_types_linux.md) *(ATAC)* | Leiden cell typing on the ATAC DR embedding, with dendrogram / differential-peak analysis. Imported as `from sampledisco.preparation.ATAC_cell_type import cell_types_atac`. |
 
 ## Shared with RNA
 
-- [`cell_types_linux`](rna/cell_types_linux.md) — auto-detects `X_lsi_harmony` in `.obsm` and switches to cosine-metric neighborhoods when it sees an ATAC embedding.
-- [`calculate_sample_embedding`](shared/calculate_sample_embedding.md) — set `atac=True` to enable TF-IDF/LSI-aware pseudobulk aggregation.
-- [`find_optimal_cell_resolution_linux`](shared/find_optimal_cell_resolution_linux.md) — set `modality="atac"`.
+- [`compute_sample_embedding`](shared/calculate_sample_embedding.md) — the single, unified sample-embedding entry point for RNA, ATAC, and multi-omics (`from sampledisco.sample_embedding import compute_sample_embedding`). It writes the final sample embedding to `adata.uns['X_DR_sample']`; there is no longer an `atac=True` flag.
+
+!!! warning "Removed: `find_optimal_cell_resolution_linux`"
+    The CCA-driven cell-resolution sweep no longer exists. Parameter selection is now alpha/block-weight **autotune** (`from sampledisco.parameter_selection.autotune import run_autotune`), enabled via the `atac_autotune_enable` flag in the config-driven wrapper. Prefer running the wrapper rather than calling this stage directly.
 
 ## Typical order
 
 ```
-preprocess_linux (ATAC)
-   └─> cell_types_linux               # same function as RNA
-          └─> calculate_sample_embedding(atac=True)
+preprocess (ATAC)
+   └─> cell_types_atac                # ATAC-specific cell typing
+          └─> compute_sample_embedding
                  └─> downstream analyses
+```
+
+The supported way to run this end-to-end is the config-driven wrapper:
+
+```bash
+sampledisco -m complex --config config.yaml
 ```
 
 For a runnable walkthrough, see the [ATAC tutorial](../tutorials/atac.md).

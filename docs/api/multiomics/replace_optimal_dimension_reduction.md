@@ -1,19 +1,19 @@
 # `replace_optimal_dimension_reduction`
 
-Folds the results of [`find_optimal_cell_resolution_multiomics_linux`](find_optimal_cell_resolution_multiomics_linux.md) back into the canonical pseudobulk object. Reads the per-DR-type optimal AnnData files and replaces the `X_DR_expression` / `X_DR_proportion` entries (plus the underlying pseudobulk expression matrix) in `pseudobulk_sample.h5ad`. After this step, downstream modules automatically pick up the optimal embeddings.
+Folds the results of a per-DR-type resolution optimization back into the canonical pseudobulk object. Reads the optimal expression and proportion AnnData files, uses the optimal expression object as the template (carrying the updated `X`, `var`, and DR results), merges the original `obs` metadata plus non-DR `uns`/`obsm` from `pseudobulk_sample.h5ad`, overwrites the `X_DR_expression` / `X_DR_proportion` entries, writes a `.backup` of the original, and exports CSV embeddings under `{base_path}/embeddings/`.
 
-**Source:** `parameter_selection/multi_omics_unify_optimal.py:8`
+!!! warning "Legacy helper — off the current pipeline path"
+    This function still operates on the **legacy two-key** layout (`X_DR_expression` / `X_DR_proportion`). The current SampleDisco pipeline produces a **single** sample embedding, `adata.uns['X_DR_sample']`, written in place by [`compute_sample_embedding`](../shared/calculate_sample_embedding.md). It is not part of the config-driven wrapper path, and parameter selection is now handled by alpha/block-weight **autotune** (`sampledisco.parameter_selection.autotune.run_autotune`, enabled via `multiomics_autotune_enable` in the wrapper) rather than a resolution sweep. Keep this helper only if you are working with older two-key outputs.
+
+**Source:** `utils/unify_optimal.py:7`
 
 ## Signature
 
 ```python
 def replace_optimal_dimension_reduction(
     base_path: str,
-    expression_resolution_dir: Optional[str] = None,
-    proportion_resolution_dir: Optional[str] = None,
-    pseudobulk_path: Optional[str] = None,
-    optimization_target: str = "rna",
     verbose: bool = True,
+    modality: str = "RNA",
 ) -> sc.AnnData
 ```
 
@@ -21,35 +21,37 @@ def replace_optimal_dimension_reduction(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `base_path` | str | — | Multi-omics output root, e.g. `/results/multiomics`. |
-| `expression_resolution_dir` | str, optional | `None` | Overrides `{base_path}/resolution_optimization_expression`. |
-| `proportion_resolution_dir` | str, optional | `None` | Overrides `{base_path}/resolution_optimization_proportion`. |
-| `pseudobulk_path` | str, optional | `None` | Overrides `{base_path}/pseudobulk/pseudobulk_sample.h5ad`. |
-| `optimization_target` | str | `"rna"` | Target modality (`"rna"` or `"atac"`); used to construct expected file names such as `optimal_rna_expression.h5ad`. |
+| `base_path` | str | — | Run output directory, e.g. `.../covid_25_sample/rna`. Expects the optimization summary subdirs and `pseudobulk/pseudobulk_sample.h5ad` underneath (see layout below). |
 | `verbose` | bool | `True` | Print progress. |
+| `modality` | str | `"RNA"` | Target modality; must be `"RNA"` or `"ATAC"` (case-insensitive). Used to construct the `{MODALITY}_resolution_optimization_*` directory names. |
 
 ## Returns
 
-The updated pseudobulk AnnData (also written back to disk).
+The updated pseudobulk AnnData (also written back to `pseudobulk_sample.h5ad`, with the original preserved as a `.backup`).
 
 ## Expected layout
 
 ```
 {base_path}/
-├── resolution_optimization_expression/
-│   └── Integration_optimization_{target}_expression/summary/optimal_{target}_expression.h5ad
-├── resolution_optimization_proportion/
-│   └── Integration_optimization_{target}_proportion/summary/optimal_{target}_proportion.h5ad
+├── {MODALITY}_resolution_optimization_expression/summary/optimal.h5ad
+├── {MODALITY}_resolution_optimization_proportion/summary/optimal.h5ad
 └── pseudobulk/pseudobulk_sample.h5ad
 ```
+
+where `{MODALITY}` is `RNA` or `ATAC`. The three objects must share the same `obs` index order; the function raises `ValueError` if the sample indices do not match.
+
+## Side effects
+
+- Overwrites `pseudobulk_sample.h5ad` in place, after copying the original to `pseudobulk_sample.h5ad.backup` (skipped if a backup already exists).
+- Writes `embeddings/sample_expression_embedding.csv` and `embeddings/sample_proportion_embedding.csv` under `base_path`.
 
 ## Usage
 
 ```python
-from genodistance.parameter_selection import replace_optimal_dimension_reduction
+from sampledisco.utils.unify_optimal import replace_optimal_dimension_reduction
 
 updated_pseudo = replace_optimal_dimension_reduction(
-    base_path="/results/multiomics",
-    optimization_target="rna",
+    base_path="/results/multiomics/rna",
+    modality="RNA",
 )
 ```

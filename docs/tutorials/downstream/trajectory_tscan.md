@@ -5,11 +5,11 @@ When you do not have a supervising phenotype, TSCAN infers a trajectory from the
 ## Call
 
 ```python
-from genodistance.sample_trajectory import TSCAN
+from sampledisco.sample_trajectory.TSCAN import TSCAN
 
-tscan_expr = TSCAN(
+tscan_results = TSCAN(
     AnnData_sample=pseudo_adata,
-    column="X_DR_expression",
+    column="X_DR_sample",
     n_clusters=None,
     output_dir="/results/rna",
     grouping_columns=["sev.level"],
@@ -18,22 +18,23 @@ tscan_expr = TSCAN(
 )
 ```
 
-Run again with `column="X_DR_proportion"` for the proportion embedding.
+TSCAN now runs on the **single** sample embedding `uns['X_DR_sample']` — the two-key
+`X_DR_expression` / `X_DR_proportion` split is gone, so there is only one trajectory to compute.
+`TSCAN` returns a results `dict` (clusters, MST, principal path, ordering, and pseudotime); it also
+writes `tscan_pseudotime_main` and `tscan_cluster` columns back into `AnnData_sample.obs`.
 
 ## Output
 
-**Writes** → `/results/rna/TSCAN/`:
+**Writes** → `/results/rna/TSCAN/` (`{column}` is the embedding key, here `X_DR_sample`):
 
-- `tscan_clusters_by_cluster_{column}.png` — points colored by GMM cluster.
-- `tscan_clusters_by_grouping_{column}.png` — points colored by each entry in `grouping_columns`.
-- `tscan_pseudotime_{column}.csv` — per-sample pseudotime.
+- `clusters_by_cluster_{column}.png` — points colored by GMM cluster.
+- `clusters_by_grouping_{column}.png` — points colored by each entry in `grouping_columns`.
+- `{column}_pseudotime.csv` — per-sample pseudotime (with `trajectory_type`, `branch_id`, and `cluster` columns for the main path and any branches).
 
 ## Result
 
-![TSCAN clusters on expression embedding](../../resource/downstream/tscan_clusters_by_cluster_expression.png)
-![TSCAN colored by severity (expression)](../../resource/downstream/tscan_clusters_by_grouping_expression.png)
-![TSCAN clusters on proportion embedding](../../resource/downstream/tscan_clusters_by_cluster_proportion.png)
-![TSCAN colored by severity (proportion)](../../resource/downstream/tscan_clusters_by_grouping_proportion.png)
-<div class="figure-caption">Trajectories on both embeddings, colored either by the inferred cluster or by the phenotype.</div>
+![TSCAN clusters on sample embedding](../../resource/downstream/tscan_clusters_by_cluster_expression.png)
+![TSCAN colored by severity](../../resource/downstream/tscan_clusters_by_grouping_expression.png)
+<div class="figure-caption">Trajectory on the sample embedding, colored either by the inferred cluster or by the phenotype.</div>
 
 See the [API page](../../api/downstream/trajectory_tscan.md) for the full parameter list.

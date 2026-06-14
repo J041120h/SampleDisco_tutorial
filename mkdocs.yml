@@ -82,7 +82,7 @@ nav:
       - "Multi-omics pipeline": tutorials/multiomics.md
       - "Downstream analysis":
           - Overview: tutorials/downstream/index.md
-          - Resolution selection: tutorials/downstream/resolution_selection.md
+          - "Resolution selection (removed)": tutorials/downstream/resolution_selection.md
           - Sample distance: tutorials/downstream/sample_distance.md
           - Dimension association: tutorials/downstream/sample_association.md
           - "Trajectory — CCA": tutorials/downstream/trajectory_cca.md
@@ -96,22 +96,23 @@ nav:
       - Overview: api/index.md
       - RNA:
           - Overview: api/rna.md
-          - preprocess_linux: api/rna/preprocess_linux.md
-          - cell_types_linux: api/rna/cell_types_linux.md
+          - preprocess: api/rna/preprocess_linux.md
+          - cell_types: api/rna/cell_types_linux.md
       - ATAC:
           - Overview: api/atac.md
-          - preprocess_linux: api/atac/preprocess_linux.md
+          - preprocess: api/atac/preprocess_linux.md
       - Multi-omics:
           - Overview: api/multiomics.md
           - multiomics_preparation: api/multiomics/multiomics_preparation.md
-          - integrate_preprocess: api/multiomics/integrate_preprocess.md
-          - cell_types_multiomics_linux: api/multiomics/cell_types_multiomics_linux.md
-          - calculate_multiomics_sample_embedding: api/multiomics/calculate_multiomics_sample_embedding.md
-          - find_optimal_cell_resolution_multiomics_linux: api/multiomics/find_optimal_cell_resolution_multiomics_linux.md
+          - "integrate_preprocess (removed)": api/multiomics/integrate_preprocess.md
+          - cell_types_multiomics: api/multiomics/cell_types_multiomics_linux.md
+          - "compute_sample_embedding (multi-omics)": api/multiomics/calculate_multiomics_sample_embedding.md
+          - "find_optimal_cell_resolution_multiomics_linux (removed)": api/multiomics/find_optimal_cell_resolution_multiomics_linux.md
           - replace_optimal_dimension_reduction: api/multiomics/replace_optimal_dimension_reduction.md
       - Shared:
-          - calculate_sample_embedding: api/shared/calculate_sample_embedding.md
-          - find_optimal_cell_resolution_linux: api/shared/find_optimal_cell_resolution_linux.md
+          - compute_sample_embedding: api/shared/calculate_sample_embedding.md
+          - run_autotune: api/shared/run_autotune.md
+          - "find_optimal_cell_resolution_linux (removed)": api/shared/find_optimal_cell_resolution_linux.md
       - Downstream:
           - Overview: api/downstream.md
           - sample_distance: api/downstream/sample_distance.md

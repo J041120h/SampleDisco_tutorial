@@ -5,7 +5,7 @@
 ## Call
 
 ```python
-from genodistance.visualization import visualization
+from sampledisco.visualization.visualization_other import visualization
 
 visualization(
     AnnData_cell=adata_cell,
