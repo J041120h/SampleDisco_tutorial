@@ -90,9 +90,6 @@ adata = compute_sample_embedding(
 
 **Writes** the single sample embedding into `adata.uns['X_DR_sample']` (a `pandas.DataFrame`, units × PCs) and returns the modified `AnnData`.
 
-!!! note "One key replaces the old two-key embedding"
-    The current pipeline produces a single embedding, `uns['X_DR_sample']`. The legacy `X_DR_expression` / `X_DR_proportion` pair (and the old `(pseudo_dict, pseudo_adata)` return, `atac=True`, `sample_hvg_number`, `n_expression_components`, `n_proportion_components`, `harmony_for_proportion` arguments) no longer exists.
-
 ---
 
 Everything after sample embedding (sample distance, trajectory, DGE, clustering, RAISIN, visualization, optional parameter autotune) is a downstream task and is documented under [Downstream analysis](downstream/index.md).

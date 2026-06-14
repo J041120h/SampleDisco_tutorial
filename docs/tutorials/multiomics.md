@@ -57,12 +57,7 @@ multiomics_preparation(
 ![UMAP split by modality](../resource/multiomics/umap_split_by_modality.png)
 <div class="figure-caption">Step 1 — RNA and ATAC cells sharing the GLUE joint embedding. The right panel splits the modalities to confirm good mixing.</div>
 
-## 2. Integration QC
-
-!!! warning "Removed — folded into `multiomics_preparation`"
-    The standalone `integrate_preprocess` function (which performed post-GLUE QC on the merged object) has been **removed**. Its work — per-modality QC filters, normalization, and the cell-union build — is now performed inside `multiomics_preparation` via the `run_preprocess_per_modality` and `run_merge` flags shown in step 1. The relevant QC knobs (`rna_min_cells`, `rna_min_genes`, `rna_pct_mito_cutoff`, `atac_min_features`, `atac_doublet_detection`, …) are now parameters of `multiomics_preparation`. The low-level helpers live in `sampledisco.preparation.multi_omics_merge` (`build_embedding_union`, `preprocess_rna_for_downstream`, `preprocess_atac_for_downstream`). No separate call is needed.
-
-## 3. Joint cell typing
+## 2. Joint cell typing
 
 `cell_types_multiomics` clusters RNA cells with Leiden on the joint embedding, then transfers labels to ATAC via a Jaccard-weighted shared-nearest-neighbor (SNN) graph. `use_rep` should point at the sample-removed `Z_clust`; the wrapper resolves this automatically, and the default `'X_glue'` is a fallback.
 
@@ -93,9 +88,9 @@ adata_integrated = cell_types_multiomics(
 
 ![UMAP colored by inferred joint cell type](../resource/multiomics/umap_cell_type.png)
 ![Cell-type × modality confusion heatmap](../resource/multiomics/celltype_modality_heatmap.png)
-<div class="figure-caption">Step 3 — Joint cell types on the GLUE embedding and a modality-balance check per cluster.</div>
+<div class="figure-caption">Step 2 — Joint cell types on the GLUE embedding and a modality-balance check per cluster.</div>
 
-## 4. Sample embedding
+## 3. Sample embedding
 
 The unified `compute_sample_embedding` handles RNA, ATAC, and multi-omics — there is no separate multi-omics entry point. For multi-omics, pass `modality_col="modality"`; the units of the resulting embedding are `<sample>_RNA` / `<sample>_ATAC`. The composition blocks are built on the sample-removed `Z_clust`, and the RMD displacement block on the sample-preserved `Z_rmd`.
 
@@ -122,11 +117,11 @@ adata_integrated = compute_sample_embedding(
 )
 ```
 
-**Writes** → the single sample embedding into `adata_integrated.uns['X_DR_sample']` (a pandas DataFrame, units × PCs) and persists the updated object under `/results/multiomics/`. The function **returns the modified `AnnData`**. This single key replaces the legacy two-key `X_DR_expression` / `X_DR_proportion` layout and is consumed by every downstream module.
+**Writes** → the single sample embedding into `adata_integrated.uns['X_DR_sample']` (a pandas DataFrame, units × PCs) and persists the updated object under `/results/multiomics/`. The function **returns the modified `AnnData`**. This single key is consumed by every downstream module.
 
-## 5. Embedding visualization
+## 4. Embedding visualization
 
-`visualize_multimodal_embedding` produces scatter plots of the sample embedding with optional coloring by metadata. With the single-key embedding, both `expression_key` and `proportion_key` survive only for back-compat and should be set to `'X_DR_sample'`.
+`visualize_multimodal_embedding` produces scatter plots of the sample embedding with optional coloring by metadata. Set both `expression_key` and `proportion_key` to `'X_DR_sample'`.
 
 ```python
 from sampledisco.visualization.multi_omics_visualization import visualize_multimodal_embedding
@@ -153,4 +148,4 @@ visualize_multimodal_embedding(
 
 ---
 
-Once `uns['X_DR_sample']` is populated, every remaining analysis — sample distance, CCA / TSCAN, trajectory DGE, sample clustering, proportion test, and RAISIN cluster DGE — is shared across modalities. (The old CCA-guided resolution search has been removed; parameter selection is now the alpha / block-weight autotune, enabled via `multiomics_autotune_enable` in the config-driven wrapper.) Continue to the [Downstream analysis tutorials](downstream/index.md).
+Once `uns['X_DR_sample']` is populated, every remaining analysis — sample distance, CCA / TSCAN, trajectory DGE, sample clustering, proportion test, and RAISIN cluster DGE — is shared across modalities. Parameter selection is the alpha / block-weight autotune, enabled via `multiomics_autotune_enable` in the config-driven wrapper. Continue to the [Downstream analysis tutorials](downstream/index.md).

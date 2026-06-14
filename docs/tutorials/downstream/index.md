@@ -32,7 +32,7 @@ Each function has its own page with the call, parameters, outputs, and represent
 
 | Page | Function | What it does |
 | --- | --- | --- |
-| [Resolution selection](resolution_selection.md) | _(deprecated)_ | The CCA-guided resolution sweep was removed; superseded by alpha / block-weight autotune (`run_autotune`, the `*_autotune_enable` wrapper flags). |
+| [Autotune](autotune.md) | `run_autotune` | Selects the RMD-weight α (composition vs displacement block weighting) via the `*_autotune_enable` wrapper flags. |
 | [Sample distance](sample_distance.md) | `sample_distance` | Pairwise distance matrices on the sample embedding with multiple metrics. |
 | [Dimension association](sample_association.md) | `run_dimension_association_analysis` | Per-PC variance-explained decomposition against every metadata variable — confounder / leading-covariate check. |
 | [Trajectory — CCA](trajectory_cca.md) | `CCA_Call`, `cca_pvalue_test` | Supervised pseudotime and its permutation significance. |

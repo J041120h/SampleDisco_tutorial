@@ -41,11 +41,8 @@ cca_pvalue_test(
 
 ## Result
 
-![CCA on the sample embedding](../../resource/downstream/cca_expression.png)
-![Per-PC contributions to the CCA axis](../../resource/downstream/cca_expression_contributions.png)
+![CCA on the sample embedding](../../resource/rna/cca_sample.png)
+![Per-PC contributions to the CCA axis](../../resource/rna/cca_sample_contributions.png)
 <div class="figure-caption">Samples projected onto the severity-maximizing axis of <code>X_DR_sample</code>, with a breakdown of which PCs drive it.</div>
-
-![Null CCA distribution](../../resource/downstream/cca_pvalue_X_DR_expression.png)
-<div class="figure-caption">Null distribution of CCA correlations from 1,000 label permutations with the observed value overlaid.</div>
 
 See the API pages for [`CCA_Call`](../../api/downstream/trajectory_cca_call.md) and [`cca_pvalue_test`](../../api/downstream/trajectory_cca_pvalue_test.md).
