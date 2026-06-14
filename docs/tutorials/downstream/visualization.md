@@ -30,7 +30,13 @@ visualization(
 
 ## Result
 
-![Cell-type dendrogram (ATAC run)](../../resource/atac/cell_type_dendrogram.png)
+![Cell-type dendrogram](../../resource/rna/cell_type_dendrogram.png)
 <div class="figure-caption">Example dendrogram output. Sub-trees reflect expression similarity between cell types in the pseudobulk.</div>
+
+![Cell-type proportion PCA](../../resource/rna/proportion_embedding.png)
+<div class="figure-caption">PCA on per-sample cell-type proportions, colored by the grouping.</div>
+
+![Expression embedding UMAP](../../resource/rna/expression_embedding.png)
+<div class="figure-caption">UMAP on the pseudobulk expression embedding, colored by the grouping.</div>
 
 See the [API page](../../api/downstream/visualization.md) for the full parameter list.

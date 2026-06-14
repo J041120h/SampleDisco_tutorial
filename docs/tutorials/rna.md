@@ -103,5 +103,5 @@ adata = compute_sample_embedding(
 
 From here, everything else — sample distance, CCA / TSCAN trajectory, trajectory DGE, sample clustering, proportion test, RAISIN cluster DGE, and visualization — runs off `adata.uns['X_DR_sample']` (the downstream consumers materialize a one-row-per-sample AnnData from it via `build_sample_adata`). Continue to the [Downstream analysis tutorials](downstream/index.md).
 
-!!! warning "Removed: CCA-guided resolution search"
-    The old `find_optimal_cell_resolution_linux` sweep no longer exists. Parameter selection is now alpha / block-weight **autotune** (`sampledisco.parameter_selection.autotune.run_autotune`), enabled via the `rna_autotune_enable` flag on the config-driven wrapper.
+!!! tip "Tune the embedding with autotune"
+    The RMD-vs-composition blend (`rmd_weight` / α) can be selected automatically with [autotune](downstream/autotune.md) (`run_autotune` from `sampledisco.parameter_selection.autotune`), enabled via the `rna_autotune_enable` flag on the config-driven wrapper.

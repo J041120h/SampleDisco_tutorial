@@ -10,9 +10,7 @@ The RNA branch of SampleDisco takes a cell-level `.h5ad` with raw counts and tur
 ## Shared with ATAC
 
 - [`compute_sample_embedding`](shared/calculate_sample_embedding.md) — composition blocks on `Z_clust` + RMD displacement block on `Z_rmd`, reduced to the single key `uns['X_DR_sample']`.
-
-!!! warning "Removed: CCA resolution search"
-    `find_optimal_cell_resolution_linux` has been **removed**. The CCA-driven cell-resolution sweep no longer exists; parameter selection is now alpha / block-weight **autotune** (`sampledisco.parameter_selection.autotune.run_autotune`), enabled via the `rna_autotune_enable` flag in the config-driven wrapper. See the [shared page](shared/find_optimal_cell_resolution_linux.md) for details.
+- [`run_autotune`](shared/run_autotune.md) — parameter selection: optimizes the RMD-weight α (composition vs displacement), enabled via the `rna_autotune_enable` flag in the config-driven wrapper.
 
 ## Typical order
 

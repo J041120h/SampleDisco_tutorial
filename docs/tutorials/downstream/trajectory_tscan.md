@@ -31,10 +31,4 @@ writes `tscan_pseudotime_main` and `tscan_cluster` columns back into `AnnData_sa
 - `clusters_by_grouping_{column}.png` — points colored by each entry in `grouping_columns`.
 - `{column}_pseudotime.csv` — per-sample pseudotime (with `trajectory_type`, `branch_id`, and `cluster` columns for the main path and any branches).
 
-## Result
-
-![TSCAN clusters on sample embedding](../../resource/downstream/tscan_clusters_by_cluster_expression.png)
-![TSCAN colored by severity](../../resource/downstream/tscan_clusters_by_grouping_expression.png)
-<div class="figure-caption">Trajectory on the sample embedding, colored either by the inferred cluster or by the phenotype.</div>
-
 See the [API page](../../api/downstream/trajectory_tscan.md) for the full parameter list.

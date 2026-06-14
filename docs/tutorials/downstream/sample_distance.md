@@ -45,12 +45,10 @@ For `EMD`, outputs go under `/results/rna/EMD_distance/` (`distance_matrix_EMD.c
 
 ## Result
 
-![Cosine on the sample embedding](../../resource/downstream/sample_distance_expression_DR_heatmap_cosine.png)
-![Correlation on the sample embedding](../../resource/downstream/sample_distance_expression_DR_heatmap_correlation.png)
-<div class="figure-caption">Sample-embedding distances under the cosine and correlation metrics. Samples with similar phenotype cluster in the heatmap.</div>
+![Cosine on the sample embedding](../../resource/rna/sample_distance_cosine.png)
+<div class="figure-caption">Sample-embedding distances under the cosine metric. Samples with similar phenotype cluster in the heatmap.</div>
 
-![EMD on cell-type proportions](../../resource/downstream/sample_distance_proportion_DR_heatmap_cosine.png)
-![Jensen-Shannon on cell-type proportions](../../resource/downstream/sample_distance_proportion_DR_heatmap_correlation.png)
-<div class="figure-caption">Distribution metrics on cell-type proportions — a composition-driven view that complements the embedding-based distances.</div>
+![Correlation on the sample embedding](../../resource/rna/sample_distance_correlation.png)
+<div class="figure-caption">Sample-embedding distances under the correlation metric.</div>
 
 See the [API page](../../api/downstream/sample_distance.md) for the full parameter list.

@@ -10,11 +10,8 @@ The multi-omics branch integrates scRNA + scATAC via scGLUE, cleans the merged o
 | [`multiomics_preparation`](multiomics/multiomics_preparation.md) | Full scGLUE pipeline — preprocessing, adversarial training, per-modality QC, embedding-union merge, optional visualization. |
 | [`cell_types_multiomics`](multiomics/cell_types_multiomics_linux.md) | Leiden on RNA cells in the joint embedding, then Jaccard-weighted SNN label transfer to ATAC. |
 | [`compute_sample_embedding`](multiomics/calculate_multiomics_sample_embedding.md) | Single-key sample embedding for multi-omics (`uns['X_DR_sample']`); pass `modality_col='modality'`. |
-| [`replace_optimal_dimension_reduction`](multiomics/replace_optimal_dimension_reduction.md) | Legacy optimal-resolution merge helper (still references the old two-key layout). |
-
-!!! warning "Removed functions"
-    - **`integrate_preprocess`** has been removed. Its post-GLUE QC and per-modality union-build step is now folded into `multiomics_preparation` (flags `run_preprocess_per_modality` / `run_merge`).
-    - **`find_optimal_cell_resolution_multiomics_linux`** has been removed. The CCA-driven resolution sweep no longer exists; parameter selection is now alpha/block-weight autotuning, enabled via `multiomics_autotune_enable` in the wrapper (`sampledisco.parameter_selection.autotune.run_autotune` with `modality_col='modality'`).
+| [`replace_optimal_dimension_reduction`](multiomics/replace_optimal_dimension_reduction.md) | Legacy optimal-resolution merge helper. |
+| [`run_autotune`](shared/run_autotune.md) | Parameter selection — optimizes the RMD-weight α (composition vs displacement); pass `modality_col='modality'`. Enabled via `multiomics_autotune_enable` in the wrapper. |
 
 ## Typical order
 

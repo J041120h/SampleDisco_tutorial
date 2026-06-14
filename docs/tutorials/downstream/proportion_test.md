@@ -28,8 +28,8 @@ proportion_test(
 
 ## Result
 
-![Proportion heatmap grouped by cell type](../../resource/downstream/proportion_heatmap_group_by_celltype.png)
-![Significance matrix](../../resource/downstream/proportion_significance_matrix.png)
+![Proportion heatmap grouped by cell type](../../resource/rna/proportion_heatmap.png)
+![Significance matrix](../../resource/rna/proportion_significance_matrix.png)
 <div class="figure-caption">Per-sample cell-type proportions (left) and which cluster × cell-type combinations are significantly enriched or depleted (right).</div>
 
 See the [API page](../../api/downstream/proportion_test.md) for the full parameter list.
