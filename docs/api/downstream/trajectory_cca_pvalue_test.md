@@ -50,7 +50,7 @@ pvalue = cca_pvalue_test(
     pseudo_adata=pseudo_adata,
     column="X_DR_sample",
     input_correlation=cca_score_a,
-    output_directory="/results/rna",
+    output_directory="sampledisco_demo_output/rna",
     num_simulations=1000,
     trajectory_col="sev.level",
 )

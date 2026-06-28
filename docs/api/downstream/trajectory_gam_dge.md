@@ -105,6 +105,6 @@ results_df = run_trajectory_gam_differential_gene_analysis(
     num_splines=5,
     spline_order=3,
     anchor_col="sev.level",
-    output_dir="/results/rna/trajectoryDEG",
+    output_dir="sampledisco_demo_output/rna/trajectoryDEG",
 )
 ```

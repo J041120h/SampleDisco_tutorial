@@ -68,7 +68,7 @@ adata_cluster = cell_types(
     n_target_clusters=None,
     umap=True,
     save=True,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
 )
 ```
 

@@ -63,7 +63,7 @@ result = TSCAN(
     AnnData_sample=pseudo_adata,
     column="X_DR_sample",
     n_clusters=None,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     grouping_columns=["sev.level"],
     origin=None,
 )

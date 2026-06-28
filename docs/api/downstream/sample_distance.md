@@ -77,7 +77,7 @@ from sampledisco.sample_distance.sample_distance import sample_distance
 for method in ["cosine", "correlation", "euclidean"]:
     sample_distance(
         adata=sample_adata,
-        output_dir="/results/rna",
+        output_dir="sampledisco_demo_output/rna",
         method=method,
         data_type="RNA",
         grouping_columns=["sev.level"],

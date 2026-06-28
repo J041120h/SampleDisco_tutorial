@@ -51,7 +51,7 @@ from sampledisco.sample_clustering.cluster import cluster
 
 sample_clusters, _ = cluster(
     pseudobulk_adata=pseudo_adata,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     number_of_clusters=4,
 )
 ```

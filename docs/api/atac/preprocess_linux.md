@@ -74,9 +74,9 @@ def preprocess(
 from sampledisco.preparation.atac_preprocess_cpu import preprocess  # GPU: atac_preprocess_gpu.preprocess_gpu
 
 adata = preprocess(
-    h5ad_path="/data/test_ATAC.h5ad",
-    sample_meta_path="/data/sample_meta.csv",
-    output_dir="/results/atac",
+    h5ad_path="data/test_ATAC.h5ad",
+    sample_meta_path=None,
+    output_dir="sampledisco_demo_output/atac",
     cell_embedding_num_PCs=50,
     num_cell_hvfs=50000,
     doublet_detection=True,

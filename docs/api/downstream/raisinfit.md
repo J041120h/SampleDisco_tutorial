@@ -78,7 +78,7 @@ fit = raisinfit(
 
 run_pairwise_tests(
     fit=fit,
-    output_dir="/results/rna/raisin_results_expression",
+    output_dir="sampledisco_demo_output/rna/raisin_results_expression",
     fdr_threshold=0.05,
 )
 ```

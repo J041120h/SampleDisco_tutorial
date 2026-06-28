@@ -85,7 +85,7 @@ visualize_multimodal_embedding(
     point_size=60,
     alpha=0.8,
     colormap="viridis",
-    output_dir="/results/multiomics/visualization",
+    output_dir="sampledisco_demo_output/multiomics/visualization",
     show_default=True,
 )
 ```

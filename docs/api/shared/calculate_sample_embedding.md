@@ -106,7 +106,7 @@ from sampledisco.sample_embedding import compute_sample_embedding
 
 adata = compute_sample_embedding(
     adata,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     sample_col="sample",
     celltype_col="cell_type",
     cluster_emb_key="Z_clust",
@@ -123,7 +123,7 @@ For multi-omics, pass `modality_col='modality'`:
 ```python
 adata = compute_sample_embedding(
     adata,
-    output_dir="/results/multiomics",
+    output_dir="sampledisco_demo_output/multiomics",
     modality_col="modality",
     cluster_emb_key="Z_clust",
     rmd_emb_key="Z_rmd",

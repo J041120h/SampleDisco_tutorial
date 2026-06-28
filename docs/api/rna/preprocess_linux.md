@@ -70,9 +70,9 @@ def preprocess(
 from sampledisco.preparation.rna_preprocess_cpu import preprocess
 
 adata = preprocess(
-    h5ad_path="/data/test_RNA.h5ad",
-    sample_meta_path="/data/sample_meta.csv",
-    output_dir="/results/rna",
+    h5ad_path="data/test_RNA.h5ad",
+    sample_meta_path=None,
+    output_dir="sampledisco_demo_output/rna",
     sample_column="sample",
     cell_level_batch_key=None,
 )
