@@ -16,7 +16,7 @@ from sampledisco.parameter_selection.autotune import run_autotune
 
 result = run_autotune(
     adata,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     sample_col="sample",
     celltype_col="cell_type",
     cluster_emb_key="Z_clust",

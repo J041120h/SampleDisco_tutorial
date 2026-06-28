@@ -24,10 +24,13 @@ SampleDisco is a config-driven Python pipeline that turns single-cell RNA, ATAC,
 
 ## Supported inputs
 
-- `scRNA-seq` — a single `.h5ad` + sample metadata CSV.
-- `scATAC-seq` — a peak/fragment `.h5ad` + sample metadata CSV.
+- `scRNA-seq` — a single `.h5ad`; sample/phenotype columns in `.obs` (or an optional metadata CSV).
+- `scATAC-seq` — a peak/fragment `.h5ad`; metadata in `.obs` (or an optional CSV).
 - `Unpaired multi-omics (RNA + ATAC)` — two `.h5ad` files integrated via GLUE.
 - `Paired multi-omics` — same two-file entry point; GLUE still anchors the joint embedding.
+
+!!! tip "Try it on the demo data"
+    Two ready-made datasets (scRNA-seq + scATAC-seq, COVID-19 PBMC) and a one-command config are published on Zenodo — see [Demo data](tutorials/demo_data.md) to download and reproduce every tutorial.
 
 ## Quick start
 

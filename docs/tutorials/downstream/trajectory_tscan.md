@@ -11,7 +11,7 @@ tscan_results = TSCAN(
     AnnData_sample=pseudo_adata,
     column="X_DR_sample",
     n_clusters=None,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     grouping_columns=["sev.level"],
     origin=None,
     pseudotime_mode="rank",
@@ -25,7 +25,7 @@ writes `tscan_pseudotime_main` and `tscan_cluster` columns back into `AnnData_sa
 
 ## Output
 
-**Writes** → `/results/rna/TSCAN/` (`{column}` is the embedding key, here `X_DR_sample`):
+**Writes** → `sampledisco_demo_output/rna/TSCAN/` (`{column}` is the embedding key, here `X_DR_sample`):
 
 - `clusters_by_cluster_{column}.png` — points colored by GMM cluster.
 - `clusters_by_grouping_{column}.png` — points colored by each entry in `grouping_columns`.

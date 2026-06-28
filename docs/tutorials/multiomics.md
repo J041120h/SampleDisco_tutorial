@@ -5,12 +5,18 @@ The multi-omics branch integrates unpaired (or paired) scRNA + scATAC data via [
 ## Inputs
 
 - `RNA.h5ad` and `ATAC.h5ad` — modality-tagged cell-level counts.
-- Optional per-modality sample metadata CSVs.
-- Optional `additional_hvg_file` — plain text list of genes forced into the HVG set (useful for anchoring known markers).
+- *(optional)* per-modality sample metadata CSVs — not needed when phenotype columns are already in `.obs`.
+- *(optional)* `additional_hvg_file` — plain text list of genes forced into the HVG set (useful for anchoring known markers).
+
+!!! tip "Demo data"
+    This tutorial runs on **both** `test_RNA.h5ad` and `test_ATAC.h5ad` from the [demo dataset](demo_data.md) — an unpaired RNA + ATAC pair GLUE integrates into one joint embedding. Download both into a local `data/` folder; their `.obs` already carry `sample` and `sev.level`, so no metadata files are required (`additional_hvg_file` can stay `None`).
 
 Output lands under `output_dir/multiomics/`.
 
 ## 1. GLUE integration
+
+!!! tip "Skip training with the pre-integrated file"
+    GLUE training (plus the genome-annotation download and the `bedtools` dependency) is the slowest part of this pipeline. The [demo data](demo_data.md) ships a pre-computed `test_multiomics_integrated.h5ad`, so you can **skip this entire section**: via the config set `multiomics_integration: false` and `multiomics_integrated_h5ad_path: "data/test_multiomics_integrated.h5ad"` (already wired in [`config_demo.yaml`](../assets/config_demo.yaml)). The steps below show training GLUE from scratch.
 
 `multiomics_preparation` runs the full GLUE pipeline as toggleable sub-stages: scGLUE preprocessing (`run_preprocessing`), adversarial training (`run_training`), cell-union merge into a single integrated object (`run_merge`), per-modality QC + normalize (`run_preprocess_per_modality`), and optional visualization (`run_visualization`). Set `run_second_glue_for_sample_removal=True` to train scGLUE a second time and also obtain the sample-REMOVED cluster embedding (`obsm['Z_clust']`); the primary run's `X_glue` is aliased to the sample-PRESERVED `obsm['Z_rmd']`.
 
@@ -18,12 +24,12 @@ Output lands under `output_dir/multiomics/`.
 from sampledisco.preparation.multi_omics_glue import multiomics_preparation
 
 multiomics_preparation(
-    rna_file="/data/test_RNA.h5ad",
-    atac_file="/data/test_ATAC.h5ad",
+    rna_file="data/test_RNA.h5ad",
+    atac_file="data/test_ATAC.h5ad",
     rna_sample_meta_file=None,
     atac_sample_meta_file=None,
-    additional_hvg_file="/data/unique_genes.txt",
-    output_dir="/results/multiomics",
+    additional_hvg_file=None,        # optional; not needed for the demo
+    output_dir="sampledisco_demo_output/multiomics",
     # Process control flags
     run_preprocessing=True,
     run_training=True,
@@ -51,7 +57,7 @@ multiomics_preparation(
 )
 ```
 
-**Writes** → `/results/multiomics/integration/glue/` (trained model + integrated objects), `/results/multiomics/preprocess/adata_sample.h5ad` (the cell-union object), and per-modality `preprocess/adata_{rna,atac}_preprocessed.h5ad`. The integrated cells carry `obsm['Z_rmd']` (primary `X_glue`) and, with the second run enabled, `obsm['Z_clust']`.
+**Writes** → `sampledisco_demo_output/multiomics/integration/glue/` (trained model + integrated objects), `sampledisco_demo_output/multiomics/preprocess/adata_sample.h5ad` (the cell-union object), and per-modality `preprocess/adata_{rna,atac}_preprocessed.h5ad`. The integrated cells carry `obsm['Z_rmd']` (primary `X_glue`) and, with the second run enabled, `obsm['Z_clust']`.
 
 ![GLUE joint UMAP colored by modality](../resource/multiomics/scglue_umap_modality.png)
 ![UMAP split by modality](../resource/multiomics/umap_split_by_modality.png)
@@ -77,7 +83,7 @@ adata_integrated = cell_types_multiomics(
     transfer_metric="cosine",
     compute_umap=True,
     save=True,
-    output_dir="/results/multiomics",
+    output_dir="sampledisco_demo_output/multiomics",
 )
 ```
 
@@ -99,7 +105,7 @@ from sampledisco.sample_embedding import compute_sample_embedding
 
 adata_integrated = compute_sample_embedding(
     adata_integrated,
-    output_dir="/results/multiomics",
+    output_dir="sampledisco_demo_output/multiomics",
     use_gpu=True,
     sample_col="sample",
     celltype_col="cell_type",
@@ -117,7 +123,7 @@ adata_integrated = compute_sample_embedding(
 )
 ```
 
-**Writes** → the single sample embedding into `adata_integrated.uns['X_DR_sample']` (a pandas DataFrame, units × PCs) and persists the updated object under `/results/multiomics/`. The function **returns the modified `AnnData`**. This single key is consumed by every downstream module.
+**Writes** → the single sample embedding into `adata_integrated.uns['X_DR_sample']` (a pandas DataFrame, units × PCs) and persists the updated object under `sampledisco_demo_output/multiomics/`. The function **returns the modified `AnnData`**. This single key is consumed by every downstream module.
 
 ## 4. Embedding visualization
 
@@ -138,13 +144,13 @@ visualize_multimodal_embedding(
     point_size=60,
     alpha=0.8,
     colormap="viridis",
-    output_dir="/results/multiomics/visualization",
+    output_dir="sampledisco_demo_output/multiomics/visualization",
     show_sample_names=False,
     show_default=True,
 )
 ```
 
-**Writes** → per-grouping PNGs under `/results/multiomics/visualization/`. The severity-colored views of these embeddings are shown in the downstream CCA step (see [Downstream analysis](downstream/index.md)), so no separate embedding panel is reproduced here.
+**Writes** → per-grouping PNGs under `sampledisco_demo_output/multiomics/visualization/`. The severity-colored views of these embeddings are shown in the downstream CCA step (see [Downstream analysis](downstream/index.md)), so no separate embedding panel is reproduced here.
 
 ---
 

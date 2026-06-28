@@ -23,7 +23,7 @@ results_df = run_trajectory_gam_differential_gene_analysis(
     top_n_genes=100,
     num_splines=5,
     spline_order=3,
-    output_dir="/results/rna/trajectoryDEG/expression",
+    output_dir="sampledisco_demo_output/rna/trajectoryDEG/expression",
     generate_visualizations=True,
     n_clusters=3,
     top_n_genes_for_curves=20,
@@ -33,7 +33,7 @@ results_df = run_trajectory_gam_differential_gene_analysis(
 
 ## Output
 
-**Writes** → `/results/rna/trajectoryDEG/expression/`:
+**Writes** → `sampledisco_demo_output/rna/trajectoryDEG/expression/`:
 
 | File | Shows |
 | --- | --- |

@@ -12,7 +12,7 @@ proportion_test(
     sample_col="sample",
     sample_to_clade=expr_clusters,     # from cluster(...)
     celltype_col="cell_type",
-    output_dir="/results/rna/sample_cluster/expression",
+    output_dir="sampledisco_demo_output/rna/sample_cluster/expression",
 )
 ```
 

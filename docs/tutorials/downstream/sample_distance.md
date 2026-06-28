@@ -10,7 +10,7 @@ from sampledisco.sample_distance.sample_distance import sample_distance
 for method in ["cosine", "correlation"]:
     sample_distance(
         adata=adata,
-        output_dir="/results/rna",
+        output_dir="sampledisco_demo_output/rna",
         method=method,
         data_type="RNA",
         grouping_columns=["sev.level"],
@@ -22,7 +22,7 @@ Here `adata` is the cell-level AnnData carrying the sample embedding in `adata.u
 ```python
 sample_distance(
     adata=adata,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     method="EMD",
     data_type="RNA",
     cell_adata=adata,
@@ -34,14 +34,14 @@ sample_distance(
 
 ## Output
 
-**Writes** → `/results/rna/{method}/`:
+**Writes** → `sampledisco_demo_output/rna/{method}/`:
 
 - `sample_DR_coordinates.csv` and `distance_matrix_sample_DR.csv`
 - `sample_distance_sample_DR_heatmap.pdf`
 - `distance_statistics_summary_{method}.csv`
 - Group-summary results via `distanceCheck` when `grouping_columns` is set.
 
-For `EMD`, outputs go under `/results/rna/EMD_distance/` (`distance_matrix_EMD.csv`, `cell_type_proportions.csv`, `cell_type_centroids.csv`, `distance_matrix_EMD_heatmap.pdf`).
+For `EMD`, outputs go under `sampledisco_demo_output/rna/EMD_distance/` (`distance_matrix_EMD.csv`, `cell_type_proportions.csv`, `cell_type_centroids.csv`, `distance_matrix_EMD_heatmap.pdf`).
 
 ## Result
 
