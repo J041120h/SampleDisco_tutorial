@@ -3,7 +3,7 @@
 SampleDisco is **one package** (`sampledisco`). The core install is pip-only and runs on CPU; **GPU acceleration lights up automatically when the NVIDIA RAPIDS stack is present** in your environment — there is no separate "GPU build" and you never reinstall SampleDisco.
 
 !!! info "Platform support"
-    The CPU pipeline runs on **macOS and Linux** — `pip install sampledisco` pulls only cross-platform packages. GPU acceleration is **optional and Linux + NVIDIA only** (RAPIDS needs a CUDA GPU); on macOS everything runs on CPU. The `bedtools` binary (step 2) is needed **only if you train scGLUE from scratch**; the [demo data](tutorials/demo_data.md#skip-scglue-training-multi-omics) ships a pre-integrated file so the multi-omics demo skips it.
+    The CPU pipeline runs on **macOS and Linux** — `pip install sampledisco` pulls only cross-platform packages. GPU acceleration is **optional and Linux + NVIDIA only** (RAPIDS needs a CUDA GPU); on macOS everything runs on CPU. The `bedtools` binary (step 2) is needed **only if you train scGLUE from scratch**; the [demo data](tutorials/multiomics.md#1-load-the-integrated-data) ships a pre-integrated file so the multi-omics demo skips it.
 
 ## Install SampleDisco
 
@@ -15,7 +15,7 @@ pip install sampledisco
 
 ### 2. Optional — bedtools (only for scGLUE training)
 
-The `bedtools` binary is required **only if you train multi-omics scGLUE integration from scratch** (scGLUE / `pybedtools` call it). RNA-only, ATAC-only, and the multi-omics demo that resumes from the [pre-integrated file](tutorials/demo_data.md#skip-scglue-training-multi-omics) do not need it.
+The `bedtools` binary is required **only if you train multi-omics scGLUE integration from scratch** (scGLUE / `pybedtools` call it). RNA-only, ATAC-only, and the multi-omics demo that resumes from the [pre-integrated file](tutorials/multiomics.md#1-load-the-integrated-data) do not need it.
 
 ```bash
 conda install -c bioconda bedtools     # macOS: also available via `brew install bedtools`

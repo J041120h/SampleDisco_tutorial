@@ -7,14 +7,12 @@ The pipeline ends at the sample embedding. Everything after that (sample distanc
 !!! note "Imports"
     The code below assumes `sampledisco` is installed (`pip install sampledisco`). Public functions are imported from their concrete module files — the subpackage `__init__` files are intentionally empty. The CPU implementations are shown here; GPU variants live alongside them (e.g. `from sampledisco.preparation.rna_preprocess_gpu import preprocess_gpu`) and light up automatically when the RAPIDS stack is importable.
 
-!!! tip "Prefer the config-driven wrapper"
-    For most users the supported entry point is the YAML-config CLI, which runs this whole branch end to end:
+!!! tip "Config-driven alternative"
+    The steps below call each function directly. To run this whole branch end to end from a single YAML instead, see the [Configuration guide](configuration.md):
 
     ```bash
     sampledisco -m complex --config config_covid_rna.yaml
     ```
-
-    The low-level calls below are the building blocks that wrapper orchestrates.
 
 ## Inputs
 
