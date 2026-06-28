@@ -139,10 +139,10 @@ The merged union AnnData, with the integrated embedding in `.obsm` (`Z_rmd`, and
 from sampledisco.preparation.multi_omics_glue import multiomics_preparation
 
 multiomics_preparation(
-    rna_file="/data/test_RNA.h5ad",
-    atac_file="/data/test_ATAC.h5ad",
-    additional_hvg_file="/data/unique_genes.txt",
-    output_dir="/results/multiomics",
+    rna_file="data/test_RNA.h5ad",
+    atac_file="data/test_ATAC.h5ad",
+    additional_hvg_file=None,
+    output_dir="sampledisco_demo_output/multiomics",
     ensembl_release=98,
     species="homo_sapiens",
     consistency_threshold=0.05,

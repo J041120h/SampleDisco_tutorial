@@ -56,6 +56,6 @@ results = proportion_test(
     sample_col="sample",
     sample_to_clade=clade_map,        # from cluster(...)
     celltype_col="cell_type",
-    output_dir="/results/rna/sample_cluster",
+    output_dir="sampledisco_demo_output/rna/sample_cluster",
 )
 ```

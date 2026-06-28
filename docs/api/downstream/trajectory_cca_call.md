@@ -52,7 +52,7 @@ from sampledisco.sample_trajectory.CCA import CCA_Call
 
 score, _, pseudotime, _ = CCA_Call(
     adata=adata,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     trajectory_col="sev.level",
     n_components=10,
     auto_select_best_2pc=True,

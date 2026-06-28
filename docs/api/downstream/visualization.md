@@ -62,7 +62,7 @@ from sampledisco.visualization.visualization_other import visualization
 visualization(
     AnnData_cell=adata_cell,
     pseudobulk_anndata=pseudo_adata,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     grouping_columns=["sev.level"],
     plot_dendrogram_flag=True,
     plot_cell_type_proportions_pca_flag=True,

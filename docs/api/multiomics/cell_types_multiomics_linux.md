@@ -73,6 +73,6 @@ adata = cell_types_multiomics(
     transfer_metric="cosine",
     compute_umap=True,
     save=True,
-    output_dir="/results/multiomics",
+    output_dir="sampledisco_demo_output/multiomics",
 )
 ```

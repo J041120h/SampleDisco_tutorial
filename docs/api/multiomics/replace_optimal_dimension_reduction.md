@@ -51,7 +51,7 @@ where `{MODALITY}` is `RNA` or `ATAC`. The three objects must share the same `ob
 from sampledisco.utils.unify_optimal import replace_optimal_dimension_reduction
 
 updated_pseudo = replace_optimal_dimension_reduction(
-    base_path="/results/multiomics/rna",
+    base_path="sampledisco_demo_output/multiomics/rna",
     modality="RNA",
 )
 ```

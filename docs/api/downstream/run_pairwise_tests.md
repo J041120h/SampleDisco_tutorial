@@ -66,7 +66,7 @@ from sampledisco.sample_clustering.RAISIN_TEST import run_pairwise_tests
 
 results_summary, all_results = run_pairwise_tests(
     fit=fit,
-    output_dir="/results/rna/raisin_results",
+    output_dir="sampledisco_demo_output/rna/raisin_results",
     groups_to_compare=None,
     control_group=None,
     fdr_threshold=0.05,

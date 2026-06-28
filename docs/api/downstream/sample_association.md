@@ -62,7 +62,7 @@ from sampledisco.sample_association.association import run_dimension_association
 
 assoc = run_dimension_association_analysis(
     pseudo_adata=pseudo_adata,
-    output_dir="/results/rna/sample_association",
+    output_dir="sampledisco_demo_output/rna/sample_association",
     n_permutations=999,
     sample_col="sample",
     verbose=True,
