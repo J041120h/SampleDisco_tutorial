@@ -76,7 +76,6 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - Tutorials:
-      - "Configuration guide": tutorials/configuration.md
       - "Demo data (download)": tutorials/demo_data.md
       - "RNA pipeline": tutorials/rna.md
       - "ATAC pipeline": tutorials/atac.md
@@ -93,6 +92,7 @@ nav:
           - Proportion test: tutorials/downstream/proportion_test.md
           - RAISIN cluster DGE: tutorials/downstream/raisin_dge.md
           - Visualization: tutorials/downstream/visualization.md
+      - "Configuration guide": tutorials/configuration.md
   - API reference:
       - Overview: api/index.md
       - RNA:

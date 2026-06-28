@@ -5,7 +5,7 @@
 
 SampleDisco is a config-driven Python pipeline that turns single-cell RNA, ATAC, or unpaired multi-omics data into a unified sample-level embedding — combining multi-resolution cell-type composition with within-cell-type state shifts (RMD displacement) — and runs the full downstream stack of distance analysis, trajectory inference, differential testing, clustering, and visualization in a single call.
 
-[Get started](tutorials/configuration.md){ .md-button .md-button--primary }
+[Get started](tutorials/demo_data.md){ .md-button .md-button--primary }
 [Browse the API](api/index.md){ .md-button }
 </div>
 
@@ -53,12 +53,14 @@ SampleDisco is a config-driven Python pipeline that turns single-cell RNA, ATAC,
     wrapper(**config)
     ```
 
-Continue to the [Configuration guide](tutorials/configuration.md) for a walkthrough of the YAML, or jump into one of the pipeline tutorials:
+Start with the [demo data](tutorials/demo_data.md), then work through the pipeline tutorials. To drive the whole pipeline from a single YAML instead, see the [Configuration guide](tutorials/configuration.md).
 
+- [Demo data](tutorials/demo_data.md)
 - [RNA pipeline](tutorials/rna.md)
 - [ATAC pipeline](tutorials/atac.md)
 - [Multi-omics pipeline](tutorials/multiomics.md)
 - [Downstream analysis](tutorials/downstream/index.md)
+- [Configuration guide](tutorials/configuration.md)
 
 ## Citation
 
