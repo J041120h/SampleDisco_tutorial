@@ -1,6 +1,6 @@
 # RNA pipeline tutorial
 
-This tutorial walks through the scRNA-seq branch from raw counts to the sample-level embedding. Every step shows the call you would make from a notebook, the files it writes, and the figure you should expect. Parameter values follow the canonical [`config_covid_rna.yaml`](https://github.com/).
+This tutorial walks through the scRNA-seq branch from raw counts to the sample-level embedding. Every step shows the call you would make from a notebook, the files it writes, and the figure you should expect. Parameter values follow the canonical `config_covid_rna.yaml`.
 
 The pipeline ends at the sample embedding. Everything after that (sample distance, trajectory, differential genes, clustering, ...) is a downstream task — see [Downstream analysis](downstream/index.md).
 
@@ -19,7 +19,10 @@ The pipeline ends at the sample embedding. Everything after that (sample distanc
 ## Inputs
 
 - `RNA.h5ad` — cell-level raw counts; `.obs` must carry a sample column (default `"sample"`).
-- `sample_meta.csv` — one row per sample keyed by `sample`, with phenotype columns such as `sev.level`, `age`, `batch`.
+- *(optional)* `sample_meta.csv` — one row per sample keyed by `sample`, with phenotype columns such as `sev.level`, `age`, `batch`. Not needed when those columns already live in `.obs`.
+
+!!! tip "Demo data"
+    This tutorial runs on `test_RNA.h5ad` from the [demo dataset](demo_data.md). Download it into a local `data/` folder and the snippets below work as-is — its `.obs` already carries `sample`, `batch`, and `sev.level`, so `sample_meta_path` can stay `None`.
 
 Output lands under `output_dir/rna/`.
 
@@ -31,9 +34,9 @@ Read counts, merge metadata, QC-filter cells and genes, select HVGs, compute PCA
 from sampledisco.preparation.rna_preprocess_cpu import preprocess
 
 adata = preprocess(
-    h5ad_path="/data/test_RNA.h5ad",
-    sample_meta_path="/data/sample_meta.csv",
-    output_dir="/results/rna",
+    h5ad_path="data/test_RNA.h5ad",
+    sample_meta_path=None,        # demo metadata already lives in .obs
+    output_dir="sampledisco_demo_output/rna",
     sample_column="sample",
     cell_level_batch_key=None,
     min_cells=500,
@@ -46,7 +49,7 @@ adata = preprocess(
 )
 ```
 
-**Writes** → `/results/rna/preprocess/adata_preprocessed.h5ad`.
+**Writes** → `sampledisco_demo_output/rna/preprocess/adata_preprocessed.h5ad`.
 
 ## 2. Cell-type clustering
 
@@ -62,7 +65,7 @@ adata = cell_types(
     n_target_clusters=None,
     umap=True,
     save=True,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     verbose=True,
 )
 ```
@@ -83,7 +86,7 @@ from sampledisco.sample_embedding import compute_sample_embedding
 
 adata = compute_sample_embedding(
     adata,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     sample_col="sample",
     celltype_col="cell_type",
     cluster_emb_key="Z_clust",

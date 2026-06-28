@@ -9,7 +9,7 @@ from sampledisco.sample_clustering.cluster import cluster
 
 sample_clusters, _ = cluster(
     pseudobulk_adata=pseudo_adata,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     number_of_clusters=4,
     random_state=0,
 )
@@ -17,7 +17,7 @@ sample_clusters, _ = cluster(
 
 ## Output
 
-**Writes** → `/results/rna/sample_cluster/`:
+**Writes** → `sampledisco_demo_output/rna/sample_cluster/`:
 
 - `kmeans_clusters_sample.csv` — sample ↔ cluster table.
 - `kmeans_sample_embedding.png` — 2D scatter of the first two embedding dimensions, colored by cluster.

@@ -14,10 +14,10 @@ import anndata as ad
 from sampledisco.sample_embedding import compute_sample_embedding
 from sampledisco.sample_embedding.sample_embedding import build_sample_adata
 
-adata_cell = ad.read_h5ad("/results/rna/preprocess/adata_preprocessed.h5ad")
+adata_cell = ad.read_h5ad("sampledisco_demo_output/rna/preprocess/adata_preprocessed.h5ad")
 
 # Compute the sample embedding in place (skip if uns['X_DR_sample'] already present)
-adata_cell  = compute_sample_embedding(adata_cell, output_dir="/results/rna")
+adata_cell  = compute_sample_embedding(adata_cell, output_dir="sampledisco_demo_output/rna")
 
 # Materialize the sample-level AnnData (samples × PCs) for downstream consumers
 pseudo_adata = build_sample_adata(adata_cell, sample_col="sample")

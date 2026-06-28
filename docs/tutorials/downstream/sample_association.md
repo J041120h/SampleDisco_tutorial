@@ -9,7 +9,7 @@ from sampledisco.sample_association.association import run_dimension_association
 
 assoc = run_dimension_association_analysis(
     pseudo_adata=pseudo_adata,
-    output_dir="/results/rna/sample_association",
+    output_dir="sampledisco_demo_output/rna/sample_association",
     n_permutations=999,
     sample_col="sample",
     random_state=42,
@@ -24,7 +24,7 @@ Leave `continuous_cols` and `categorical_cols` as their defaults to let the func
 
 ## Output
 
-**Writes** → `/results/rna/sample_association/`:
+**Writes** → `sampledisco_demo_output/rna/sample_association/`:
 
 - `variance_explained_sample.csv` — one row per `(variable, component)` with `variable`, `component`, `kind`, `n_levels`, `r2`, `perm_p`, `fdr`, `pearson_r`, `spearman_r`, `n`.
 - `figures/sample_variance_heatmap.pdf` — variable × component R² heatmap.

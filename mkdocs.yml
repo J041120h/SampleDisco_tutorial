@@ -77,6 +77,7 @@ nav:
   - Installation: installation.md
   - Tutorials:
       - "Configuration guide": tutorials/configuration.md
+      - "Demo data (download)": tutorials/demo_data.md
       - "RNA pipeline": tutorials/rna.md
       - "ATAC pipeline": tutorials/atac.md
       - "Multi-omics pipeline": tutorials/multiomics.md

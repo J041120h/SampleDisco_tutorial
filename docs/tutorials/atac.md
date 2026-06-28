@@ -5,7 +5,10 @@ The scATAC-seq pipeline mirrors the RNA pipeline but switches preprocessing and 
 ## Inputs
 
 - `ATAC.h5ad` — cell × peak counts; `.obs` must carry a `sample` column.
-- `sample_meta.csv` — per-sample metadata including any phenotype of interest (e.g. `sev.level`).
+- *(optional)* `sample_meta.csv` — per-sample metadata including any phenotype of interest (e.g. `sev.level`). Not needed when that column is already in `.obs`.
+
+!!! tip "Demo data"
+    This tutorial runs on `test_ATAC.h5ad` from the [demo dataset](demo_data.md). Download it into a local `data/` folder and the snippets below work as-is — its `.obs` already carries `sample` and `sev.level`, so `sample_meta_path` can stay `None`.
 
 Output lands under `output_dir/atac/`.
 
@@ -18,9 +21,9 @@ from sampledisco.preparation.atac_preprocess_cpu import preprocess  # ATAC versi
 # GPU: from sampledisco.preparation.atac_preprocess_gpu import preprocess_gpu
 
 adata = preprocess(
-    h5ad_path="/data/test_ATAC.h5ad",
-    sample_meta_path="/data/sample_meta.csv",
-    output_dir="/results/atac",
+    h5ad_path="data/test_ATAC.h5ad",
+    sample_meta_path=None,        # demo metadata already lives in .obs
+    output_dir="sampledisco_demo_output/atac",
     sample_column="sample",
     cell_embedding_num_PCs=50,
     num_cell_hvfs=50000,
@@ -38,7 +41,7 @@ adata = preprocess(
 
 A single file is written carrying both cell embeddings — `obsm['Z_clust']` (sample-removed) and `obsm['Z_rmd']` (sample-preserved) — and the function returns the `AnnData`.
 
-**Writes** → `/results/atac/preprocess/adata_preprocessed.h5ad`.
+**Writes** → `sampledisco_demo_output/atac/preprocess/adata_preprocessed.h5ad`.
 
 ## 2. Cell-type clustering
 
@@ -57,7 +60,7 @@ adata = cell_types_atac(
     use_rep="X_DM_harmony",
     umap=False,
     Save=True,
-    output_dir="/results/atac",
+    output_dir="sampledisco_demo_output/atac",
 )
 ```
 
@@ -77,7 +80,7 @@ from sampledisco.sample_embedding import compute_sample_embedding
 
 adata = compute_sample_embedding(
     adata,
-    output_dir="/results/atac",
+    output_dir="sampledisco_demo_output/atac",
     sample_col="sample",
     celltype_col="cell_type",
     cluster_emb_key="Z_clust",

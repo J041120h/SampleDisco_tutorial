@@ -2,7 +2,10 @@
 
 SampleDisco is driven by a single YAML configuration file. At runtime the file is parsed into a flat dictionary and handed to [`wrapper(**config)`](../api/index.md) — every key in the YAML matches a parameter name of the wrapper function, and in `complex` mode the CLI validates the YAML **exactly** against `wrapper()`'s signature (every parameter must be present, no extra keys allowed).
 
-The canonical reference is [`code/config/config_covid_rna.yaml`](https://github.com/). This page walks through the same file, block by block, so you can build your own.
+The canonical reference is `code/config/config_covid_rna.yaml`. This page walks through the same file, block by block, so you can build your own.
+
+!!! tip "Want a config that runs right now?"
+    Grab [**`config_demo.yaml`**](../assets/config_demo.yaml) — a complete, ready-to-run config wired to the [demo datasets](demo_data.md). Download the two `.h5ad` files into a `data/` folder and run `sampledisco -m complex --config config_demo.yaml`.
 
 ## Run it
 
@@ -68,7 +71,7 @@ These are top-level keys that apply to the whole run.
 | `large_data_need_extra_memory` | bool | `false` | Switch to memory-safe paths for very large datasets. |
 
 ```yaml
-output_dir: "/dcs07/hongkai/data/harry/result/test"
+output_dir: "./sampledisco_output"
 run_rna_pipeline: true
 run_atac_pipeline: false
 run_multiomics_pipeline: false
@@ -80,7 +83,7 @@ save_intermediate: true
 
 ## Block B — Per-modality inputs and outputs
 
-Each pipeline reads its inputs from dedicated path keys. The expected format is `.h5ad` for counts and `.csv` for metadata.
+Each pipeline reads its inputs from dedicated path keys. Counts are `.h5ad`; metadata is `.csv`. The `*_sample_meta_path` keys are **optional** — leave them `null` when the sample/phenotype columns (e.g. `sample`, `sev.level`, `batch`) already live in the `.h5ad` `.obs`, as they do in the [demo data](demo_data.md).
 
 === "RNA"
 
@@ -220,6 +223,9 @@ Under `{output_dir}/{modality}/` you will find:
 | `visualization/` | `visualization`, `visualize_multimodal_embedding` | Dendrogram, grouped scatter plots, multi-omics embedding panels |
 
 ## Two worked configs
+
+!!! warning "These are illustrative excerpts, not runnable files"
+    The snippets below show only the keys that matter for each scenario. Because `complex` mode validates the YAML **key-for-key** against `wrapper()`, a runnable config must contain *every* parameter — start from a full template such as [`config_demo.yaml`](../assets/config_demo.yaml) or `code/config/config_covid_rna.yaml` and change the values you need.
 
 === "Minimal RNA from scratch"
 

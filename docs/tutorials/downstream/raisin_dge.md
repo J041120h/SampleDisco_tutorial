@@ -23,7 +23,7 @@ fit = raisinfit(
 
 run_pairwise_tests(
     fit=fit,
-    output_dir="/results/rna/raisin_results_expression",
+    output_dir="sampledisco_demo_output/rna/raisin_results_expression",
     fdrmethod="fdr_bh",
     n_permutations=100,
     fdr_threshold=0.05,
@@ -34,7 +34,7 @@ run_pairwise_tests(
 
 ## Output
 
-**Writes** → `/results/rna/raisin_results_expression/`:
+**Writes** → `sampledisco_demo_output/rna/raisin_results_expression/`:
 
 - One subdirectory per pair (`0_vs_1/`, `0_vs_2/`, ...) each containing `raisin_results.csv`, `volcano.png`, and a labeled variant.
 - `summary_plots/pseudobulk_heatmap.png` — top DE genes across all clusters.

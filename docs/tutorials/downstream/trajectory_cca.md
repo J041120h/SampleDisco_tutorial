@@ -10,7 +10,7 @@ from sampledisco.sample_trajectory.CCA_test import cca_pvalue_test
 
 score_a, score_b, ptime_a, ptime_b = CCA_Call(
     adata=pseudo_adata,
-    output_dir="/results/rna",
+    output_dir="sampledisco_demo_output/rna",
     trajectory_col="sev.level",
     n_components=2,
     auto_select_best_2pc=True,
@@ -22,7 +22,7 @@ cca_pvalue_test(
     pseudo_adata=pseudo_adata,
     column="X_DR_sample",
     input_correlation=score_a,
-    output_directory="/results/rna",
+    output_directory="sampledisco_demo_output/rna",
     num_simulations=1000,
     trajectory_col="sev.level",
 )
@@ -34,10 +34,10 @@ cca_pvalue_test(
 
 **Writes** →
 
-- `/results/rna/CCA/pca_2d_cca_sample.pdf` — 2D projection of the sample embedding.
-- `/results/rna/CCA/pca_2d_cca_sample_contributions.pdf` — per-PC contribution to the axis.
-- `/results/rna/CCA/pseudotime_sample.csv` — per-sample pseudotime along the axis.
-- `/results/rna/CCA_test/cca_pvalue_distribution_X_DR_sample.png` — null distribution + observed.
+- `sampledisco_demo_output/rna/CCA/pca_2d_cca_sample.pdf` — 2D projection of the sample embedding.
+- `sampledisco_demo_output/rna/CCA/pca_2d_cca_sample_contributions.pdf` — per-PC contribution to the axis.
+- `sampledisco_demo_output/rna/CCA/pseudotime_sample.csv` — per-sample pseudotime along the axis.
+- `sampledisco_demo_output/rna/CCA_test/cca_pvalue_distribution_X_DR_sample.png` — null distribution + observed.
 
 ## Result
 

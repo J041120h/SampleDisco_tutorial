@@ -10,7 +10,7 @@ from sampledisco.visualization.visualization_other import visualization
 visualization(
     AnnData_cell=adata_cell,
     pseudobulk_anndata=pseudo_adata,
-    output_dir="/results/rna/visualization",
+    output_dir="sampledisco_demo_output/rna/visualization",
     grouping_columns=["sev.level"],
     age_bin_size=None,
     age_column="age",
@@ -22,7 +22,7 @@ visualization(
 
 ## Output
 
-**Writes** → `/results/rna/visualization/`:
+**Writes** → `sampledisco_demo_output/rna/visualization/`:
 
 - `cell_type_dendrogram.png` — hierarchical tree of cell types by pseudobulk expression.
 - `proportion_pca_{grouping_column}.png` — PCA on per-sample cell-type proportions, colored by the grouping.
