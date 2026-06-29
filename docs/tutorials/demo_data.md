@@ -1,6 +1,6 @@
 # Demo data
 
-Every tutorial on this site runs on the same public datasets, published on Zenodo — **[zenodo.org/records/20990399](https://zenodo.org/records/20990399)** (CC-BY-4.0). Download them below, then follow the pipeline tutorials.
+Every tutorial on this site runs on the same public datasets, published on Zenodo — **[zenodo.org/records/21019419](https://zenodo.org/records/21019419)** (CC-BY-4.0). Download them below, then follow the pipeline tutorials.
 
 ## What's in the box
 
@@ -8,8 +8,8 @@ Three single-cell AnnData (`.h5ad`) files — unpaired scRNA-seq and scATAC-seq 
 
 | File | Contents | Shape | Units | Size | MD5 |
 | --- | --- | --- | --- | --- | --- |
-| `test_RNA.h5ad` | scRNA-seq counts | 29,989 cells × 14,881 genes | 8 samples (CoV / HD donors) | 501 MB | `d2f7f9a84a8082d09c18d102669966e3` |
-| `test_ATAC.h5ad` | scATAC-seq counts | 29,021 cells × 230,356 peaks | 8 samples (SRA accessions) | 2.7 GB | `70df48c7f3007651ac23c2644e49e829` |
+| `test_RNA.h5ad` | scRNA-seq counts | 29,989 cells × 14,881 genes | 8 samples (CoV / HD donors) | 94 MB | `69f00904fb9ff21e1d8e83afd63aa441` |
+| `test_ATAC.h5ad` | scATAC-seq counts | 29,021 cells × 230,356 peaks | 8 samples (SRA accessions) | 260 MB | `9053f14b396ae2553677d00b69ba18a8` |
 | `test_multiomics_integrated.h5ad` | scGLUE-integrated RNA + ATAC | 59,010 cells × 13,820 genes | 29,989 RNA + 29,021 ATAC cells | 54 MB | `3d474460e651fe61cc0751a3911512d1` |
 
 The third file is **optional** — the [multi-omics tutorial](multiomics.md) starts from it to skip scGLUE training. It already carries the GLUE joint embedding (`obsm['X_glue']`), the sample-removed view (`obsm['Z_clust']`), and joint cell-type labels.
@@ -27,20 +27,20 @@ Grab the files into a local `data/` folder:
 
     ```bash
     mkdir -p data
-    wget -O data/test_RNA.h5ad  "https://zenodo.org/records/20990399/files/test_RNA.h5ad?download=1"
-    wget -O data/test_ATAC.h5ad "https://zenodo.org/records/20990399/files/test_ATAC.h5ad?download=1"
+    wget -O data/test_RNA.h5ad  "https://zenodo.org/records/21019419/files/test_RNA.h5ad?download=1"
+    wget -O data/test_ATAC.h5ad "https://zenodo.org/records/21019419/files/test_ATAC.h5ad?download=1"
     # optional — used by the multi-omics tutorial:
-    wget -O data/test_multiomics_integrated.h5ad "https://zenodo.org/records/20990399/files/test_multiomics_integrated.h5ad?download=1"
+    wget -O data/test_multiomics_integrated.h5ad "https://zenodo.org/records/21019419/files/test_multiomics_integrated.h5ad?download=1"
     ```
 
 === "curl"
 
     ```bash
     mkdir -p data
-    curl -L -o data/test_RNA.h5ad  "https://zenodo.org/records/20990399/files/test_RNA.h5ad?download=1"
-    curl -L -o data/test_ATAC.h5ad "https://zenodo.org/records/20990399/files/test_ATAC.h5ad?download=1"
+    curl -L -o data/test_RNA.h5ad  "https://zenodo.org/records/21019419/files/test_RNA.h5ad?download=1"
+    curl -L -o data/test_ATAC.h5ad "https://zenodo.org/records/21019419/files/test_ATAC.h5ad?download=1"
     # optional — used by the multi-omics tutorial:
-    curl -L -o data/test_multiomics_integrated.h5ad "https://zenodo.org/records/20990399/files/test_multiomics_integrated.h5ad?download=1"
+    curl -L -o data/test_multiomics_integrated.h5ad "https://zenodo.org/records/21019419/files/test_multiomics_integrated.h5ad?download=1"
     ```
 
 === "Python"
@@ -48,7 +48,7 @@ Grab the files into a local `data/` folder:
     ```python
     import urllib.request, os
     os.makedirs("data", exist_ok=True)
-    base = "https://zenodo.org/records/20990399/files"
+    base = "https://zenodo.org/records/21019419/files"
     files = ["test_RNA.h5ad", "test_ATAC.h5ad", "test_multiomics_integrated.h5ad"]
     for f in files:
         urllib.request.urlretrieve(f"{base}/{f}?download=1", f"data/{f}")
