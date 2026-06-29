@@ -1,6 +1,6 @@
 # Demo data
 
-Every tutorial on this site runs on the same public datasets, published on Zenodo — **[zenodo.org/records/21019419](https://zenodo.org/records/21019419)** (CC-BY-4.0). Download them below, then follow the pipeline tutorials.
+Every tutorial on this site runs on the same public datasets, published on Zenodo under DOI **[10.5281/zenodo.20988712](https://doi.org/10.5281/zenodo.20988712)** (CC-BY-4.0) — this DOI always resolves to the **latest version**, so it's the link to share. The commands below fetch the current latest (v1.2).
 
 ## What's in the box
 
