@@ -39,24 +39,39 @@ Then set `use_gpu: true` in your config. **You do not reinstall SampleDisco** �
 !!! warning "RAPIDS version is driver-specific"
     RAPIDS is pinned to **24.12** on purpose: it is built for CUDA 12.0–12.5 and runs on a 12.5 driver. RAPIDS 25.04+ needs a newer driver (≥ CUDA 12.6) and fails at import with `cudaErrorInsufficientDriver` on a 12.5 driver. On machines with driver ≥ CUDA 12.6 you may bump the pins to 25.x.
 
-## Alternative: one-command environment
+## Alternative: reproducible conda environment
 
-For a fully reproducible environment — including bedtools, scGLUE 0.3.2, and (GPU) the full RAPIDS 24.12 stack — use the provided conda files instead of the steps above. This is the **most reproducible option**:
+For an exactly-pinned stack (the most reproducible option), use the conda environment files that ship in the repository. **Clone the repo first** — that's where the environment files and the package source live:
 
 ```bash
-# CPU
-conda env create -f environment-cpu.yml
-conda activate sampledisco-cpu
-pip install sampledisco          # or: pip install -e . --no-deps  from a clone
-
-# GPU (RAPIDS 24.12)
-conda env create -f environment-gpu.yml
-conda activate sampledisco-gpu
-pip install rapids-singlecell==0.13.1 --no-deps   # rapids-singlecell is pip-only
-pip install sampledisco          # or: pip install -e . --no-deps  from a clone
+git clone https://github.com/J041120h/SampleDisco.git
+cd SampleDisco
 ```
 
-The CPU stack is cross-platform (macOS + Linux); the GPU environment is Linux + NVIDIA only. Pinned versions: numpy 2.0.2 + scGLUE 0.3.2 + scanpy 1.11.4 + anndata 0.10.9; the GPU environment adds RAPIDS 24.12 + torch 2.5.1+cu121.
+Then create the environment from the matching file and install the package itself from the clone:
+
+=== "CPU (macOS / Linux)"
+
+    ```bash
+    conda env create -f environment-cpu.yml
+    conda activate sampledisco-cpu
+    pip install -e . --no-deps        # the env already provides every dependency
+    ```
+
+=== "GPU (Linux + NVIDIA, RAPIDS 24.12)"
+
+    ```bash
+    conda env create -f environment-gpu.yml
+    conda activate sampledisco-gpu
+    pip install rapids-singlecell==0.13.1 --no-deps   # pip-only; --no-deps preserves the pinned RAPIDS
+    pip install -e . --no-deps
+    ```
+
+This pins the whole stack (NumPy 2.0.2, scanpy 1.11.4, anndata 0.10.9, scGLUE 0.3.2; the GPU env adds RAPIDS 24.12 + torch 2.5.1+cu121). With the environment active, run the pipeline from a YAML config — see the [Configuration guide](tutorials/configuration.md), e.g. on the [demo data](tutorials/demo_data.md):
+
+```bash
+sampledisco -m complex --config your_config.yaml
+```
 
 !!! warning "scGLUE must come from PyPI"
     Install scGLUE with `pip install scglue==0.3.2`, never `conda install -c bioconda scglue` — the bioconda recipe caps `numpy<1.22` and breaks the rest of the stack. The env files already do this.
