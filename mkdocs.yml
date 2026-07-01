@@ -1,4 +1,4 @@
-site_name: SampleDisc
+site_name: SampleDisco
 site_description: A config-driven pipeline for sample-level representation learning from single-cell RNA, ATAC, and unpaired multi-omics data.
 use_directory_urls: true
 strict: false
