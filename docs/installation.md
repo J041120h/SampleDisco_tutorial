@@ -5,7 +5,8 @@ Install SampleDisco from PyPI with `pip`. It runs on CPU by default; GPU acceler
 !!! info "Requirements"
     - **Python ≥ 3.10** (developed and tested on 3.10).
     - **OS:** macOS or Linux. GPU acceleration is **Linux + NVIDIA only** (RAPIDS needs a CUDA GPU); on macOS everything runs on CPU.
-    - **Core dependencies** — installed automatically by `pip`: NumPy ≥ 1.23, SciPy ≥ 1.9, scikit-learn ≥ 1.2, scanpy ≥ 1.11, anndata ≥ 0.10, PyTorch ≥ 2.0, scGLUE ≥ 0.3, leidenalg ≥ 0.9, numba ≥ 0.57 (and others).
+    - **Core dependencies** — installed automatically by `pip`: NumPy ≥ 1.23, SciPy ≥ 1.9, scikit-learn ≥ 1.2, scanpy ≥ 1.11, anndata ≥ 0.10, harmonypy, leidenalg ≥ 0.9, numba ≥ 0.57 (and others). **No PyTorch** — Harmony runs on CPU via harmonypy.
+    - **Multi-omics extra** — `pip install sampledisco[multiomics]` adds PyTorch ≥ 2.0 + scGLUE ≥ 0.3 (+ harmony-pytorch). Needed only for scGLUE integration; it also enables the faster torch-based Harmony automatically.
     - **`bedtools`** (system binary, [step 2](#2-optional-bedtools-only-for-scglue-training)) — needed **only** to train scGLUE from scratch. The multi-omics demo skips it via the [pre-integrated file](tutorials/multiomics.md#1-load-the-integrated-data).
 
 ## Install SampleDisco
@@ -13,8 +14,11 @@ Install SampleDisco from PyPI with `pip`. It runs on CPU by default; GPU acceler
 ### 1. Core install (CPU) — from PyPI
 
 ```bash
-pip install sampledisco
+pip install sampledisco                 # core: CPU, single-omics (no PyTorch)
+pip install "sampledisco[multiomics]"   # adds PyTorch + scGLUE for multi-omics
 ```
+
+The core install has **no PyTorch** and runs Harmony via harmonypy — enough for the full RNA-only and ATAC-only pipelines. Add the `multiomics` extra only if you need scGLUE integration (it also switches Harmony to the faster torch backend automatically).
 
 ### 2. Optional — bedtools (only for scGLUE training)
 
