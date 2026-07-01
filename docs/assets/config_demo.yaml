@@ -45,7 +45,7 @@ rna_trajectory_analysis: true
 rna_trajectory_dge: true
 rna_sample_cluster: true
 rna_proportion_test: true
-rna_cluster_dge: true
+rna_cluster_dge: false   # RAISIN cluster-DGE is memory-heavy (multithreaded ComBat scales with #cores); off by default so the demo finishes on modest machines. Set true if you have ample RAM.
 rna_visualize_data: true
 rna_dimension_association_analysis: true
 
