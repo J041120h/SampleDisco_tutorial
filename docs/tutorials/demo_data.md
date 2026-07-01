@@ -54,6 +54,30 @@ Grab the files into a local `data/` folder:
         urllib.request.urlretrieve(f"{base}/{f}?download=1", f"data/{f}")
     ```
 
+## Verify your download (optional)
+
+A corrupted or partial download can surface later as a cryptic HDF5 error (e.g. "bad symbol table node signature"). To catch it early, check the MD5s against the [table above](#whats-in-the-box):
+
+=== "Linux"
+
+    ```bash
+    md5sum data/*.h5ad
+    ```
+
+=== "macOS"
+
+    ```bash
+    md5 data/*.h5ad
+    ```
+
+Expected:
+
+```
+69f00904fb9ff21e1d8e83afd63aa441  test_RNA.h5ad
+9053f14b396ae2553677d00b69ba18a8  test_ATAC.h5ad
+3d474460e651fe61cc0751a3911512d1  test_multiomics_integrated.h5ad
+```
+
 ## Citation
 
 > Jiang, H., & Ji, H. *SampleDisco tutorial demo data: scRNA-seq and scATAC-seq COVID-19 PBMC subsets.* Zenodo. https://doi.org/10.5281/zenodo.20988712

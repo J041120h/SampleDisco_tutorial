@@ -45,7 +45,7 @@ A single file is written carrying both cell embeddings — `obsm['Z_clust']` (sa
 
 ## 2. Cell-type clustering
 
-`cell_types_atac` clusters on the ATAC DR embedding (`use_rep='X_DM_harmony'`) and builds a dendrogram / diff-peaks view of the resulting types.
+`cell_types_atac` clusters on the ATAC DR embedding (`use_rep='Z_clust'`) and builds a dendrogram / diff-peaks view of the resulting types.
 
 ```python
 from sampledisco.preparation.ATAC_cell_type import cell_types_atac
@@ -57,7 +57,7 @@ adata = cell_types_atac(
     existing_cell_types=False,
     n_target_clusters=None,
     cluster_resolution=0.8,
-    use_rep="X_DM_harmony",
+    use_rep="Z_clust",
     umap=False,
     Save=True,
     output_dir="sampledisco_demo_output/atac",

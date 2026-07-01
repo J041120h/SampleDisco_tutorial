@@ -3,11 +3,12 @@
 Install SampleDisco from PyPI with `pip`. It runs on CPU by default; GPU acceleration is optional and turns on automatically when the NVIDIA RAPIDS stack is importable — no separate build and no reinstall — otherwise it falls back to CPU.
 
 !!! info "Requirements"
-    - **Python ≥ 3.10** (developed and tested on 3.10).
+    - **Python ≥ 3.10** (developed and tested on 3.10). On a fresh machine or HPC login node, create a matching environment first — e.g. `conda create -n sampledisco python=3.10 && conda activate sampledisco`.
     - **OS:** macOS or Linux. GPU acceleration is **Linux + NVIDIA only** (RAPIDS needs a CUDA GPU); on macOS everything runs on CPU.
     - **Core dependencies** — installed automatically by `pip`: NumPy ≥ 1.23, SciPy ≥ 1.9, scikit-learn ≥ 1.2, scanpy ≥ 1.11, anndata ≥ 0.10, harmonypy, leidenalg ≥ 0.9, numba ≥ 0.57 (and others). **No PyTorch** — Harmony runs on CPU via harmonypy.
-    - **Multi-omics extra** — `pip install sampledisco[multiomics]` adds PyTorch ≥ 2.0 + scGLUE ≥ 0.3 (+ harmony-pytorch). Needed only for scGLUE integration; it also enables the faster torch-based Harmony automatically.
+    - **Multi-omics extra** — `pip install sampledisco[multiomics]` adds PyTorch ≥ 2.0 + scGLUE ≥ 0.3 (+ harmony-pytorch). Needed for scGLUE integration and for the GPU/torch-based Harmony path.
     - **`bedtools`** (system binary, [step 2](#2-optional-bedtools-only-for-scglue-training)) — needed **only** to train scGLUE from scratch. The multi-omics demo skips it via the [pre-integrated file](tutorials/multiomics.md#1-load-the-integrated-data).
+    - **Resources** — the CPU demo runs comfortably in **≈4–8 GiB RAM**; the RAPIDS GPU install needs **≥8 GiB RAM and ~10 GiB disk** to unpack the CUDA libraries. (`rna_cluster_dge` / RAISIN is multithreaded and memory-heavy — see the demo config note.)
 
 ## Install SampleDisco
 
@@ -36,9 +37,17 @@ The GPU code paths (RAPIDS-accelerated normalization, Harmony, k-means / PCA, Le
 conda install -c rapidsai -c conda-forge -c nvidia \
     cuml=24.12 cudf=24.12 cugraph=24.12 rmm=24.12 cuvs=24.12 cupy=13 cuda-version=12.5
 pip install rapids-singlecell==0.13.1 --no-deps
+pip install docrep scikit-image        # rapids-singlecell runtime deps that --no-deps skips
 ```
 
-Then set `use_gpu: true` in your config. **You do not reinstall SampleDisco** — once those libraries are importable the GPU paths turn on automatically; if they are missing or the driver is too old, SampleDisco falls back cleanly to CPU equivalents (harmonypy, scikit-learn k-means, PyTorch CPU).
+For the multi-omics / torch-based Harmony GPU path, also install the extra with a **CUDA-12 torch build** — the default PyPI torch may be a CUDA-13 wheel that reports `torch.cuda.is_available() == False` on a CUDA-12 driver and silently runs on CPU:
+
+```bash
+pip install "sampledisco[multiomics]"
+pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121   # match your driver's CUDA
+```
+
+Then set `use_gpu: true` in your config. **You do not reinstall SampleDisco** — once those libraries are importable the GPU paths turn on automatically; if any part of the GPU stack is missing or the driver is too old, SampleDisco falls back cleanly to the CPU implementations (harmonypy Harmony, scikit-learn k-means).
 
 !!! warning "RAPIDS version is driver-specific"
     RAPIDS is pinned to **24.12** on purpose: it is built for CUDA 12.0–12.5 and runs on a 12.5 driver. RAPIDS 25.04+ needs a newer driver (≥ CUDA 12.6) and fails at import with `cudaErrorInsufficientDriver` on a 12.5 driver. On machines with driver ≥ CUDA 12.6 you may bump the pins to 25.x.

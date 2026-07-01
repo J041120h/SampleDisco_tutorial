@@ -5,7 +5,7 @@ This tutorial walks through the scRNA-seq branch from raw counts to the sample-l
 The pipeline ends at the sample embedding. Everything after that (sample distance, trajectory, differential genes, clustering, ...) is a downstream task — see [Downstream analysis](downstream/index.md).
 
 !!! note "Imports"
-    The code below assumes `sampledisco` is installed (`pip install sampledisco`). Public functions are imported from their concrete module files — the subpackage `__init__` files are intentionally empty. The CPU implementations are shown here; GPU variants live alongside them (e.g. `from sampledisco.preparation.rna_preprocess_gpu import preprocess_gpu`) and light up automatically when the RAPIDS stack is importable.
+    The code below assumes `sampledisco` is installed (`pip install sampledisco`). Public functions are re-exported from each subpackage's `__init__` (you can also import them from their concrete module files). The CPU implementations are shown here; GPU variants live alongside them (e.g. `from sampledisco.preparation.rna_preprocess_gpu import preprocess_gpu`) and light up automatically when the RAPIDS stack is importable.
 
 !!! tip "Config-driven alternative"
     The steps below call each function directly. To run this whole branch end to end from a single YAML instead, see the [Configuration guide](configuration.md):
