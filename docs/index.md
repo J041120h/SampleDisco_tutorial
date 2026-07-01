@@ -1,4 +1,4 @@
-# SampleDisc
+# SampleDisco
 
 <div class="hero" markdown>
 **Sample-level representation learning for single-cell multi-omics.**
@@ -11,7 +11,7 @@ SampleDisco is a config-driven Python pipeline that turns single-cell RNA, ATAC,
 
 ## Workflow overview
 
-![SampleDisc workflow](resource/overview.jpg)
+![SampleDisco workflow](resource/overview.jpg)
 
 <div class="figure-caption">From cell-level input to a sample-level embedding and downstream trajectory, clustering, and differential analyses.</div>
 
@@ -64,4 +64,4 @@ Start with the [demo data](tutorials/demo_data.md), then work through the pipeli
 
 ## Citation
 
-A manuscript describing SampleDisc is in preparation. A citation block will be added here once the preprint is posted.
+A manuscript describing SampleDisco is in preparation. A citation block will be added here once the preprint is posted.

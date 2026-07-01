@@ -1,6 +1,6 @@
-# SampleDisc documentation site
+# SampleDisco documentation site
 
-This directory now contains the MkDocs source for the SampleDisc documentation website.
+This directory now contains the MkDocs source for the SampleDisco documentation website.
 
 ## Local preview
 

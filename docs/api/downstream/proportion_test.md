@@ -26,7 +26,7 @@ def proportion_test(
 | `sample_col` | str | — | Sample identifier column. |
 | `group_col` | str, optional | `None` | Column in `adata.obs` defining the group label. Takes precedence over `sample_to_clade`. |
 | `sample_to_clade` | dict, optional | `None` | `{sample_id: group_label}` mapping. Used only when `group_col` is `None`. |
-| `celltype_col` | str | `"celltype"` | Cell-type column. Set to `"cell_type"` for SampleDisc pipelines. |
+| `celltype_col` | str | `"celltype"` | Cell-type column. Set to `"cell_type"` for SampleDisco pipelines. |
 | `output_dir` | str, optional | `None` | Writes results + plots to `{output_dir}/proportion_test/`. |
 | `verbose` | bool | `True` | Accepted for API symmetry; currently unused internally. |
 
