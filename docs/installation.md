@@ -6,7 +6,7 @@ Install SampleDisco from PyPI with `pip`. It runs on CPU by default; GPU acceler
     - **Python ≥ 3.10** (developed and tested on 3.10). On a fresh machine or HPC login node, create a matching environment first — e.g. `conda create -n sampledisco python=3.10 && conda activate sampledisco`.
     - **OS:** macOS or Linux. GPU acceleration is **Linux + NVIDIA only** (RAPIDS needs a CUDA GPU); on macOS everything runs on CPU.
     - **Core dependencies** — installed automatically by `pip`: NumPy ≥ 1.23, SciPy ≥ 1.9, scikit-learn ≥ 1.2, scanpy ≥ 1.11, anndata ≥ 0.10, harmonypy, leidenalg ≥ 0.9, numba ≥ 0.57 (and others). **No PyTorch** — Harmony runs on CPU via harmonypy.
-    - **Multi-omics extra** — `pip install sampledisco[multiomics]` adds PyTorch ≥ 2.0 + scGLUE ≥ 0.3 (+ harmony-pytorch). Needed for scGLUE integration and for the GPU/torch-based Harmony path.
+    - **GPU acceleration & training GLUE from scratch (advanced)** — install these yourself, per each tool's own instructions (see [step 3](#3-gpu-acceleration-training-glue-from-scratch-optional)): RAPIDS (GPU), PyTorch, scGLUE, harmony-pytorch. There is **no pip extra** — these are environment-specific (CUDA driver, `bedtools`), so the package deliberately doesn't bundle them. (scGLUE and harmony-pytorch also run on CPU, just slower.)
     - **`bedtools`** (system binary, [step 2](#2-optional-bedtools-only-for-scglue-training)) — needed **only** to train scGLUE from scratch. The multi-omics demo skips it via the [pre-integrated file](tutorials/multiomics.md#1-load-the-integrated-data).
     - **Resources** — the CPU demo runs comfortably in **≈4–8 GiB RAM**; the RAPIDS GPU install needs **≥8 GiB RAM and ~10 GiB disk** to unpack the CUDA libraries. (`rna_cluster_dge` / RAISIN is multithreaded and memory-heavy — see the demo config note.)
 
@@ -15,11 +15,10 @@ Install SampleDisco from PyPI with `pip`. It runs on CPU by default; GPU acceler
 ### 1. Core install (CPU) — from PyPI
 
 ```bash
-pip install sampledisco                 # core: CPU, single-omics (no PyTorch)
-pip install "sampledisco[multiomics]"   # adds PyTorch + scGLUE for multi-omics
+pip install sampledisco
 ```
 
-The core install has **no PyTorch** and runs Harmony via harmonypy — enough for the full RNA-only and ATAC-only pipelines. Add the `multiomics` extra only if you need scGLUE integration (it also switches Harmony to the faster torch backend automatically).
+This core install is **CPU-only and has no PyTorch** (Harmony runs via harmonypy). It's all you need for the full **RNA**, **ATAC**, and **multi-omics from a pre-integrated file** pipelines. GPU acceleration and *training GLUE from scratch* are optional add-ons you install yourself — see [step 3](#3-gpu-acceleration-training-glue-from-scratch-optional).
 
 ### 2. Optional — bedtools (only for scGLUE training)
 
@@ -29,7 +28,7 @@ The `bedtools` binary is required **only if you train multi-omics scGLUE integra
 conda install -c bioconda bedtools     # macOS: also available via `brew install bedtools`
 ```
 
-### 3. GPU acceleration (optional — Linux + NVIDIA)
+### 3. GPU acceleration & training GLUE from scratch (optional)
 
 The GPU code paths (RAPIDS-accelerated normalization, Harmony, k-means / PCA, Leiden, scGLUE training) activate **only when the RAPIDS stack is importable**. RAPIDS requires an NVIDIA CUDA GPU and is **Linux-only** (skip this section on macOS), conda-only, and **must match your GPU driver's CUDA version**. There is no single command that works on every machine — a driver/RAPIDS mismatch is common and simply means SampleDisco runs on CPU, so get the exact install line for *your* driver from the official installers:
 
@@ -46,12 +45,14 @@ pip install rapids-singlecell==0.13.1 --no-deps
 pip install docrep scikit-image        # rapids-singlecell runtime deps that --no-deps skips
 ```
 
-For the multi-omics / torch-based Harmony GPU path, also install the extra with a **CUDA-12 torch build** — the default PyPI torch may be a CUDA-13 wheel that reports `torch.cuda.is_available() == False` on a CUDA-12 driver and silently runs on CPU:
+**For training GLUE from scratch and torch-based Harmony**, install PyTorch, scGLUE and (optionally) harmony-pytorch yourself — they are *not* bundled in the package because their versions are environment-specific. Use a **CUDA-12 torch build** (the default PyPI torch may be a CUDA-13 wheel that reports `torch.cuda.is_available() == False` on a CUDA-12 driver and silently runs on CPU):
 
 ```bash
-pip install "sampledisco[multiomics]"
 pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121   # match your driver's CUDA
+pip install scglue==0.3.2 harmony-pytorch                                     # scGLUE (train GLUE) + faster Harmony
 ```
+
+See scGLUE's own install guide (it also needs `bedtools`; version pins matter): [scglue.readthedocs.io](https://scglue.readthedocs.io/en/latest/install.html). scGLUE and harmony-pytorch also run on CPU (slower); without harmony-pytorch, Harmony falls back to harmonypy.
 
 Then set `use_gpu: true` in your config. **You do not reinstall SampleDisco** — once those libraries are importable the GPU paths turn on automatically; if any part of the GPU stack is missing or the driver is too old, SampleDisco falls back cleanly to the CPU implementations (harmonypy Harmony, scikit-learn k-means).
 
