@@ -14,7 +14,7 @@ Output lands under `output_dir/multiomics/`.
 
 ## 1. Load the integrated data
 
-The demo ships a pre-computed scGLUE integration, so the tutorial starts from it — load `test_multiomics_integrated.h5ad` and go straight to cell typing. It already carries the joint embedding (`obsm['X_glue']`, aliased to the sample-preserved `Z_rmd`) and the sample-removed `obsm['Z_clust']`, so **no scGLUE training and no `bedtools` are needed**. Since the scGLUE import is lazy (v0.1.3+), this pre-integrated path doesn't even require scGLUE to be installed — a plain `pip install sampledisco` runs it (the `[multiomics]` extra is only needed to *train* GLUE from scratch).
+The demo ships a pre-computed scGLUE integration, so the tutorial starts from it — load `test_multiomics_integrated.h5ad` and go straight to cell typing. It already carries the joint embedding (`obsm['X_glue']`, aliased to the sample-preserved `Z_rmd`) and the sample-removed `obsm['Z_clust']`, so **no scGLUE training and no `bedtools` are needed**. Since the scGLUE import is lazy (v0.1.3+), this pre-integrated path doesn't even require scGLUE to be installed — a plain `pip install sampledisco` runs it — you only need to install scGLUE yourself (see [Installation](../installation.md)) if you want to *train* GLUE from scratch.
 
 ```python
 import anndata as ad
@@ -26,7 +26,7 @@ Continue to [joint cell typing](#2-joint-cell-typing). To build this object your
 
 ### Optional — integrate from scratch with GLUE
 
-This trains scGLUE and needs the `bedtools` binary (see [Installation](../installation.md)); it is the slowest part of the pipeline. `multiomics_preparation` runs the full GLUE pipeline as toggleable sub-stages: scGLUE preprocessing (`run_preprocessing`), adversarial training (`run_training`), cell-union merge into a single integrated object (`run_merge`), per-modality QC + normalize (`run_preprocess_per_modality`), and optional visualization (`run_visualization`). Set `run_second_glue_for_sample_removal=True` to train scGLUE a second time and also obtain the sample-REMOVED cluster embedding (`obsm['Z_clust']`); the primary run's `X_glue` is aliased to the sample-PRESERVED `obsm['Z_rmd']`.
+This trains scGLUE, so you must install `scglue` + the `bedtools` binary yourself first (see [Installation](../installation.md)); it is the slowest part of the pipeline. `multiomics_preparation` runs the full GLUE pipeline as toggleable sub-stages: scGLUE preprocessing (`run_preprocessing`), adversarial training (`run_training`), cell-union merge into a single integrated object (`run_merge`), per-modality QC + normalize (`run_preprocess_per_modality`), and optional visualization (`run_visualization`). Set `run_second_glue_for_sample_removal=True` to train scGLUE a second time and also obtain the sample-REMOVED cluster embedding (`obsm['Z_clust']`); the primary run's `X_glue` is aliased to the sample-PRESERVED `obsm['Z_rmd']`.
 
 ```python
 from sampledisco.preparation.multi_omics_glue import multiomics_preparation
