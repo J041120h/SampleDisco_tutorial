@@ -31,7 +31,13 @@ conda install -c bioconda bedtools     # macOS: also available via `brew install
 
 ### 3. GPU acceleration (optional — Linux + NVIDIA)
 
-The GPU code paths (RAPIDS-accelerated normalization, Harmony, k-means / PCA, Leiden, scGLUE training) activate **only when the RAPIDS stack is importable**. RAPIDS requires an NVIDIA CUDA GPU and is **Linux-only** (skip this section on macOS). It is CUDA-driver-specific and conda-only, so you install it separately, matching your driver. The pins below target a CUDA 12.5 driver:
+The GPU code paths (RAPIDS-accelerated normalization, Harmony, k-means / PCA, Leiden, scGLUE training) activate **only when the RAPIDS stack is importable**. RAPIDS requires an NVIDIA CUDA GPU and is **Linux-only** (skip this section on macOS), conda-only, and **must match your GPU driver's CUDA version**. There is no single command that works on every machine — a driver/RAPIDS mismatch is common and simply means SampleDisco runs on CPU, so get the exact install line for *your* driver from the official installers:
+
+!!! note "Use the official installers (they generate the line for your driver)"
+    - **RAPIDS install selector** — [docs.rapids.ai/install](https://docs.rapids.ai/install) — produces the exact `conda`/`pip` command for your CUDA version.
+    - **rapids-singlecell** — [docs](https://rapids-singlecell.readthedocs.io/) · [GitHub](https://github.com/scverse/rapids_singlecell).
+
+The stack below is the **known-good reference we test against** (a CUDA 12.5 driver); adjust the versions to your driver using the selector above:
 
 ```bash
 conda install -c rapidsai -c conda-forge -c nvidia \
