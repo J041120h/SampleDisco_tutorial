@@ -14,7 +14,7 @@ Output lands under `output_dir/multiomics/`.
 
 ## 1. Load the integrated data
 
-The demo ships a pre-computed scGLUE integration, so the tutorial starts from it — load `test_multiomics_integrated.h5ad` and go straight to cell typing. It already carries the joint embedding (`obsm['X_glue']`, aliased to the sample-preserved `Z_rmd`) and the sample-removed `obsm['Z_clust']`, so **no scGLUE training and no `bedtools` are needed**.
+The demo ships a pre-computed scGLUE integration, so the tutorial starts from it — load `test_multiomics_integrated.h5ad` and go straight to cell typing. It already carries the joint embedding (`obsm['X_glue']`, aliased to the sample-preserved `Z_rmd`) and the sample-removed `obsm['Z_clust']`, so **no scGLUE training and no `bedtools` are needed**. Since the scGLUE import is lazy (v0.1.3+), this pre-integrated path doesn't even require scGLUE to be installed — a plain `pip install sampledisco` runs it (the `[multiomics]` extra is only needed to *train* GLUE from scratch).
 
 ```python
 import anndata as ad
