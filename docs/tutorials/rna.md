@@ -93,7 +93,7 @@ adata = compute_sample_embedding(
     pca_components=10,
     use_rmd=True,
     rmd_weight=0.60,
-    use_gpu=True,            # falls back to CPU if RAPIDS is unavailable
+    use_gpu=False,           # CPU default; set True for RAPIDS on Linux+NVIDIA (auto-falls back to CPU)
     save=True,
 )
 ```

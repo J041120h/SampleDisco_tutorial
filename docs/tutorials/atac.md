@@ -16,6 +16,9 @@ Output lands under `output_dir/atac/`.
 
 TF-IDF normalization, LSI projection, optional doublet removal, and a two-pass Harmony integration. ATAC typically uses a high feature count (50,000) and 50 LSI components.
 
+!!! note "Runtime on a CPU / laptop"
+    ATAC preprocessing operates on the full ~230k-peak matrix and is the slowest single step of the demo. On a CPU-only machine — including Apple Silicon Macs, where SampleDisco always runs on CPU (GPU acceleration is Linux + NVIDIA only) — expect it to take roughly **30–60 minutes** on the demo data. This is expected; let it run.
+
 ```python
 from sampledisco.preparation.atac_preprocess_cpu import preprocess  # ATAC version
 # GPU: from sampledisco.preparation.atac_preprocess_gpu import preprocess_gpu
@@ -86,7 +89,7 @@ adata = compute_sample_embedding(
     cluster_emb_key="Z_clust",
     rmd_emb_key=None,        # defaults to Z_rmd
     batch_col=None,
-    use_gpu=True,
+    use_gpu=False,           # CPU default; set True for RAPIDS on Linux+NVIDIA (auto-falls back to CPU)
     save=True,
 )
 ```

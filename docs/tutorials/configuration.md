@@ -5,7 +5,13 @@ SampleDisco is driven by a single YAML configuration file. At runtime the file i
 The canonical reference is `code/config/config_covid_rna.yaml`. This page walks through the same file, block by block, so you can build your own.
 
 !!! tip "Want a config that runs right now?"
-    Grab [**`config_demo.yaml`**](../assets/config_demo.yaml) — a complete, ready-to-run config wired to the [demo datasets](demo_data.md). Download the two `.h5ad` files into a `data/` folder and run `sampledisco -m complex --config config_demo.yaml`.
+    The package ships the same template — generate it locally with:
+
+    ```bash
+    sampledisco --init-config config_demo.yaml
+    ```
+
+    That writes a complete, ready-to-run config wired to the [demo datasets](demo_data.md) (identical to [**`config_demo.yaml`**](../assets/config_demo.yaml)). Download the two `.h5ad` files into a `data/` folder and run `sampledisco -m complex --config config_demo.yaml`.
 
 ## Run it
 

@@ -116,7 +116,7 @@ from sampledisco.sample_embedding import compute_sample_embedding
 adata_integrated = compute_sample_embedding(
     adata_integrated,
     output_dir="sampledisco_demo_output/multiomics",
-    use_gpu=True,
+    use_gpu=False,           # CPU default; set True for RAPIDS on Linux+NVIDIA (auto-falls back to CPU)
     sample_col="sample",
     celltype_col="cell_type",
     cluster_emb_key="Z_clust",
