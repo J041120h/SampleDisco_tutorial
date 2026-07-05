@@ -1,17 +1,18 @@
 # RNA pipeline tutorial
 
-This tutorial walks through the scRNA-seq branch from raw counts to the sample-level embedding. Every step shows the call you would make from a notebook, the files it writes, and the figure you should expect. Parameter values follow the canonical `config_covid_rna.yaml`.
+This tutorial walks through the scRNA-seq branch from raw counts to the sample-level embedding. Every step shows the call you would make from a notebook, the files it writes, and the figure you should expect. Parameter values follow the shipped demo config (generate it with `sampledisco --init-config`).
 
 The pipeline ends at the sample embedding. Everything after that (sample distance, trajectory, differential genes, clustering, ...) is a downstream task — see [Downstream analysis](downstream/index.md).
 
 !!! note "Imports"
-    The code below assumes `sampledisco` is installed (`pip install sampledisco`). Public functions are re-exported from each subpackage's `__init__` (you can also import them from their concrete module files). The CPU implementations are shown here; GPU variants live alongside them (e.g. `from sampledisco.preparation.rna_preprocess_gpu import preprocess_gpu`) and light up automatically when the RAPIDS stack is importable.
+    The code below assumes `sampledisco` is installed (`pip install sampledisco`). Public functions are re-exported from each subpackage's `__init__` (you can also import them from their concrete module files). The CPU implementations are shown here; GPU variants live alongside them (e.g. `from sampledisco.preparation.rna_preprocess_gpu import preprocess_gpu`). The config-driven wrapper switches to them automatically when RAPIDS is importable — but note the `*_gpu` **preprocessing** modules import RAPIDS at module load, so they can only be imported on a GPU box (there's no CPU fallback for those; only `compute_sample_embedding` has one).
 
 !!! tip "Config-driven alternative"
-    The steps below call each function directly. To run this whole branch end to end from a single YAML instead, see the [Configuration guide](configuration.md):
+    The steps below call each function directly. To run this whole branch end to end from a single YAML instead, generate the ready-to-run demo config and pass it (see the [Configuration guide](configuration.md)):
 
     ```bash
-    sampledisco -m complex --config config_covid_rna.yaml
+    sampledisco --init-config config_demo.yaml
+    sampledisco -m complex --config config_demo.yaml
     ```
 
 ## Inputs

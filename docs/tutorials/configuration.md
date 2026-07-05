@@ -2,7 +2,7 @@
 
 SampleDisco is driven by a single YAML configuration file. At runtime the file is parsed into a flat dictionary and handed to [`wrapper(**config)`](../api/index.md) — every key in the YAML matches a parameter name of the wrapper function, and in `complex` mode the CLI validates the YAML **exactly** against `wrapper()`'s signature (every parameter must be present, no extra keys allowed).
 
-The canonical reference is `code/config/config_covid_rna.yaml`. This page walks through the same file, block by block, so you can build your own.
+The best starting point is the shipped demo template — run `sampledisco --init-config config_demo.yaml` to write a complete, ready-to-run config (the repo also carries a fuller `code/config/config_covid_rna.yaml` example). This page walks through the config block by block so you can build your own.
 
 !!! tip "Want a config that runs right now?"
     The package ships the same template — generate it locally with:
@@ -312,4 +312,4 @@ Under `{output_dir}/{modality}/` you will find:
 !!! warning "use_gpu=true needs the RAPIDS stack"
     The GPU code path imports `rapids_singlecell` (RAPIDS, conda-only and CUDA-driver-specific). If RAPIDS is missing or the driver is too old, SampleDisco falls back cleanly to the CPU implementations even with `use_gpu: true` — but for a deliberate CPU run set `use_gpu: false`. See the [installation guide](../installation.md) for the RAPIDS pins.
 
-    GPU and CPU results are **not bit-identical**: the composition k-means blocks use different backends (cuML vs scikit-learn), so the embedding — and therefore downstream clustering — can differ slightly. The sample-level batch correction is the *same* on both paths (`harmonypy`). On small data a GPU run is often no faster than CPU (import/transfer overhead dominates).
+    GPU and CPU results are **not equivalent**: the composition k-means blocks use different backends (cuML vs scikit-learn), so the embedding — and some downstream sample clusters — can differ **materially** (on the demo, CPU-vs-GPU sample-distance correlation was only ≈0.4–0.6). The sample-level batch correction is the *same* on both paths (`harmonypy`). Pick one backend for reproducible results. On small data a GPU run is often no faster than CPU (import/transfer overhead dominates).

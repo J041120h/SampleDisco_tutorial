@@ -27,7 +27,7 @@ The supported interface is the config-driven CLI — `sampledisco -m complex --c
 These aren't bundled — they're CUDA-driver- and OS-specific. If any part is missing, SampleDisco falls back cleanly to CPU.
 
 !!! note "GPU pays off only on large data"
-    On the small demo (8 samples, ~30 k cells) the import and host↔device transfer overhead outweighs the speedup — a GPU run may be **no faster, or even slightly slower**, than CPU. The GPU paths matter on large datasets. Also note GPU and CPU embeddings are **not bit-identical**: the composition k-means uses different backends (cuML vs scikit-learn), so downstream clustering can shift slightly. The sample-level batch correction is the same on both (harmonypy).
+    On the small demo (8 samples, ~30 k cells) the import and host↔device transfer overhead outweighs the speedup — a GPU run may be **no faster, or even slightly slower**, than CPU. The GPU paths matter on large datasets. Also note the GPU and CPU embeddings are **not equivalent, and can differ materially**: the composition k-means uses different backends (cuML vs scikit-learn), and on the demo the CPU-vs-GPU sample-distance-matrix correlation was only ≈0.4–0.6 — enough to change some downstream sample clusters. (The sample-level batch correction itself is the same on both — `harmonypy`.) **For reproducible or publication results, pick one backend and stay on it.**
 
 **RAPIDS (GPU — Linux + NVIDIA).** No single command works everywhere; get the line for *your* driver from the [RAPIDS install selector](https://docs.rapids.ai/install) and [rapids-singlecell docs](https://rapids-singlecell.readthedocs.io/). The known-good stack we test (CUDA 12.5 driver):
 
