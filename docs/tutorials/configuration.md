@@ -311,3 +311,5 @@ Under `{output_dir}/{modality}/` you will find:
 
 !!! warning "use_gpu=true needs the RAPIDS stack"
     The GPU code path imports `rapids_singlecell` (RAPIDS, conda-only and CUDA-driver-specific). If RAPIDS is missing or the driver is too old, SampleDisco falls back cleanly to the CPU implementations even with `use_gpu: true` — but for a deliberate CPU run set `use_gpu: false`. See the [installation guide](../installation.md) for the RAPIDS pins.
+
+    GPU and CPU results are **not bit-identical**: the composition k-means blocks use different backends (cuML vs scikit-learn), so the embedding — and therefore downstream clustering — can differ slightly. The sample-level batch correction is the *same* on both paths (`harmonypy`). On small data a GPU run is often no faster than CPU (import/transfer overhead dominates).
