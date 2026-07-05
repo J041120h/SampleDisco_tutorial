@@ -5,7 +5,7 @@
 !!! info "Requirements"
     - **Python ≥ 3.10** — on a fresh machine, create an env first: `conda create -n sampledisco python=3.10 && conda activate sampledisco`.
     - **OS:** macOS or Linux. The CPU core has **no PyTorch** (Harmony runs via harmonypy); GPU acceleration is **Linux + NVIDIA only**.
-    - **Resources:** CPU demo ≈ 4–8 GiB RAM; the full RAPIDS GPU env is ≈ 16 GiB installed (allow ~30 GiB transient for the conda package cache during the solve) and needs ≥ 8 GiB RAM. RAISIN (`rna_cluster_dge`) is multithreaded and memory-heavy.
+    - **Resources:** the RNA demo fits in ≈ 4–8 GiB RAM, but the **ATAC** stage (29 k cells × 230 k peaks) peaks higher — allow **≈ 16 GiB** for the full RNA+ATAC demo (a 10 GiB cap OOM-kills ATAC). The full RAPIDS GPU env is ≈ 16 GiB installed (allow ~30 GiB transient for the conda package cache during the solve). RAISIN (`rna_cluster_dge`) is multithreaded and memory-heavy.
 
 ## 1. Core install (CPU)
 
@@ -38,7 +38,12 @@ pip install rapids-singlecell==0.13.1 --no-deps
 pip install docrep scikit-image          # rapids-singlecell deps that --no-deps skips
 ```
 
-For GPU-accelerated Harmony during **preprocessing** (not just the sample-embedding step), also install `harmony-pytorch` from the block below — without it, preprocessing Harmony silently runs on CPU (`harmonypy`).
+`harmony-pytorch` is **optional**: with just the RAPIDS stack above the whole pipeline already runs on GPU — only the cell-level Harmony step falls back to CPU (`harmonypy`). To run that step on the GPU too, install a **CUDA-12 PyTorch first**, then harmony-pytorch **with `--no-deps`** — a plain `pip install harmony-pytorch` pulls a CUDA-13 torch that shadows cupy's CUDA-12 runtime and breaks RAPIDS (`CUSPARSE_STATUS_NOT_INITIALIZED`):
+
+```bash
+pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121   # match your driver's CUDA
+pip install harmony-pytorch --no-deps
+```
 
 **Training GLUE from scratch / torch-based Harmony.** Install `bedtools`, a **CUDA-12** PyTorch, scGLUE, and optionally harmony-pytorch. Use a cu12 torch build — the default PyPI torch may be a CUDA-13 wheel that silently runs on CPU on a CUDA-12 driver:
 
