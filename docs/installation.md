@@ -29,14 +29,26 @@ These aren't bundled — they're CUDA-driver- and OS-specific. If any part is mi
 !!! note "GPU pays off only on large data"
     On the small demo (8 samples, ~30 k cells) the import and host↔device transfer overhead outweighs the speedup — a GPU run may be **no faster, or even slightly slower**, than CPU. The GPU paths matter on large datasets. Also note the GPU and CPU embeddings are **not equivalent, and can differ materially**: the composition k-means uses different backends (cuML vs scikit-learn), and on the demo the CPU-vs-GPU sample-distance-matrix correlation was only ≈0.4–0.6 — enough to change some downstream sample clusters. (The sample-level batch correction itself is the same on both — `harmonypy`.) **For reproducible or publication results, pick one backend and stay on it.**
 
-**RAPIDS (GPU — Linux + NVIDIA).** No single command works everywhere; get the line for *your* driver from the [RAPIDS install selector](https://docs.rapids.ai/install) and [rapids-singlecell docs](https://rapids-singlecell.readthedocs.io/). The known-good stack we test (CUDA 12.5 driver):
+**RAPIDS (GPU — Linux + NVIDIA).** Use the **validated env file** in the repo — it solves `rapidsai` + `conda-forge` together. (Layering `conda install cuml=24.12 …` onto the `defaults`-channel `python=3.10` env from step 1 does **not** solve — a defaults-vs-conda-forge clash.) Clone the repo and build the GPU env:
 
 ```bash
-conda install -c rapidsai -c conda-forge -c nvidia \
-    cuml=24.12 cudf=24.12 cugraph=24.12 rmm=24.12 cuvs=24.12 cupy=13 cuda-version=12.5
-pip install rapids-singlecell==0.13.1 --no-deps
-pip install docrep scikit-image          # rapids-singlecell deps that --no-deps skips
+git clone https://github.com/J041120h/SampleDisco.git && cd SampleDisco
+conda env create -f environment-gpu.yml            # RAPIDS 24.12 + torch 2.5.1+cu121 (Linux + NVIDIA)
+conda activate sampledisco-gpu
+pip install rapids-singlecell==0.13.1 --no-deps    # pip-only; --no-deps avoids re-pulling RAPIDS
+pip install sampledisco --no-deps                  # or `pip install -e . --no-deps` from the clone
 ```
+
+**Verify the GPU stack imports before trusting `use_gpu: true`:**
+
+```bash
+python -c "import cuml, cupy, rapids_singlecell; print('GPU OK')"
+```
+
+If that errors, a run with `use_gpu: true` still completes — on **CPU**, with a warning. The definitive record of what a run actually used is the `gpu_available` field in `<output_dir>/sys_log/main_process_status.json`.
+
+!!! note "Building the RAPIDS env by hand"
+    If you'd rather not use the env file, mirror its channels and pins: put `rapidsai` + `conda-forge` first and create a **fresh** env (never `conda install` RAPIDS on top of a `defaults`-channel env). See [`environment-gpu.yml`](https://github.com/J041120h/SampleDisco/blob/main/environment-gpu.yml) for the exact, tested pin set (RAPIDS 24.12, `cupy=13`, `cuda-version=12.5`, python 3.10). Pin for your own driver via the [RAPIDS selector](https://docs.rapids.ai/install).
 
 `harmony-pytorch` is **optional**: with just the RAPIDS stack above the whole pipeline already runs on GPU — only the cell-level Harmony step falls back to CPU (`harmonypy`). To run that step on the GPU too, install a **CUDA-12 PyTorch first**, then harmony-pytorch **with `--no-deps`** — a plain `pip install harmony-pytorch` pulls a CUDA-13 torch that shadows cupy's CUDA-12 runtime and breaks RAPIDS (`CUSPARSE_STATUS_NOT_INITIALIZED`):
 
@@ -68,9 +80,9 @@ See scGLUE's [install guide](https://scglue.readthedocs.io/en/latest/install.htm
 !!! warning "RAPIDS is driver-specific"
     The 24.12 pins target a CUDA 12.0–12.5 driver. RAPIDS 25.04+ needs ≥ CUDA 12.6 and fails to import (`cudaErrorInsufficientDriver`) on older drivers; bump the pins on newer drivers.
 
-## Alternative: pinned conda environment (most reproducible)
+## Alternative: pinned CPU conda environment (most reproducible)
 
-The repo ships exact-version env files. Clone it, create the env, and install the package from the clone:
+The repo ships an exact-version CPU env file (for GPU, use `environment-gpu.yml` as in §2 above). Clone it, create the env, and install the package from the clone:
 
 ```bash
 git clone https://github.com/J041120h/SampleDisco.git && cd SampleDisco
@@ -78,5 +90,3 @@ conda env create -f environment-cpu.yml      # CPU (macOS / Linux)
 conda activate sampledisco-cpu
 pip install -e . --no-deps
 ```
-
-For GPU, use `environment-gpu.yml` (RAPIDS 24.12 + torch 2.5.1+cu121) and add `pip install rapids-singlecell==0.13.1 --no-deps` after activating.
