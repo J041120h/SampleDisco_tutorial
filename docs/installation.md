@@ -1,92 +1,59 @@
 # Installation
 
-`pip install sampledisco` gives you the full **CPU** pipeline — RNA, ATAC, and multi-omics from a pre-integrated file. GPU acceleration and *training GLUE from scratch* are optional add-ons you install yourself (they're environment-specific and can't be set up reliably via a pip extra).
+`pip install sampledisco` installs the full **CPU** pipeline (RNA, ATAC, and multi-omics from a pre-integrated file). GPU acceleration and training GLUE from scratch are optional, environment-specific add-ons.
 
 !!! info "Requirements"
-    - **Python ≥ 3.10** — on a fresh machine, create an env first: `conda create -n sampledisco python=3.10 && conda activate sampledisco`.
-    - **OS:** macOS or Linux. The CPU core has **no PyTorch** (Harmony runs via harmonypy); GPU acceleration is **Linux + NVIDIA only**.
-    - **Resources:** the RNA demo fits in ≈ 4–8 GiB RAM, but the **ATAC** stage (29 k cells × 230 k peaks) peaks higher — allow **≈ 16 GiB** for the full RNA+ATAC demo (a 10 GiB cap OOM-kills ATAC). The full RAPIDS GPU env is ≈ 16 GiB installed (allow ~30 GiB transient for the conda package cache during the solve). RAISIN (`rna_cluster_dge`) is multithreaded and memory-heavy.
+    - **Python ≥ 3.10**, **macOS or Linux**. GPU acceleration is **Linux + NVIDIA only**.
+    - **RAM:** ≈ 8 GiB for RNA; **≈ 16 GiB** for the full RNA+ATAC demo (ATAC's peak matrix is large).
 
 ## 1. Core install (CPU)
 
 ```bash
+conda create -n sampledisco python=3.10 && conda activate sampledisco
 pip install sampledisco
 ```
 
-Verify:
+Verify, then drive the pipeline from a YAML config (see the [Configuration guide](tutorials/configuration.md)):
 
 ```bash
 python -c "import sampledisco; print(sampledisco.__version__)"
 sampledisco --help
 ```
 
-The supported interface is the config-driven CLI — `sampledisco -m complex --config config.yaml` (see the [Configuration guide](tutorials/configuration.md)).
+## 2. GPU acceleration (optional — Linux + NVIDIA)
 
-## 2. GPU acceleration & training GLUE from scratch (optional)
-
-These aren't bundled — they're CUDA-driver- and OS-specific. If any part is missing, SampleDisco falls back cleanly to CPU.
-
-!!! note "GPU pays off only on large data"
-    On the small demo (8 samples, ~30 k cells) the import and host↔device transfer overhead outweighs the speedup — a GPU run may be **no faster, or even slightly slower**, than CPU. The GPU paths matter on large datasets. Also note the GPU and CPU embeddings are **not equivalent, and can differ materially**: the composition k-means uses different backends (cuML vs scikit-learn), and on the demo the CPU-vs-GPU sample-distance-matrix correlation was only ≈0.4–0.6 — enough to change some downstream sample clusters. (The sample-level batch correction itself is the same on both — `harmonypy`.) **For reproducible or publication results, pick one backend and stay on it.**
-
-**RAPIDS (GPU — Linux + NVIDIA).** Use the **validated env file** in the repo — it solves `rapidsai` + `conda-forge` together. (Layering `conda install cuml=24.12 …` onto the `defaults`-channel `python=3.10` env from step 1 does **not** solve — a defaults-vs-conda-forge clash.) Clone the repo and build the GPU env:
+Build the GPU environment from the repo's validated env file. (Layering `conda install` of RAPIDS onto the CPU env does **not** solve — a channel clash.)
 
 ```bash
 git clone https://github.com/J041120h/SampleDisco.git && cd SampleDisco
-conda env create -f environment-gpu.yml            # RAPIDS 24.12 + torch 2.5.1+cu121 (Linux + NVIDIA)
+conda env create -f environment-gpu.yml         # RAPIDS 24.12 + torch 2.5.1+cu121
 conda activate sampledisco-gpu
-pip install rapids-singlecell==0.13.1 --no-deps    # pip-only; --no-deps avoids re-pulling RAPIDS
-pip install sampledisco --no-deps                  # or `pip install -e . --no-deps` from the clone
+pip install rapids-singlecell==0.13.1 --no-deps
+pip install sampledisco --no-deps
 ```
 
-**Verify the GPU stack imports before trusting `use_gpu: true`:**
+Verify the stack, then set `use_gpu: true` in your config:
 
 ```bash
 python -c "import cuml, cupy, rapids_singlecell; print('GPU OK')"
 ```
 
-If that errors, a run with `use_gpu: true` still completes — on **CPU**, with a warning. The definitive record of what a run actually used is the `gpu_available` field in `<output_dir>/sys_log/main_process_status.json`.
+If the stack is missing, runs fall back to CPU (the backend used is recorded as `gpu_available` in `sys_log/main_process_status.json`). GPU and CPU embeddings are **not identical** — the k-means backends differ — so stay on one backend for reproducible results; on small data the GPU may be no faster than CPU. The 24.12 pins target a CUDA 12.0–12.5 driver; bump to RAPIDS 25.x on a newer driver.
 
-!!! note "Building the RAPIDS env by hand"
-    If you'd rather not use the env file, mirror its channels and pins: put `rapidsai` + `conda-forge` first and create a **fresh** env (never `conda install` RAPIDS on top of a `defaults`-channel env). See [`environment-gpu.yml`](https://github.com/J041120h/SampleDisco/blob/main/environment-gpu.yml) for the exact, tested pin set (RAPIDS 24.12, `cupy=13`, `cuda-version=12.5`, python 3.10). Pin for your own driver via the [RAPIDS selector](https://docs.rapids.ai/install).
+## 3. Training GLUE from scratch (optional)
 
-`harmony-pytorch` is **optional**: with just the RAPIDS stack above the whole pipeline already runs on GPU — only the cell-level Harmony step falls back to CPU (`harmonypy`). To run that step on the GPU too, install a **CUDA-12 PyTorch first**, then harmony-pytorch **with `--no-deps`** — a plain `pip install harmony-pytorch` pulls a CUDA-13 torch that shadows cupy's CUDA-12 runtime and breaks RAPIDS (`CUSPARSE_STATUS_NOT_INITIALIZED`):
-
-```bash
-pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121   # match your driver's CUDA
-pip install harmony-pytorch --no-deps
-```
-
-**Training GLUE from scratch / torch-based Harmony.** Install `bedtools`, a **CUDA-12** PyTorch, scGLUE, and optionally harmony-pytorch. Use a cu12 torch build — the default PyPI torch may be a CUDA-13 wheel that silently runs on CPU on a CUDA-12 driver:
+Only needed to build the multi-omics integration yourself (the demo starts from a pre-integrated file). scGLUE 0.3.2 needs `anndata < 0.11`, so use a dedicated env:
 
 ```bash
-conda install -c bioconda bedtools                                           # scGLUE needs it (macOS: brew install bedtools)
-pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121   # match your driver's CUDA
-pip install scglue==0.3.2 harmony-pytorch                                     # scGLUE + faster Harmony
+conda create -n sampledisco-glue python=3.10 && conda activate sampledisco-glue
+conda install -c bioconda bedtools
+pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121   # cu12 build first
+pip install "anndata<0.11" scglue==0.3.2 harmony-pytorch
+pip install sampledisco --no-deps
 ```
 
-See scGLUE's [install guide](https://scglue.readthedocs.io/en/latest/install.html) — install it from PyPI, never `conda install -c bioconda scglue` (that recipe caps `numpy<1.22`). scGLUE/harmony-pytorch also run on CPU (slower); without harmony-pytorch, Harmony uses harmonypy.
+Install scGLUE from PyPI, never `conda install -c bioconda scglue` (that recipe caps `numpy<1.22`).
 
-!!! warning "scGLUE 0.3.2 needs `anndata < 0.11`"
-    `scglue==0.3.2` imports `anndata._core.sparse_dataset.SparseDataset`, which was **removed in anndata 0.11**. A plain `pip install sampledisco` pulls `anndata 0.11.x`, so `import scglue` then fails with `AttributeError: … has no attribute 'SparseDataset'`. This only affects *training GLUE from scratch* (the demo starts from the pre-integrated file and never imports scGLUE). If you do need from-scratch GLUE, train it in a **dedicated env** that pins `anndata<0.11`:
+## Reproducible env files
 
-    ```bash
-    conda create -n sampledisco-glue python=3.10
-    conda activate sampledisco-glue
-    pip install "anndata<0.11" scglue==0.3.2 harmony-pytorch
-    pip install sampledisco --no-deps      # avoid re-pulling anndata 0.11
-    ```
-
-!!! warning "RAPIDS is driver-specific"
-    The 24.12 pins target a CUDA 12.0–12.5 driver. RAPIDS 25.04+ needs ≥ CUDA 12.6 and fails to import (`cudaErrorInsufficientDriver`) on older drivers; bump the pins on newer drivers.
-
-## Alternative: pinned CPU conda environment (most reproducible)
-
-The repo ships an exact-version CPU env file (for GPU, use `environment-gpu.yml` as in §2 above). Clone it, create the env, and install the package from the clone:
-
-```bash
-git clone https://github.com/J041120h/SampleDisco.git && cd SampleDisco
-conda env create -f environment-cpu.yml      # CPU (macOS / Linux)
-conda activate sampledisco-cpu
-pip install -e . --no-deps
-```
+The repo ships exact-version `environment-cpu.yml` and `environment-gpu.yml`. Create with `conda env create -f <file>`, then `pip install -e . --no-deps`.
