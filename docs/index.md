@@ -34,6 +34,23 @@ SampleDisco is a config-driven Python pipeline that turns single-cell RNA, ATAC,
 
 ## Quick start
 
+**Run the full demo in three steps** (after `pip install sampledisco` — see [Installation](installation.md)):
+
+```bash
+# 1. generate a ready-to-run config (pre-wired to ./data/test_*.h5ad)
+sampledisco --init-config config_demo.yaml
+
+# 2. download the demo data into ./data  (full commands + checksums: Demo data page)
+mkdir -p data
+wget -O data/test_RNA.h5ad  "https://zenodo.org/records/21019419/files/test_RNA.h5ad?download=1"
+wget -O data/test_ATAC.h5ad "https://zenodo.org/records/21019419/files/test_ATAC.h5ad?download=1"
+
+# 3. run RNA + ATAC end to end
+sampledisco -m complex --config config_demo.yaml
+```
+
+The general form (any config):
+
 === "CLI"
 
     ```bash
