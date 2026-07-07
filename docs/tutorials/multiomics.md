@@ -1,6 +1,9 @@
 # Multi-omics pipeline tutorial
 
-The multi-omics branch integrates unpaired (or paired) scRNA + scATAC data via [GLUE](https://www.nature.com/articles/s41587-022-01284-4), computes cell-type labels on the joint embedding, and then produces the same single sample embedding (`uns['X_DR_sample']`) as the single-modality pipelines. Downstream analyses (distance, trajectory, DGE, clustering) reuse the shared modules.
+The multi-omics branch takes paired or unpaired scRNA + scATAC data with a precomputed joint cell embedding (default [scGLUE](https://www.nature.com/articles/s41587-022-01284-4)), computes cell-type labels on that embedding, and then produces the same single sample embedding (`uns['X_DR_sample']`) as the single-modality pipelines. Downstream analyses (distance, trajectory, DGE, clustering) reuse the shared modules.
+
+!!! tip "Config-driven alternative"
+    These steps call each function directly. To run the whole multi-omics branch from a single YAML instead, enable `run_multiomics_pipeline` in your config and run `sampledisco -m complex --config config.yaml` — see the [Configuration guide](configuration.md).
 
 ## Inputs
 
@@ -120,7 +123,7 @@ adata_integrated = compute_sample_embedding(
     sample_col="sample",
     celltype_col="cell_type",
     cluster_emb_key="Z_clust",
-    rmd_emb_key="X_glue",        # sample-preserved GLUE joint embedding; the integrated file has no literal Z_rmd, so set this explicitly to avoid falling back to Z_clust
+    rmd_emb_key="X_glue",        # sample-preserved GLUE joint embedding (set explicitly; no literal Z_rmd here — see note above)
     modality_col="modality",
     batch_col=None,
     medium_K=120,
