@@ -108,7 +108,7 @@ adata_integrated = cell_types_multiomics(
 
 ## 3. Sample embedding
 
-The unified `compute_sample_embedding` handles RNA, ATAC, and multi-omics — there is no separate multi-omics entry point. For multi-omics, pass `modality_col="modality"`; the units of the resulting embedding are `<sample>_RNA` / `<sample>_ATAC`. The composition blocks are built on the sample-removed `Z_clust`, and the RMD displacement block on the sample-preserved `Z_rmd`.
+The unified `compute_sample_embedding` handles RNA, ATAC, and multi-omics — there is no separate multi-omics entry point. For multi-omics, pass `modality_col="modality"`; the units of the resulting embedding are `<sample>_RNA` / `<sample>_ATAC`. The composition blocks are built on the sample-removed `Z_clust`, and the RMD displacement block on the sample-preserved GLUE joint embedding — which the integrated file stores under `obsm['X_glue']` (there is no literal `Z_rmd` key). Point the RMD block at it explicitly with `rmd_emb_key="X_glue"`: the key resolver falls back to `cluster_emb_key` (`Z_clust`) when it finds neither the passed `rmd_emb_key` nor a literal `Z_rmd`, so leaving it at `None` here would silently collapse the RMD block onto the same `Z_clust` used by the composition blocks.
 
 ```python
 from sampledisco.sample_embedding import compute_sample_embedding
@@ -120,7 +120,7 @@ adata_integrated = compute_sample_embedding(
     sample_col="sample",
     celltype_col="cell_type",
     cluster_emb_key="Z_clust",
-    rmd_emb_key=None,            # defaults to Z_rmd
+    rmd_emb_key="X_glue",        # sample-preserved GLUE joint embedding; the integrated file has no literal Z_rmd, so set this explicitly to avoid falling back to Z_clust
     modality_col="modality",
     batch_col=None,
     medium_K=120,

@@ -6,7 +6,7 @@ The `expression_key` / `proportion_key` arguments survive for backward compatibi
 
 **Import:** `from sampledisco.visualization.multi_omics_visualization import visualize_multimodal_embedding`
 
-**Source:** `sampledisco/visualization/multi_omics_visualization.py:497`
+**Source:** `sampledisco/visualization/multi_omics_visualization.py:512`
 
 ## Signature
 

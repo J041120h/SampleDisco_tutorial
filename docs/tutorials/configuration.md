@@ -81,7 +81,7 @@ output_dir: "./sampledisco_output"
 run_rna_pipeline: true
 run_atac_pipeline: false
 run_multiomics_pipeline: false
-use_gpu: true
+use_gpu: false  # auto-falls back to CPU; the shipped demo config uses false
 initialization: false
 verbose: true
 save_intermediate: true
@@ -217,8 +217,7 @@ Under `{output_dir}/{modality}/` you will find:
 | Directory | Produced by | What's inside |
 | --- | --- | --- |
 | `preprocess/` | `preprocess` | `adata_preprocessed.h5ad` (with `obsm['Z_clust']` and `obsm['Z_rmd']`), QC summary |
-| `pseudobulk/` | `compute_sample_embedding` | sample-level `.h5ad` carrying the single embedding `uns['X_DR_sample']` |
-| `embeddings/` | `compute_sample_embedding` | CSV export of the `X_DR_sample` embedding |
+| `sample_embedding/` | `compute_sample_embedding` | `sample_embedding.csv` (`X_DR_sample` export); `uns['X_DR_sample']` is also written back into `preprocess/adata_preprocessed.h5ad`. (`pseudobulk/` and `embeddings/` appear only on the autotune path.) |
 | `Sample_distance/` | `sample_distance` | Per-metric subdirs with CSVs and heatmap PDFs |
 | `CCA/` | `CCA_Call` | 2D CCA plots, contribution plots, pseudotime CSVs |
 | `CCA_test/` | `cca_pvalue_test` | Null-distribution plots and p-values |
@@ -238,7 +237,7 @@ Under `{output_dir}/{modality}/` you will find:
     ```yaml
     output_dir: "/data/run/covid_rna"
     run_rna_pipeline: true
-    use_gpu: true
+    use_gpu: false  # auto-falls back to CPU; the shipped demo config uses false
 
     rna_count_data_path: "/data/test_RNA.h5ad"
     rna_sample_meta_path: "/data/sample_meta.csv"
@@ -278,16 +277,18 @@ Under `{output_dir}/{modality}/` you will find:
     ```yaml
     output_dir: "/data/run/covid_rna"
     run_rna_pipeline: true
-    use_gpu: true
+    use_gpu: false  # auto-falls back to CPU; the shipped demo config uses false
 
     # skip preprocessing and embedding — already on disk
     rna_preprocessing: false
     rna_cell_type_cluster: false
     rna_derive_sample_embedding: false
 
-    rna_adata_cell_path: "/data/run/covid_rna/rna/preprocess/adata_cell.h5ad"
-    rna_adata_sample_path: "/data/run/covid_rna/rna/preprocess/adata_sample.h5ad"
-    rna_pseudo_adata_path: "/data/run/covid_rna/rna/pseudobulk/pseudobulk_sample.h5ad"
+    # preprocessing writes a single adata_preprocessed.h5ad; the default flow
+    # writes the embedding under sample_embedding/ (no pseudobulk_sample.h5ad)
+    rna_adata_cell_path: "/data/run/covid_rna/rna/preprocess/adata_preprocessed.h5ad"
+    rna_adata_sample_path: null
+    rna_pseudo_adata_path: "/data/run/covid_rna/rna/preprocess/adata_preprocessed.h5ad"
     rna_sample_meta_path: "/data/sample_meta.csv"
 
     # run downstream only

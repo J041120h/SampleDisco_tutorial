@@ -15,6 +15,8 @@ The pipeline ends at the sample embedding. Everything after that (sample distanc
     sampledisco -m complex --config config_demo.yaml
     ```
 
+    The shipped `config_demo.yaml` sets **both** `run_rna_pipeline: true` and `run_atac_pipeline: true` (with `continue_on_error: false`), so it runs the RNA **and** ATAC branches. To use it as written you also need `./data/test_ATAC.h5ad` (download it from the [demo dataset](demo_data.md) too), or it will hard-fail. For an RNA-only run, set `run_atac_pipeline: false`.
+
 ## Inputs
 
 - `RNA.h5ad` — cell-level raw counts; `.obs` must carry a sample column (default `"sample"`).
@@ -38,12 +40,12 @@ adata = preprocess(
     output_dir="sampledisco_demo_output/rna",
     sample_column="sample",
     cell_level_batch_key=None,
-    min_cells=500,
-    min_genes=500,
+    min_cells=100,
+    min_genes=200,
     pct_mito_cutoff=20,
     num_cell_hvgs=2000,
     cell_embedding_num_PCs=20,
-    num_harmony_iterations=30,
+    num_harmony_iterations=20,
     verbose=True,
 )
 ```
@@ -60,7 +62,7 @@ from sampledisco.preparation.cell_type_cpu import cell_types
 adata = cell_types(
     anndata_cell=adata,
     cell_type_column="cell_type",
-    leiden_cluster_resolution=0.99,
+    leiden_cluster_resolution=0.8,
     n_target_clusters=None,
     umap=True,
     save=True,

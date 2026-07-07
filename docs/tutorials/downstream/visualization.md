@@ -25,8 +25,8 @@ visualization(
 **Writes** → `sampledisco_demo_output/rna/visualization/`:
 
 - `cell_type_dendrogram.png` — hierarchical tree of cell types by pseudobulk expression.
-- `proportion_pca_{grouping_column}.png` — PCA on per-sample cell-type proportions, colored by the grouping.
-- `expression_umap_{grouping_column}.png` — UMAP on the expression embedding, colored by the grouping.
+- `proportion_embedding_{grouping_column}.png` — PCA on per-sample cell-type proportions, colored by the grouping.
+- `expression_embedding_{grouping_column}.png` — UMAP on the expression embedding, colored by the grouping.
 
 ## Result
 

@@ -1,7 +1,10 @@
 site_name: SampleDisco
 site_description: A config-driven pipeline for sample-level representation learning from single-cell RNA, ATAC, and unpaired multi-omics data.
+site_url: https://j041120h.github.io/SampleDisco_tutorial/
+repo_url: https://github.com/J041120h/SampleDisco
+repo_name: J041120h/SampleDisco
 use_directory_urls: true
-strict: false
+strict: true
 
 theme:
   name: material
