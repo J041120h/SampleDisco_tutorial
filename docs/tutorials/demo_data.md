@@ -12,7 +12,7 @@ Three single-cell AnnData (`.h5ad`) files — unpaired scRNA-seq and scATAC-seq 
 | `test_ATAC.h5ad` | scATAC-seq counts | 29,021 cells × 230,356 peaks | 8 samples (SRA accessions) | 260 MB | `9053f14b396ae2553677d00b69ba18a8` |
 | `test_multiomics_integrated.h5ad` | scGLUE-integrated RNA + ATAC | 59,010 cells × 13,820 genes | 29,989 RNA + 29,021 ATAC cells | 54 MB | `3d474460e651fe61cc0751a3911512d1` |
 
-The third file is **optional** — the [multi-omics tutorial](multiomics.md) starts from it to skip scGLUE training. It already carries the GLUE joint embedding (`obsm['X_glue']`) — the sample-**preserved** view, aliased to `obsm['Z_rmd']` — the sample-**removed** view (`obsm['Z_clust']`), and joint cell-type labels.
+The third file is **optional** — the [multi-omics tutorial](multiomics.md) starts from it to skip scGLUE training. It already carries the GLUE joint embedding — the sample-**preserved** view (`obsm['X_glue']`, aliased to `obsm['Z_rmd']`) and the sample-**removed** view (`obsm['Z_clust']`) — plus joint cell-type labels.
 
 !!! tip "No metadata CSV needed"
     All per-cell metadata is already inside each file's `.obs`: the sample identifier (`sample`), a severity phenotype (`sev.level`; `1` = healthy, `4` = severe COVID-19), and — for RNA — a `batch` column (`Aruna` vs `Wilk`) and pre-computed `celltype` labels. You do **not** need a separate `sample_meta.csv` or HVG list.

@@ -2,6 +2,9 @@
 
 The scATAC-seq pipeline mirrors the RNA pipeline but switches preprocessing and clustering to TF-IDF normalization and LSI dimension reduction. It ends at the same single sample embedding (`uns['X_DR_sample']`); everything downstream of that is shared with RNA and lives in the [Downstream analysis tutorials](downstream/index.md). Parameter values follow the canonical config (`atac_*` block).
 
+!!! tip "Config-driven alternative"
+    These steps call each function directly. To run the whole ATAC branch from a single YAML instead, enable `run_atac_pipeline` in your config and run `sampledisco -m complex --config config.yaml` — see the [Configuration guide](configuration.md).
+
 ## Inputs
 
 - `ATAC.h5ad` — cell × peak counts; `.obs` must carry a `sample` column.

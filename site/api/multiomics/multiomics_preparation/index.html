@@ -10,11 +10,13 @@
       
       
       
+        <link rel="canonical" href="https://j041120h.github.io/SampleDisco_tutorial/api/multiomics/multiomics_preparation/">
+      
       
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="../integrate_preprocess/">
+        <link rel="next" href="../cell_types_multiomics_linux/">
       
       
         
@@ -25,7 +27,7 @@
     
     
       
-        <title>multiomics_preparation - SampleDisc</title>
+        <title>multiomics_preparation - SampleDisco</title>
       
     
     
@@ -94,7 +96,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="SampleDisc" class="md-header__button md-logo" aria-label="SampleDisc" data-md-component="logo">
+    <a href="../../.." title="SampleDisco" class="md-header__button md-logo" aria-label="SampleDisco" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 2h2v2c0 1.44.68 2.61 1.88 3.78.86.83 2.01 1.63 3.21 2.42l-1.83 1.19C8.27 10.72 7.31 10 6.5 9.21 5.07 7.82 4 6.1 4 4zm14 0h2v2c0 2.1-1.07 3.82-2.5 5.21-1.41 1.38-3.21 2.52-4.96 3.63-1.75 1.12-3.45 2.21-4.66 3.38C6.68 17.39 6 18.56 6 20v2H4v-2c0-2.1 1.07-3.82 2.5-5.21 1.41-1.38 3.21-2.52 4.96-3.63 1.75-1.12 3.45-2.21 4.66-3.38C17.32 6.61 18 5.44 18 4zm-3.26 10.61c.99.67 1.95 1.39 2.76 2.18C18.93 16.18 20 17.9 20 20v2h-2v-2c0-1.44-.68-2.61-1.88-3.78-.86-.83-2.01-1.63-3.21-2.42zM7 3h10v1l-.06.5H7.06L7 4zm.68 3h8.64c-.24.34-.52.69-.9 1.06l-.51.44H9.07l-.49-.44c-.38-.37-.66-.72-.9-1.06m1.41 10.5h5.84l.49.44c.38.37.66.72.9 1.06H7.68c.24-.34.52-.69.9-1.06zm-2.03 3h9.88l.06.5v1H7v-1z"/></svg>
@@ -108,7 +110,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SampleDisc
+            SampleDisco
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -200,6 +202,18 @@
       
     
     
+      <div class="md-header__source">
+        <a href="https://github.com/J041120h/SampleDisco" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    J041120h/SampleDisco
+  </div>
+</a>
+      </div>
+    
   </nav>
   
     
@@ -254,7 +268,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../tutorials/configuration/" class="md-tabs__link">
+        <a href="../../../tutorials/demo_data/" class="md-tabs__link">
           
   
   
@@ -320,14 +334,26 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="SampleDisc" class="md-nav__button md-logo" aria-label="SampleDisc" data-md-component="logo">
+    <a href="../../.." title="SampleDisco" class="md-nav__button md-logo" aria-label="SampleDisco" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 2h2v2c0 1.44.68 2.61 1.88 3.78.86.83 2.01 1.63 3.21 2.42l-1.83 1.19C8.27 10.72 7.31 10 6.5 9.21 5.07 7.82 4 6.1 4 4zm14 0h2v2c0 2.1-1.07 3.82-2.5 5.21-1.41 1.38-3.21 2.52-4.96 3.63-1.75 1.12-3.45 2.21-4.66 3.38C6.68 17.39 6 18.56 6 20v2H4v-2c0-2.1 1.07-3.82 2.5-5.21 1.41-1.38 3.21-2.52 4.96-3.63 1.75-1.12 3.45-2.21 4.66-3.38C17.32 6.61 18 5.44 18 4zm-3.26 10.61c.99.67 1.95 1.39 2.76 2.18C18.93 16.18 20 17.9 20 20v2h-2v-2c0-1.44-.68-2.61-1.88-3.78-.86-.83-2.01-1.63-3.21-2.42zM7 3h10v1l-.06.5H7.06L7 4zm.68 3h8.64c-.24.34-.52.69-.9 1.06l-.51.44H9.07l-.49-.44c-.38-.37-.66-.72-.9-1.06m1.41 10.5h5.84l.49.44c.38.37.66.72.9 1.06H7.68c.24-.34.52-.69.9-1.06zm-2.03 3h9.88l.06.5v1H7v-1z"/></svg>
 
     </a>
-    SampleDisc
+    SampleDisco
   </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/J041120h/SampleDisco" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    J041120h/SampleDisco
+  </div>
+</a>
+    </div>
   
   <ul class="md-nav__list" data-md-scrollfix>
     
@@ -404,6 +430,8 @@
       
         
       
+        
+      
     
     
     
@@ -456,14 +484,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorials/configuration/" class="md-nav__link">
+      <a href="../../../tutorials/demo_data/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configuration guide
+    Demo data (download)
   
 
     
@@ -655,14 +683,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorials/downstream/resolution_selection/" class="md-nav__link">
+      <a href="../../../tutorials/downstream/autotune/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Resolution selection
+    Autotune (α / block-weight selection)
   
 
     
@@ -936,6 +964,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1130,7 +1186,7 @@
   <span class="md-ellipsis">
     
   
-    preprocess_linux
+    preprocess
   
 
     
@@ -1158,7 +1214,7 @@
   <span class="md-ellipsis">
     
   
-    cell_types_linux
+    cell_types
   
 
     
@@ -1283,7 +1339,7 @@
   <span class="md-ellipsis">
     
   
-    preprocess_linux
+    preprocess
   
 
     
@@ -1315,10 +1371,6 @@
   
     
     
-      
-        
-      
-        
       
         
       
@@ -1543,34 +1595,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrate_preprocess/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    integrate_preprocess
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../cell_types_multiomics_linux/" class="md-nav__link">
         
   
@@ -1578,7 +1602,7 @@
   <span class="md-ellipsis">
     
   
-    cell_types_multiomics_linux
+    cell_types_multiomics
   
 
     
@@ -1606,35 +1630,7 @@
   <span class="md-ellipsis">
     
   
-    calculate_multiomics_sample_embedding
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../find_optimal_cell_resolution_multiomics_linux/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    find_optimal_cell_resolution_multiomics_linux
+    compute_sample_embedding (multi-omics)
   
 
     
@@ -1759,7 +1755,7 @@
   <span class="md-ellipsis">
     
   
-    calculate_sample_embedding
+    compute_sample_embedding
   
 
     
@@ -1780,14 +1776,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../shared/find_optimal_cell_resolution_linux/" class="md-nav__link">
+      <a href="../../shared/run_autotune/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    find_optimal_cell_resolution_linux
+    run_autotune
   
 
     
@@ -2368,56 +2364,86 @@
                   
 
 
+  
+  
+
 
 <h1 id="multiomics_preparation"><code>multiomics_preparation</code><a class="headerlink" href="#multiomics_preparation" title="Permanent link">&para;</a></h1>
-<p>Full GLUE integration pipeline for unpaired (or paired) scRNA + scATAC data. Internally runs four sub-stages, each individually toggleable via <code>run_preprocessing</code>, <code>run_training</code>, <code>run_gene_activity</code>, <code>run_visualization</code>:</p>
+<p>Full scGLUE integration pipeline for unpaired (or paired) scRNA + scATAC data. Internally runs five sub-stages, each individually toggleable via <code>run_preprocessing</code>, <code>run_training</code>, <code>run_merge</code>, <code>run_preprocess_per_modality</code>, <code>run_visualization</code>:</p>
 <ol>
-<li><strong>GLUE preprocessing</strong> — reads both modalities, merges sample metadata, selects HVGs on RNA, runs LSI on ATAC, and builds a gene-region guidance graph from an Ensembl GTF.</li>
-<li><strong>Adversarial GLUE training</strong> — fits the joint embedding with a consistency-regularized adversarial loss; optionally treats each sample as its own batch.</li>
-<li><strong>Gene activity computation</strong> — for each ATAC cell, pulls nearest RNA neighbors on the joint embedding and imputes gene activity scores.</li>
-<li><strong>Visualization (optional)</strong> — UMAPs on the joint space, colored by modality or user-specified columns.</li>
+<li><strong>scGLUE preprocessing</strong> — reads both modalities, merges sample metadata, selects HVGs on RNA, runs LSI on ATAC, and builds a gene-region guidance graph from an Ensembl GTF.</li>
+<li><strong>Adversarial scGLUE training</strong> — fits the joint embedding with a consistency-regularized adversarial loss. The primary run produces the sample-preserved embedding (the paper's <code>Z_rmd</code>). With <code>run_second_glue_for_sample_removal=True</code>, a second run with <code>treat_sample_as_batch=True</code> produces the sample-removed embedding (<code>Z_clust</code>).</li>
+<li><strong>Cell-union merge</strong> — builds an embedding-only union AnnData (<code>preprocess/adata_sample.h5ad</code>) carrying <code>obsm['Z_rmd']</code> (primary <code>X_glue</code>, aliased) and, when the second run is enabled, <code>obsm['Z_clust']</code>. No expression matrix is stored — see <code>multi_omics_merge.py</code>.</li>
+<li><strong>Per-modality preprocess</strong> — per-modality QC + normalize (RNA) and QC + TF-IDF (ATAC), writing <code>preprocess/adata_rna_preprocessed.h5ad</code> and <code>preprocess/adata_atac_preprocessed.h5ad</code> for downstream DGE / RAISIN.</li>
+<li><strong>Visualization (optional)</strong> — UMAPs/scatter on the joint space, colored by modality or user-specified columns.</li>
 </ol>
-<p>The returned object is a merged AnnData with <code>X_glue</code> in <code>.obsm</code> ready for <a href="../integrate_preprocess/"><code>integrate_preprocess</code></a> and <a href="../cell_types_multiomics_linux/"><code>cell_types_multiomics_linux</code></a>.</p>
-<p><strong>Source:</strong> <code>preparation/multi_omics_glue.py:952</code></p>
+<p>The returned object is the merged union AnnData with the integrated embedding in <code>.obsm</code>, ready for <a href="../cell_types_multiomics_linux/"><code>cell_types_multiomics</code></a>. The single sample embedding for downstream analysis is produced later by <code>compute_sample_embedding</code> and stored in <code>uns['X_DR_sample']</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Gene-activity step removed</p>
+<p>Earlier versions ran a fourth sub-stage that imputed per-cell gene activity by KNN on the joint embedding. That step has been removed; the union is now built directly from the per-modality scGLUE embeddings (<code>build_embedding_union</code>). The old <code>run_gene_activity</code>, <code>k_neighbors</code>, <code>use_rep</code>, <code>metric</code>, and <code>use_gpu</code> arguments no longer exist.</p>
+</div>
+<p><strong>Source:</strong> <code>preparation/multi_omics_glue.py:801</code></p>
 <h2 id="signature">Signature<a class="headerlink" href="#signature" title="Permanent link">&para;</a></h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">multiomics_preparation</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">rna_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">atac_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">rna_sample_meta_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">atac_sample_meta_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">additional_hvg_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="c1"># Process control flags</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">run_preprocessing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">run_training</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">run_gene_activity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">run_visualization</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="c1"># Preprocessing parameters</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">ensembl_release</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">98</span><span class="p">,</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">species</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;homo_sapiens&quot;</span><span class="p">,</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">use_highly_variable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">n_top_genes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">n_pca_comps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">n_lsi_comps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">gtf_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gene_name&quot;</span><span class="p">,</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">flavor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;seurat_v3&quot;</span><span class="p">,</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">generate_umap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">rna_sample_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">atac_sample_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="c1"># Training parameters</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="n">consistency_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="n">treat_sample_as_batch</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">save_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;glue&quot;</span><span class="p">,</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="c1"># Gene activity</span>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="n">k_neighbors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="n">use_rep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;X_glue&quot;</span><span class="p">,</span>
-</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span>
-</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    <span class="n">use_gpu</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="c1"># Visualization</span>
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    <span class="n">plot_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    <span class="c1"># Output</span>
-</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./glue_results&quot;</span><span class="p">,</span>
-</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="c1"># Data files</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">rna_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">atac_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">rna_sample_meta_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">atac_sample_meta_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">additional_hvg_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="c1"># Process control flags</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">run_preprocessing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">run_training</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">run_merge</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">run_preprocess_per_modality</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">run_visualization</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="c1"># Preprocessing parameters</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">ensembl_release</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">98</span><span class="p">,</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">species</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;homo_sapiens&quot;</span><span class="p">,</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">use_highly_variable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">n_top_genes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">n_top_peaks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50000</span><span class="p">,</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">atac_min_cells_floor</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">n_pca_comps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">n_lsi_comps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">gtf_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gene_name&quot;</span><span class="p">,</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="n">flavor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;seurat_v3&quot;</span><span class="p">,</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="n">generate_umap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="n">rna_sample_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">atac_sample_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="c1"># Training parameters</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="n">consistency_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="n">treat_sample_as_batch</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="n">save_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;glue&quot;</span><span class="p">,</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    <span class="n">batch_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="n">sample_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="n">data_batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    <span class="n">max_epochs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    <span class="n">dataloader_num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="n">dataloader_fetches_per_worker</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    <span class="n">array_shuffle_num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    <span class="n">graph_shuffle_num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    <span class="n">run_second_glue_for_sample_removal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>    <span class="n">second_run_save_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;glue_no_sample&quot;</span><span class="p">,</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    <span class="c1"># Per-modality preprocess QC params</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>    <span class="n">rna_min_cells</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>    <span class="n">rna_min_genes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    <span class="n">rna_pct_mito_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    <span class="n">rna_exclude_genes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    <span class="n">atac_min_cells</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    <span class="n">atac_min_features</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>    <span class="n">atac_max_features</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15000</span><span class="p">,</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>    <span class="n">atac_min_cells_per_sample</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>    <span class="n">atac_exclude_features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>    <span class="n">atac_doublet_detection</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>    <span class="n">atac_tfidf_scale_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e4</span><span class="p">,</span>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>    <span class="n">atac_log_transform</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>    <span class="c1"># Visualization parameters</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>    <span class="n">plot_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>    <span class="c1"># Output directory</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>    <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./glue_results&quot;</span><span class="p">,</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
 <table>
@@ -2449,7 +2475,7 @@
 <td>Plain-text list of extra HVGs forced into the RNA HVG set.</td>
 </tr>
 <tr>
-<td><code>run_preprocessing</code> / <code>_training</code> / <code>_gene_activity</code> / <code>_visualization</code></td>
+<td><code>run_preprocessing</code> / <code>_training</code> / <code>_merge</code> / <code>_preprocess_per_modality</code> / <code>_visualization</code></td>
 <td>bool</td>
 <td><code>True</code></td>
 <td>Toggle individual sub-stages.</td>
@@ -2470,13 +2496,25 @@
 <td><code>use_highly_variable</code></td>
 <td>bool</td>
 <td><code>True</code></td>
-<td>Restrict GLUE training to HVGs.</td>
+<td>Restrict scGLUE training to HVGs.</td>
 </tr>
 <tr>
 <td><code>n_top_genes</code></td>
 <td>int</td>
 <td><code>2000</code></td>
 <td>HVG count for RNA.</td>
+</tr>
+<tr>
+<td><code>n_top_peaks</code></td>
+<td>int</td>
+<td><code>50000</code></td>
+<td>Top peak count for ATAC.</td>
+</tr>
+<tr>
+<td><code>atac_min_cells_floor</code></td>
+<td>int</td>
+<td><code>10</code></td>
+<td>Floor on the per-feature min-cells filter for ATAC.</td>
 </tr>
 <tr>
 <td><code>n_pca_comps</code> / <code>n_lsi_comps</code></td>
@@ -2512,13 +2550,13 @@
 <td><code>consistency_threshold</code></td>
 <td>float</td>
 <td><code>0.05</code></td>
-<td>GLUE consistency loss weight threshold.</td>
+<td>scGLUE consistency loss weight threshold.</td>
 </tr>
 <tr>
 <td><code>treat_sample_as_batch</code></td>
 <td>bool</td>
-<td><code>True</code></td>
-<td>Each sample becomes its own batch dimension during training.</td>
+<td><code>False</code></td>
+<td>If <code>True</code>, each sample becomes its own batch during training (removes per-sample variance). Default <code>False</code> preserves per-sample variance for the primary (RMD) embedding.</td>
 </tr>
 <tr>
 <td><code>save_prefix</code></td>
@@ -2527,28 +2565,106 @@
 <td>Prefix for saved model and integrated files.</td>
 </tr>
 <tr>
-<td><code>k_neighbors</code></td>
+<td><code>batch_key</code></td>
+<td>str, optional</td>
+<td><code>None</code></td>
+<td>Batch column for <code>scglue.configure_dataset(use_batch=...)</code>. With <code>batch_key</code> set and <code>treat_sample_as_batch=False</code>, scGLUE removes the named batch column while preserving per-sample variance, so the primary <code>X_glue</code> is suitable as the <code>Z_rmd</code> embedding.</td>
+</tr>
+<tr>
+<td><code>sample_key</code></td>
+<td>str</td>
+<td><code>"sample"</code></td>
+<td>Sample identifier column used by training and the union merge.</td>
+</tr>
+<tr>
+<td><code>data_batch_size</code></td>
+<td>int</td>
+<td><code>1024</code></td>
+<td>scGLUE minibatch size.</td>
+</tr>
+<tr>
+<td><code>max_epochs</code></td>
+<td>int, optional</td>
+<td><code>None</code></td>
+<td>Cap on scGLUE training epochs (<code>None</code> = scGLUE default).</td>
+</tr>
+<tr>
+<td><code>dataloader_num_workers</code> / <code>dataloader_fetches_per_worker</code> / <code>array_shuffle_num_workers</code> / <code>graph_shuffle_num_workers</code></td>
+<td>int</td>
+<td><code>0 / 4 / 0 / 0</code></td>
+<td>scGLUE dataloader throughput knobs.</td>
+</tr>
+<tr>
+<td><code>run_second_glue_for_sample_removal</code></td>
+<td>bool</td>
+<td><code>False</code></td>
+<td>If <code>True</code>, run scGLUE a second time with <code>treat_sample_as_batch=True</code> to produce the sample-removed <code>Z_clust</code>, then merge both keys into the primary RNA + ATAC h5ads.</td>
+</tr>
+<tr>
+<td><code>second_run_save_prefix</code></td>
+<td>str</td>
+<td><code>"glue_no_sample"</code></td>
+<td>File prefix for the optional second (sample-removal) run.</td>
+</tr>
+<tr>
+<td><code>rna_min_cells</code> / <code>rna_min_genes</code></td>
+<td>int</td>
+<td><code>500 / 500</code></td>
+<td>RNA QC filters for the per-modality downstream preprocess.</td>
+</tr>
+<tr>
+<td><code>rna_pct_mito_cutoff</code></td>
+<td>float</td>
+<td><code>20.0</code></td>
+<td>RNA mitochondrial-percent cutoff.</td>
+</tr>
+<tr>
+<td><code>rna_exclude_genes</code></td>
+<td>list, optional</td>
+<td><code>None</code></td>
+<td>RNA genes to drop.</td>
+</tr>
+<tr>
+<td><code>atac_min_cells</code></td>
 <td>int</td>
 <td><code>1</code></td>
-<td>Nearest RNA neighbors per ATAC cell for gene activity.</td>
+<td>ATAC per-feature min-cells filter.</td>
 </tr>
 <tr>
-<td><code>use_rep</code></td>
-<td>str</td>
-<td><code>"X_glue"</code></td>
-<td>Representation to use for nearest-neighbor search.</td>
+<td><code>atac_min_features</code> / <code>atac_max_features</code></td>
+<td>int</td>
+<td><code>2000 / 15000</code></td>
+<td>ATAC per-cell feature-count bounds.</td>
 </tr>
 <tr>
-<td><code>metric</code></td>
-<td>str</td>
-<td><code>"cosine"</code></td>
-<td>Distance metric for the neighbor search.</td>
+<td><code>atac_min_cells_per_sample</code></td>
+<td>int</td>
+<td><code>1</code></td>
+<td>Minimum cells required per sample for ATAC.</td>
 </tr>
 <tr>
-<td><code>use_gpu</code></td>
+<td><code>atac_exclude_features</code></td>
+<td>list, optional</td>
+<td><code>None</code></td>
+<td>ATAC features to drop.</td>
+</tr>
+<tr>
+<td><code>atac_doublet_detection</code></td>
 <td>bool</td>
 <td><code>True</code></td>
-<td>Run the GPU-accelerated gene-activity step when available.</td>
+<td>Run doublet detection on ATAC.</td>
+</tr>
+<tr>
+<td><code>atac_tfidf_scale_factor</code></td>
+<td>float</td>
+<td><code>1e4</code></td>
+<td>TF-IDF scale factor for ATAC.</td>
+</tr>
+<tr>
+<td><code>atac_log_transform</code></td>
+<td>bool</td>
+<td><code>True</code></td>
+<td>Log-transform ATAC after TF-IDF.</td>
 </tr>
 <tr>
 <td><code>verbose</code></td>
@@ -2566,33 +2682,40 @@
 <td><code>output_dir</code></td>
 <td>str</td>
 <td><code>"./glue_results"</code></td>
-<td>Writes under <code>{output_dir}/integration/glue/</code>.</td>
+<td>Writes scGLUE artifacts under <code>{output_dir}/integration/glue/</code> and union/per-modality outputs under <code>{output_dir}/preprocess/</code>.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h2>
-<p>The merged integrated AnnData, with <code>.obsm["X_glue"]</code> and modality/gene-activity metadata populated.</p>
+<p>The merged union AnnData, with the integrated embedding in <code>.obsm</code> (<code>Z_rmd</code>, and <code>Z_clust</code> when the second run is enabled) and modality metadata populated. Returns <code>None</code> only if <code>run_merge=False</code> and no existing <code>preprocess/adata_sample.h5ad</code> is found.</p>
 <h2 id="output-files">Output files<a class="headerlink" href="#output-files" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>{output_dir}/integration/glue/</code> — preprocessing artifacts, trained model, integrated AnnData.</li>
-<li><code>{output_dir}/preprocess/adata_sample.h5ad</code> — canonical integrated object picked up by downstream stages.</li>
+<li><code>{output_dir}/integration/glue/</code> — preprocessing artifacts, trained model(s), per-modality scGLUE embeddings.</li>
+<li><code>{output_dir}/preprocess/adata_sample.h5ad</code> — canonical embedding-only union object picked up by downstream stages.</li>
+<li><code>{output_dir}/preprocess/adata_rna_preprocessed.h5ad</code>, <code>{output_dir}/preprocess/adata_atac_preprocessed.h5ad</code> — per-modality QC'd objects for downstream DGE / RAISIN.</li>
 </ul>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">genodistance.preparation</span><span class="w"> </span><span class="kn">import</span> <span class="n">multiomics_preparation</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sampledisco.preparation.multi_omics_glue</span><span class="w"> </span><span class="kn">import</span> <span class="n">multiomics_preparation</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">multiomics_preparation</span><span class="p">(</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">rna_file</span><span class="o">=</span><span class="s2">&quot;/data/test_RNA.h5ad&quot;</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">atac_file</span><span class="o">=</span><span class="s2">&quot;/data/test_ATAC.h5ad&quot;</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">additional_hvg_file</span><span class="o">=</span><span class="s2">&quot;/data/unique_genes.txt&quot;</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;/results/multiomics&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">rna_file</span><span class="o">=</span><span class="s2">&quot;data/test_RNA.h5ad&quot;</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">atac_file</span><span class="o">=</span><span class="s2">&quot;data/test_ATAC.h5ad&quot;</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">additional_hvg_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;sampledisco_demo_output/multiomics&quot;</span><span class="p">,</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">ensembl_release</span><span class="o">=</span><span class="mi">98</span><span class="p">,</span>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">species</span><span class="o">=</span><span class="s2">&quot;homo_sapiens&quot;</span><span class="p">,</span>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">consistency_threshold</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">treat_sample_as_batch</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">k_neighbors</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_glue&quot;</span><span class="p">,</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">)</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">treat_sample_as_batch</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">run_second_glue_for_sample_removal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">)</span>
 </span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Prefer the config-driven wrapper</p>
+<p>In practice you rarely call <code>multiomics_preparation</code> directly. The supported entry point is the YAML-config wrapper, which runs preprocessing → cell embedding → cell typing → sample embedding → downstream analysis for you:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sampledisco<span class="w"> </span>-m<span class="w"> </span>complex<span class="w"> </span>--config<span class="w"> </span>config.yaml
+</span></code></pre></div>
+<p>scGLUE and <code>pybedtools</code> require the <code>bedtools</code> binary (<code>conda install -c bioconda bedtools</code>). GPU paths activate automatically when the RAPIDS stack is importable.</p>
+</div>
 
 
 

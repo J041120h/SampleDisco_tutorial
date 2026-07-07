@@ -10,11 +10,13 @@
       
       
       
+        <link rel="canonical" href="https://j041120h.github.io/SampleDisco_tutorial/api/shared/calculate_sample_embedding/">
+      
       
         <link rel="prev" href="../../multiomics/replace_optimal_dimension_reduction/">
       
       
-        <link rel="next" href="../find_optimal_cell_resolution_linux/">
+        <link rel="next" href="../run_autotune/">
       
       
         
@@ -25,7 +27,7 @@
     
     
       
-        <title>calculate_sample_embedding - SampleDisc</title>
+        <title>compute_sample_embedding - SampleDisco</title>
       
     
     
@@ -78,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#calculate_sample_embedding" class="md-skip">
+        <a href="#compute_sample_embedding" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +96,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="SampleDisc" class="md-header__button md-logo" aria-label="SampleDisc" data-md-component="logo">
+    <a href="../../.." title="SampleDisco" class="md-header__button md-logo" aria-label="SampleDisco" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 2h2v2c0 1.44.68 2.61 1.88 3.78.86.83 2.01 1.63 3.21 2.42l-1.83 1.19C8.27 10.72 7.31 10 6.5 9.21 5.07 7.82 4 6.1 4 4zm14 0h2v2c0 2.1-1.07 3.82-2.5 5.21-1.41 1.38-3.21 2.52-4.96 3.63-1.75 1.12-3.45 2.21-4.66 3.38C6.68 17.39 6 18.56 6 20v2H4v-2c0-2.1 1.07-3.82 2.5-5.21 1.41-1.38 3.21-2.52 4.96-3.63 1.75-1.12 3.45-2.21 4.66-3.38C17.32 6.61 18 5.44 18 4zm-3.26 10.61c.99.67 1.95 1.39 2.76 2.18C18.93 16.18 20 17.9 20 20v2h-2v-2c0-1.44-.68-2.61-1.88-3.78-.86-.83-2.01-1.63-3.21-2.42zM7 3h10v1l-.06.5H7.06L7 4zm.68 3h8.64c-.24.34-.52.69-.9 1.06l-.51.44H9.07l-.49-.44c-.38-.37-.66-.72-.9-1.06m1.41 10.5h5.84l.49.44c.38.37.66.72.9 1.06H7.68c.24-.34.52-.69.9-1.06zm-2.03 3h9.88l.06.5v1H7v-1z"/></svg>
@@ -108,13 +110,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SampleDisc
+            SampleDisco
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              calculate_sample_embedding
+              compute_sample_embedding
             
           </span>
         </div>
@@ -200,6 +202,18 @@
       
     
     
+      <div class="md-header__source">
+        <a href="https://github.com/J041120h/SampleDisco" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    J041120h/SampleDisco
+  </div>
+</a>
+      </div>
+    
   </nav>
   
     
@@ -254,7 +268,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../tutorials/configuration/" class="md-tabs__link">
+        <a href="../../../tutorials/demo_data/" class="md-tabs__link">
           
   
   
@@ -320,14 +334,26 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="SampleDisc" class="md-nav__button md-logo" aria-label="SampleDisc" data-md-component="logo">
+    <a href="../../.." title="SampleDisco" class="md-nav__button md-logo" aria-label="SampleDisco" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 2h2v2c0 1.44.68 2.61 1.88 3.78.86.83 2.01 1.63 3.21 2.42l-1.83 1.19C8.27 10.72 7.31 10 6.5 9.21 5.07 7.82 4 6.1 4 4zm14 0h2v2c0 2.1-1.07 3.82-2.5 5.21-1.41 1.38-3.21 2.52-4.96 3.63-1.75 1.12-3.45 2.21-4.66 3.38C6.68 17.39 6 18.56 6 20v2H4v-2c0-2.1 1.07-3.82 2.5-5.21 1.41-1.38 3.21-2.52 4.96-3.63 1.75-1.12 3.45-2.21 4.66-3.38C17.32 6.61 18 5.44 18 4zm-3.26 10.61c.99.67 1.95 1.39 2.76 2.18C18.93 16.18 20 17.9 20 20v2h-2v-2c0-1.44-.68-2.61-1.88-3.78-.86-.83-2.01-1.63-3.21-2.42zM7 3h10v1l-.06.5H7.06L7 4zm.68 3h8.64c-.24.34-.52.69-.9 1.06l-.51.44H9.07l-.49-.44c-.38-.37-.66-.72-.9-1.06m1.41 10.5h5.84l.49.44c.38.37.66.72.9 1.06H7.68c.24-.34.52-.69.9-1.06zm-2.03 3h9.88l.06.5v1H7v-1z"/></svg>
 
     </a>
-    SampleDisc
+    SampleDisco
   </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/J041120h/SampleDisco" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    J041120h/SampleDisco
+  </div>
+</a>
+    </div>
   
   <ul class="md-nav__list" data-md-scrollfix>
     
@@ -404,6 +430,8 @@
       
         
       
+        
+      
     
     
     
@@ -456,14 +484,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorials/configuration/" class="md-nav__link">
+      <a href="../../../tutorials/demo_data/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configuration guide
+    Demo data (download)
   
 
     
@@ -655,14 +683,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorials/downstream/resolution_selection/" class="md-nav__link">
+      <a href="../../../tutorials/downstream/autotune/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Resolution selection
+    Autotune (α / block-weight selection)
   
 
     
@@ -936,6 +964,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1130,7 +1186,7 @@
   <span class="md-ellipsis">
     
   
-    preprocess_linux
+    preprocess
   
 
     
@@ -1158,7 +1214,7 @@
   <span class="md-ellipsis">
     
   
-    cell_types_linux
+    cell_types
   
 
     
@@ -1283,7 +1339,7 @@
   <span class="md-ellipsis">
     
   
-    preprocess_linux
+    preprocess
   
 
     
@@ -1313,10 +1369,6 @@
   
     
     
-      
-        
-      
-        
       
         
       
@@ -1439,34 +1491,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../multiomics/integrate_preprocess/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    integrate_preprocess
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../multiomics/cell_types_multiomics_linux/" class="md-nav__link">
         
   
@@ -1474,7 +1498,7 @@
   <span class="md-ellipsis">
     
   
-    cell_types_multiomics_linux
+    cell_types_multiomics
   
 
     
@@ -1502,35 +1526,7 @@
   <span class="md-ellipsis">
     
   
-    calculate_multiomics_sample_embedding
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../multiomics/find_optimal_cell_resolution_multiomics_linux/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    find_optimal_cell_resolution_multiomics_linux
+    compute_sample_embedding (multi-omics)
   
 
     
@@ -1666,7 +1662,7 @@
   <span class="md-ellipsis">
     
   
-    calculate_sample_embedding
+    compute_sample_embedding
   
 
     
@@ -1684,7 +1680,7 @@
   <span class="md-ellipsis">
     
   
-    calculate_sample_embedding
+    compute_sample_embedding
   
 
     
@@ -1780,14 +1776,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../find_optimal_cell_resolution_linux/" class="md-nav__link">
+      <a href="../run_autotune/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    find_optimal_cell_resolution_linux
+    run_autotune
   
 
     
@@ -2368,33 +2364,56 @@
                   
 
 
+  
+  
 
-<h1 id="calculate_sample_embedding"><code>calculate_sample_embedding</code><a class="headerlink" href="#calculate_sample_embedding" title="Permanent link">&para;</a></h1>
-<p>Aggregates single-cell data into a sample-level pseudobulk AnnData and computes two complementary sample embeddings:</p>
+
+<h1 id="compute_sample_embedding"><code>compute_sample_embedding</code><a class="headerlink" href="#compute_sample_embedding" title="Permanent link">&para;</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Renamed and unified</p>
+<p>This is the current core sample-embedding function. It replaces the old
+<code>calculate_sample_embedding</code> / <code>calculate_multiomics_sample_embedding</code>
+pair. The old API built a <strong>two-key</strong> embedding (<code>X_DR_expression</code> +
+<code>X_DR_proportion</code>) and returned <code>(pseudo_dict, pseudo_adata)</code>. The current
+API builds a <strong>single-key</strong> embedding written in place to
+<code>adata.uns['X_DR_sample']</code> and <strong>returns the modified cell-level AnnData</strong>.</p>
+</div>
+<p>Lifts a cell-level embedding into a single sample-level embedding (the SampleDisco "singleRMD" recipe). For each unit (a sample, or a <code>&lt;sample&gt;_RNA</code> / <code>&lt;sample&gt;_ATAC</code> unit in multi-omics) it combines:</p>
 <ol>
-<li><strong>Expression embedding</strong> (<code>X_DR_expression</code>) — PCA on the HVG-filtered pseudobulk matrix, optionally followed by Harmony and ComBat corrections. Captures the cell-type-weighted transcriptional signal of each sample.</li>
-<li><strong>Proportion embedding</strong> (<code>X_DR_proportion</code>) — PCA on the vector of cell-type proportions per sample, optionally Harmony-corrected. Captures how each sample differs in cellular composition.</li>
+<li><strong>Multi-resolution composition blocks</strong> computed on the sample-removed embedding <code>Z_clust</code>:</li>
+<li><strong>A1</strong> — coarse cell-type composition (one-hot, mean per unit).</li>
+<li><strong>A2</strong> — soft k-means composition at <code>medium_K</code>.</li>
+<li><strong>A3</strong> — soft k-means composition at <code>fine_K</code>.</li>
+<li><strong>RMD displacement block</strong> (<code>use_rmd=True</code>) computed on the sample-preserved embedding <code>Z_rmd</code> — each coarse cell type's mean position relative to a leave-one-out reference built from comparable units. Captures within-cell-type state shifts.</li>
 </ol>
-<p>Works for both RNA and ATAC: set <code>atac=True</code> to switch to TF-IDF/LSI-aware aggregation. GPU acceleration is enabled via <code>use_gpu=True</code>, which routes through <code>compute_pseudobulk_adata_linux</code>.</p>
-<p><strong>Source:</strong> <code>sample_embedding/calculate_sample_embedding.py:17</code></p>
+<p>The blocks are inverse-variance weighted, Frobenius-stacked, PCA-reduced (<code>pca_components</code>), and Harmony-corrected at the sample level. The result is written to <code>adata.uns['X_DR_sample']</code> (a pandas DataFrame, units × PCs) and consumed by every downstream module.</p>
+<p>Works for RNA, ATAC, and multi-omics: pass <code>modality_col='modality'</code> for the multi-omics case — there is no separate multi-omics entry point. GPU acceleration is enabled via <code>use_gpu=True</code>, which dispatches to the RAPIDS implementation.</p>
+<p><strong>Source:</strong> <code>sample_embedding/__init__.py</code> — <code>compute_sample_embedding</code>, the <code>use_gpu</code> dispatcher. The CPU and GPU implementations it delegates to live in <code>sample_embedding/sample_embedding.py</code> and <code>sample_embedding/sample_embedding_gpu.py</code> respectively.</p>
 <h2 id="signature">Signature<a class="headerlink" href="#signature" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_sample_embedding</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">adata</span><span class="p">:</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">sample_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">celltype_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">batch_col</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./&quot;</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">sample_hvg_number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">combat_timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">n_expression_components</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">n_proportion_components</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">harmony_for_proportion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">preserve_cols_in_sample_embedding</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">use_gpu</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">atac</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_sample_embedding</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">adata</span><span class="p">:</span> <span class="n">AnnData</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">use_gpu</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">sample_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">celltype_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">cluster_emb_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Z_clust&quot;</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">rmd_emb_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">modality_col</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">batch_col</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">medium_K</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">fine_K</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">rmd_dim_per_cluster</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">use_clr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">use_rmd</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">block_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">rmd_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.60</span><span class="p">,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">pca_components</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">batch_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;harmony&quot;</span><span class="p">,</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnnData</span>
 </span></code></pre></div>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
 <table>
@@ -2411,7 +2430,19 @@
 <td><code>adata</code></td>
 <td>AnnData</td>
 <td>—</td>
-<td>Cell-level AnnData with a <code>cell_type</code> column in <code>.obs</code>.</td>
+<td>Cell-level AnnData with the cluster embedding in <code>.obsm[cluster_emb_key]</code> and a cell-type column in <code>.obs</code>. Mutated in place.</td>
+</tr>
+<tr>
+<td><code>output_dir</code></td>
+<td>str</td>
+<td>—</td>
+<td>Writes the embedding CSV to <code>{output_dir}/sample_embedding/</code> and re-saves <code>{output_dir}/preprocess/adata_preprocessed.h5ad</code>.</td>
+</tr>
+<tr>
+<td><code>use_gpu</code></td>
+<td>bool</td>
+<td><code>False</code></td>
+<td>Dispatch to the RAPIDS GPU implementation.</td>
 </tr>
 <tr>
 <td><code>sample_col</code></td>
@@ -2426,70 +2457,88 @@
 <td>Column in <code>.obs</code> identifying cell types.</td>
 </tr>
 <tr>
+<td><code>cluster_emb_key</code></td>
+<td>str</td>
+<td><code>"Z_clust"</code></td>
+<td>obsm key for the <strong>sample-removed</strong> embedding (composition blocks).</td>
+</tr>
+<tr>
+<td><code>rmd_emb_key</code></td>
+<td>str, optional</td>
+<td><code>None</code></td>
+<td>obsm key for the <strong>sample-preserved</strong> embedding (RMD block). When <code>None</code>, resolves to <code>"Z_rmd"</code> if present, else falls back to <code>cluster_emb_key</code>.</td>
+</tr>
+<tr>
+<td><code>modality_col</code></td>
+<td>str, optional</td>
+<td><code>None</code></td>
+<td>Set to <code>"modality"</code> for multi-omics; defines the RMD grouping and the <code>&lt;sample&gt;_RNA</code> / <code>&lt;sample&gt;_ATAC</code> unit ids.</td>
+</tr>
+<tr>
 <td><code>batch_col</code></td>
 <td>str or list, optional</td>
 <td><code>None</code></td>
-<td>Sample-level batch column(s); enables ComBat + Harmony on the expression embedding.</td>
+<td>Sample-level batch column(s). The first labels the RMD grouping; supplying ≥2 enables multi-covariate sample-level Harmony.</td>
 </tr>
 <tr>
-<td><code>output_dir</code></td>
-<td>str</td>
-<td><code>"./"</code></td>
-<td>Writes to <code>{output_dir}/pseudobulk/</code> and <code>{output_dir}/embeddings/</code>.</td>
-</tr>
-<tr>
-<td><code>sample_hvg_number</code></td>
+<td><code>medium_K</code></td>
 <td>int</td>
-<td><code>2000</code></td>
-<td>Number of HVGs per cell type used when building the pseudobulk matrix.</td>
+<td><code>120</code></td>
+<td>Target k for the A2 medium-resolution soft k-means (capped by cell count).</td>
 </tr>
 <tr>
-<td><code>combat_timeout</code></td>
-<td>float, optional</td>
-<td><code>None</code></td>
-<td>ComBat time limit in seconds. Defaults to 20s (GPU) or 1800s (CPU).</td>
-</tr>
-<tr>
-<td><code>n_expression_components</code></td>
+<td><code>fine_K</code></td>
 <td>int</td>
-<td><code>10</code></td>
-<td>PCA components for the expression embedding.</td>
+<td><code>300</code></td>
+<td>Target k for the A3 fine-resolution soft k-means (capped by cell count).</td>
 </tr>
 <tr>
-<td><code>n_proportion_components</code></td>
+<td><code>rmd_dim_per_cluster</code></td>
 <td>int</td>
-<td><code>10</code></td>
-<td>PCA components for the proportion embedding.</td>
+<td><code>8</code></td>
+<td>Max RMD dimensions retained per coarse cluster.</td>
 </tr>
 <tr>
-<td><code>harmony_for_proportion</code></td>
+<td><code>use_clr</code></td>
+<td>bool</td>
+<td><code>False</code></td>
+<td>CLR-transform the composition blocks.</td>
+</tr>
+<tr>
+<td><code>use_rmd</code></td>
 <td>bool</td>
 <td><code>True</code></td>
-<td>Apply Harmony to the proportion embedding.</td>
+<td>Include the RMD displacement block.</td>
 </tr>
 <tr>
-<td><code>preserve_cols_in_sample_embedding</code></td>
-<td>str or list, optional</td>
+<td><code>block_weights</code></td>
+<td>list, optional</td>
 <td><code>None</code></td>
-<td>Metadata columns to carry through to the pseudobulk <code>.obs</code>.</td>
+<td>Explicit per-block weights. When <code>None</code>, weights are auto-derived from <code>K_c</code>/<code>medium_K</code>/<code>fine_K</code> via an inverse-variance schedule.</td>
 </tr>
 <tr>
-<td><code>use_gpu</code></td>
-<td>bool</td>
-<td><code>False</code></td>
-<td>Use the GPU implementation (<code>compute_pseudobulk_adata_linux</code>).</td>
+<td><code>rmd_weight</code></td>
+<td>float</td>
+<td><code>0.60</code></td>
+<td>Relative weight of the RMD block in the auto-derived schedule.</td>
 </tr>
 <tr>
-<td><code>atac</code></td>
-<td>bool</td>
-<td><code>False</code></td>
-<td>Switch to TF-IDF/LSI-aware aggregation for ATAC data.</td>
+<td><code>pca_components</code></td>
+<td>int</td>
+<td><code>10</code></td>
+<td>Number of PCA components in the final sample embedding.</td>
+</tr>
+<tr>
+<td><code>batch_method</code></td>
+<td>str</td>
+<td><code>"harmony"</code></td>
+<td>Sample-level batch-correction method applied after PCA.</td>
 </tr>
 <tr>
 <td><code>save</code></td>
 <td>bool</td>
 <td><code>True</code></td>
-<td>Write the pseudobulk AnnData and CSV exports to disk.</td>
+<td>Write the embedding CSV and re-save the preprocessed h5ad.</td>
 </tr>
 <tr>
 <td><code>verbose</code></td>
@@ -2497,35 +2546,58 @@
 <td><code>True</code></td>
 <td>Print progress.</td>
 </tr>
+<tr>
+<td><code>seed</code></td>
+<td>int</td>
+<td><code>42</code></td>
+<td>Random seed for k-means / RMD / Harmony.</td>
+</tr>
 </tbody>
 </table>
 <h2 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h2>
-<p><code>Tuple[Dict, AnnData]</code> — <code>(pseudobulk_result_dict, sample_embedding_adata)</code>:</p>
+<p><code>AnnData</code> — the <strong>same cell-level AnnData</strong>, mutated in place. It carries:</p>
 <ul>
-<li><code>pseudobulk_result_dict</code> has keys <code>"cell_expression_corrected"</code> and <code>"cell_proportion"</code> (pandas DataFrames of the sample × feature matrices before DR).</li>
-<li><code>sample_embedding_adata</code> is the sample-level AnnData with <code>X_DR_expression</code> and <code>X_DR_proportion</code> in <code>.obsm</code>.</li>
+<li><code>.uns['X_DR_sample']</code> — a pandas DataFrame (units × <code>pca_components</code>); the single sample embedding consumed by all downstream modules.</li>
+<li><code>.uns['sample_embedding_params']</code> — a dict of the parameters and derived cluster counts (<code>K_c</code>, <code>medium_K</code>, <code>fine_K</code>, <code>block_weights</code>, etc.).</li>
 </ul>
+<div class="admonition tip">
+<p class="admonition-title">Materializing a per-sample AnnData</p>
+<p>Downstream consumers that expect one row per sample can build it from the
+embedding with <code>build_sample_adata</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sampledisco.sample_embedding.sample_embedding</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_sample_adata</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">pseudo_adata</span> <span class="o">=</span> <span class="n">build_sample_adata</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">sample_col</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+</div>
 <h2 id="output-files">Output files<a class="headerlink" href="#output-files" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>{output_dir}/pseudobulk/pseudobulk_sample.h5ad</code></li>
-<li><code>{output_dir}/embeddings/X_DR_expression.csv</code></li>
-<li><code>{output_dir}/embeddings/X_DR_proportion.csv</code></li>
+<li><code>{output_dir}/sample_embedding/sample_embedding.csv</code></li>
+<li><code>{output_dir}/preprocess/adata_preprocessed.h5ad</code> (re-saved with <code>.uns['X_DR_sample']</code>, if it already exists)</li>
 </ul>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">genodistance.sample_embedding</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_sample_embedding</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">pseudo_dict</span><span class="p">,</span> <span class="n">pseudo_adata</span> <span class="o">=</span> <span class="n">calculate_sample_embedding</span><span class="p">(</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">adata</span><span class="o">=</span><span class="n">adata_sample</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">sample_col</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">celltype_col</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;/results/rna&quot;</span><span class="p">,</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">sample_hvg_number</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">n_expression_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">n_proportion_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">harmony_for_proportion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">use_gpu</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">atac</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sampledisco.sample_embedding</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_sample_embedding</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">adata</span> <span class="o">=</span> <span class="n">compute_sample_embedding</span><span class="p">(</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">adata</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;sampledisco_demo_output/rna&quot;</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">sample_col</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">celltype_col</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">cluster_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_clust&quot;</span><span class="p">,</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">rmd_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_rmd&quot;</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">pca_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">use_gpu</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">)</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">sample_embedding</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;X_DR_sample&quot;</span><span class="p">]</span>  <span class="c1"># DataFrame, units × PCs</span>
+</span></code></pre></div>
+<p>For multi-omics, pass <code>modality_col='modality'</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">adata</span> <span class="o">=</span> <span class="n">compute_sample_embedding</span><span class="p">(</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">adata</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;sampledisco_demo_output/multiomics&quot;</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">modality_col</span><span class="o">=</span><span class="s2">&quot;modality&quot;</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">cluster_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_clust&quot;</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">rmd_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_rmd&quot;</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">)</span>
 </span></code></pre></div>
 
 
