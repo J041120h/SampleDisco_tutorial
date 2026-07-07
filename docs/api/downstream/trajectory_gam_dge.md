@@ -2,7 +2,7 @@
 
 Takes a **cell-level** `AnnData`, builds a per-sample (optionally per-cell-type) pseudobulk internally, then fits a Generalized Additive Model (GAM) per gene with pseudotime as the smooth predictor and optional covariates as fixed effects. After fitting, effect sizes and deviance/significance statistics are computed per gene, corrected with BH FDR, and used to select pseudoDEGs by `top_n_genes` (or `fdr_threshold` + `effect_size_threshold` when `top_n_genes` is `None`). When `anchor_col` is provided, pseudotime is flipped if it is negatively correlated with that numeric obs column, so `UP`/`DOWN` regulation labels stay stable regardless of which trajectory endpoint was chosen as the origin. Lamian-style visualizations are generated: results summary, heatmap, volcano, per-gene curves, per-sample density/curves, and cluster patterns.
 
-**Source:** `sample_trajectory/trajectory_diff_gene.py:936`
+**Source:** `sample_trajectory/trajectory_diff_gene.py:952`
 
 ## Signature
 
@@ -18,11 +18,12 @@ def run_trajectory_gam_differential_gene_analysis(
     columns_to_preserve: Optional[Union[str, List[str]]] = None,
     pseudotime_col: str = "pseudotime",
     covariate_columns: Optional[List[str]] = None,
-    fdr_threshold: float = 0.01,
+    fdr_threshold: float = 0.05,
     effect_size_threshold: float = 1.0,
     top_n_genes: int = 100,
     num_splines: int = 5,
     spline_order: int = 3,
+    n_jobs: int = -1,
     output_dir: str = "trajectory_diff_gene_results_single",
     visualization_gene_list: Optional[List[str]] = None,
     generate_visualizations: bool = True,
@@ -47,11 +48,12 @@ def run_trajectory_gam_differential_gene_analysis(
 | `columns_to_preserve` | str / list, optional | `None` | Extra obs columns to carry through onto the pseudobulk samples. |
 | `pseudotime_col` | str | `"pseudotime"` | Column within `pseudotime_source` holding the values. |
 | `covariate_columns` | list, optional | `None` | Additional fixed-effect covariates (batch, age, sex...). |
-| `fdr_threshold` | float | `0.01` | FDR cutoff for pseudoDEG selection. |
+| `fdr_threshold` | float | `0.05` | FDR cutoff for pseudoDEG selection. |
 | `effect_size_threshold` | float | `1.0` | Minimum effect size (used when `top_n_genes` is `None`). |
 | `top_n_genes` | int | `100` | Select at most this many top pseudoDEGs by effect size (set `None` to use the FDR + effect-size rule instead). |
 | `num_splines` | int | `5` | GAM basis size. |
 | `spline_order` | int | `3` | Spline polynomial order. |
+| n_jobs | int | -1 | CPU cores for parallel per-gene GAM fitting (-1 = all; results identical to serial). |
 | `output_dir` | str | `"trajectory_diff_gene_results_single"` | Base directory for the results. |
 | `visualization_gene_list` | list, optional | `None` | Named genes to always visualize, regardless of rank. |
 | `generate_visualizations` | bool | `True` | Turn off to skip the visualization bundle. |

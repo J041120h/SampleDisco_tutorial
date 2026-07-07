@@ -51,8 +51,8 @@ def visualization(
 Under `{output_dir}/visualization/`:
 
 - `cell_type_dendrogram.png`
-- `proportion_pca_{grouping_column}.png` (per flag)
-- `expression_umap_{grouping_column}.png` (per flag)
+- `proportion_embedding_{grouping_column}.png` (per flag)
+- `expression_embedding_{grouping_column}.png` (per flag)
 
 ## Usage
 

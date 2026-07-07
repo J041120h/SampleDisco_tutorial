@@ -12,7 +12,7 @@ score_a, score_b, ptime_a, ptime_b = CCA_Call(
     adata=pseudo_adata,
     output_dir="sampledisco_demo_output/rna",
     trajectory_col="sev.level",
-    n_components=2,
+    n_components=10,
     auto_select_best_2pc=True,
     verbose=True,
 )

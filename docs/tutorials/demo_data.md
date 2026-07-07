@@ -1,6 +1,6 @@
 # Demo data
 
-Every tutorial on this site runs on the same public datasets, published on Zenodo under DOI **[10.5281/zenodo.20988712](https://doi.org/10.5281/zenodo.20988712)** (CC-BY-4.0) — this DOI always resolves to the **latest version**, so it's the link to share. The commands below fetch the current latest (v1.2).
+Every tutorial on this site runs on the same public datasets, published on Zenodo under DOI **[10.5281/zenodo.20988712](https://doi.org/10.5281/zenodo.20988712)** (CC-BY-4.0) — this DOI always resolves to the **latest version**, so it's the link to share. The commands below fetch v1.2 (Zenodo record 21019419), which is version-pinned so the MD5s below always match.
 
 ## What's in the box
 
@@ -12,7 +12,7 @@ Three single-cell AnnData (`.h5ad`) files — unpaired scRNA-seq and scATAC-seq 
 | `test_ATAC.h5ad` | scATAC-seq counts | 29,021 cells × 230,356 peaks | 8 samples (SRA accessions) | 260 MB | `9053f14b396ae2553677d00b69ba18a8` |
 | `test_multiomics_integrated.h5ad` | scGLUE-integrated RNA + ATAC | 59,010 cells × 13,820 genes | 29,989 RNA + 29,021 ATAC cells | 54 MB | `3d474460e651fe61cc0751a3911512d1` |
 
-The third file is **optional** — the [multi-omics tutorial](multiomics.md) starts from it to skip scGLUE training. It already carries the GLUE joint embedding (`obsm['X_glue']`), the sample-removed view (`obsm['Z_clust']`), and joint cell-type labels.
+The third file is **optional** — the [multi-omics tutorial](multiomics.md) starts from it to skip scGLUE training. It already carries the GLUE joint embedding (`obsm['X_glue']`) — the sample-**preserved** view, aliased to `obsm['Z_rmd']` — the sample-**removed** view (`obsm['Z_clust']`), and joint cell-type labels.
 
 !!! tip "No metadata CSV needed"
     All per-cell metadata is already inside each file's `.obs`: the sample identifier (`sample`), a severity phenotype (`sev.level`; `1` = healthy, `4` = severe COVID-19), and — for RNA — a `batch` column (`Aruna` vs `Wilk`) and pre-computed `celltype` labels. You do **not** need a separate `sample_meta.csv` or HVG list.
@@ -70,12 +70,12 @@ A corrupted or partial download can surface later as a cryptic HDF5 error (e.g. 
     md5 data/*.h5ad
     ```
 
-Expected:
+Expected (tool-independent `<file>: <hash>` pairs — `md5sum` prepends the `data/` path and prints `hash  file`, while macOS `md5` prints `MD5 (file) = hash`, so match on the hash regardless of layout):
 
 ```
-69f00904fb9ff21e1d8e83afd63aa441  test_RNA.h5ad
-9053f14b396ae2553677d00b69ba18a8  test_ATAC.h5ad
-3d474460e651fe61cc0751a3911512d1  test_multiomics_integrated.h5ad
+test_RNA.h5ad:                     69f00904fb9ff21e1d8e83afd63aa441
+test_ATAC.h5ad:                    9053f14b396ae2553677d00b69ba18a8
+test_multiomics_integrated.h5ad:   3d474460e651fe61cc0751a3911512d1
 ```
 
 ## Citation

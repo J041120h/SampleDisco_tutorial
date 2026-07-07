@@ -49,11 +49,23 @@ conda create -n sampledisco-glue python=3.10 && conda activate sampledisco-glue
 conda install -c bioconda bedtools
 pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121   # cu12 build first
 pip install "anndata<0.11" scglue==0.3.2 harmony-pytorch
-pip install sampledisco --no-deps
+pip install sampledisco   # installs core deps; anndata stays <0.11 (already satisfied)
 ```
+
+!!! note "The torch line is Linux + NVIDIA only"
+    The `cu121` index has no macOS wheels. On macOS, drop the `--index-url` and just `pip install torch==2.5.1` — GLUE trains fine on CPU torch there.
+
+Do **not** add `--no-deps` to the final `pip install sampledisco`: scGLUE does not pull sampledisco's ~20 core runtime deps (pyensembl, harmonypy, muon, POT, pygam, leidenalg, combat, pybedtools), and skipping them makes `sampledisco -m complex` ImportError.
 
 Install scGLUE from PyPI, never `conda install -c bioconda scglue` (that recipe caps `numpy<1.22`).
 
 ## Reproducible env files
 
-The repo ships exact-version `environment-cpu.yml` and `environment-gpu.yml`. Create with `conda env create -f <file>`, then `pip install -e . --no-deps`.
+The repo ships exact-version `environment-cpu.yml` and `environment-gpu.yml` (creating the envs `sampledisco-cpu` and `sampledisco-gpu` respectively). The final `pip install -e . --no-deps` must run from inside the cloned repo:
+
+```bash
+git clone https://github.com/J041120h/SampleDisco.git && cd SampleDisco
+conda env create -f environment-cpu.yml   # or environment-gpu.yml → sampledisco-gpu
+conda activate sampledisco-cpu
+pip install -e . --no-deps
+```

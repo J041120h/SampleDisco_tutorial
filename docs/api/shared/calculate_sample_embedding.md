@@ -20,7 +20,7 @@ The blocks are inverse-variance weighted, Frobenius-stacked, PCA-reduced (`pca_c
 
 Works for RNA, ATAC, and multi-omics: pass `modality_col='modality'` for the multi-omics case — there is no separate multi-omics entry point. GPU acceleration is enabled via `use_gpu=True`, which dispatches to the RAPIDS implementation.
 
-**Source:** `sample_embedding/sample_embedding.py:130`
+**Source:** `sample_embedding/__init__.py` — `compute_sample_embedding`, the `use_gpu` dispatcher. The CPU and GPU implementations it delegates to live in `sample_embedding/sample_embedding.py` and `sample_embedding/sample_embedding_gpu.py` respectively.
 
 ## Signature
 

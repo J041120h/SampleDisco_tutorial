@@ -8,7 +8,7 @@ Unified entry point for pairwise sample-distance computation. Supports three fam
 
 Each call writes a distance matrix CSV and heatmap PDF under `{output_dir}/{method}/`.
 
-**Source:** `sample_distance/sample_distance.py:512`
+**Source:** `sample_distance/sample_distance.py:527`
 
 ## Signature
 

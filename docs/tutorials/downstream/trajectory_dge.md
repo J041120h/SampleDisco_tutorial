@@ -37,13 +37,16 @@ results_df = run_trajectory_gam_differential_gene_analysis(
 
 | File | Shows |
 | --- | --- |
-| `pseudoDEGs.csv` | Filtered pseudoDEG table (gene, effect size, p-value, FDR, rank). |
-| `all_gene_results.csv` | Full per-gene ranking before filtering. |
-| `visualizations/dge_results_summary.png` | One-page diagnostic. |
-| `visualizations/dge_volcano.png` | Effect size vs −log10(FDR). |
-| `visualizations/dge_gene_curves.png` | GAM fits for the top genes. |
-| `visualizations/dge_sample_density.png` | Sample distribution along pseudotime. |
-| `visualizations/dge_sample_level_curves.png` | Per-sample raw + fitted curves. |
+| `gam_all_genes_<ts>.tsv` | Full per-gene result table before filtering. |
+| `gam_significant_<ts>.tsv` | Genes below `fdr_threshold`. |
+| `gam_pseudoDEGs_<ts>.tsv` | Selected pseudoDEG table (gene, effect size, p-value, FDR, regulation). |
+| `gam_summary_<ts>.txt` | Run summary (thresholds, counts, UP/DOWN split). |
+| `visualizations/01_results_summary.png` | One-page diagnostic. |
+| `visualizations/02_tde_heatmap.png` | Clustered gene-expression heatmap along pseudotime. |
+| `visualizations/04_volcano_plot.png` | Effect size vs −log10(FDR). |
+| `visualizations/05_gene_curves.png` | GAM fits for the top genes. |
+| `visualizations/06_sample_density.png` | Sample distribution along pseudotime. |
+| `visualizations/08_sample_level_curves.png` | Per-sample raw + fitted curves. |
 
 ## Result
 

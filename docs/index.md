@@ -42,8 +42,8 @@ sampledisco --init-config config_demo.yaml
 
 # 2. download the demo data into ./data  (full commands + checksums: Demo data page)
 mkdir -p data
-wget -O data/test_RNA.h5ad  "https://zenodo.org/records/21019419/files/test_RNA.h5ad?download=1"
-wget -O data/test_ATAC.h5ad "https://zenodo.org/records/21019419/files/test_ATAC.h5ad?download=1"
+curl -L -o data/test_RNA.h5ad  "https://zenodo.org/records/21019419/files/test_RNA.h5ad?download=1"
+curl -L -o data/test_ATAC.h5ad "https://zenodo.org/records/21019419/files/test_ATAC.h5ad?download=1"
 
 # 3. run RNA + ATAC end to end
 sampledisco -m complex --config config_demo.yaml

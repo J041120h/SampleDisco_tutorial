@@ -14,7 +14,7 @@ Output lands under `output_dir/atac/`.
 
 ## 1. Preprocessing
 
-TF-IDF normalization, LSI projection, optional doublet removal, and a two-pass Harmony integration. ATAC typically uses a high feature count (50,000) and 50 LSI components.
+TF-IDF normalization, LSI projection, optional doublet removal, and a two-pass Harmony integration. ATAC typically uses a moderate feature count (10,000) and 30 LSI components.
 
 !!! note "Runtime on a CPU / laptop"
     ATAC preprocessing operates on the full ~230k-peak matrix and is the slowest single step of the demo, but it's not slow in absolute terms: on a modern laptop (e.g. an Apple M3) it's **a few minutes** (~3–5 min); it can be longer on older or heavily loaded machines. On any Apple Silicon Mac, SampleDisco always runs on CPU (GPU acceleration is Linux + NVIDIA only).
@@ -28,16 +28,16 @@ adata = preprocess(
     sample_meta_path=None,        # demo metadata already lives in .obs
     output_dir="sampledisco_demo_output/atac",
     sample_column="sample",
-    cell_embedding_num_PCs=50,
-    num_cell_hvfs=50000,
-    min_cells=1,
-    min_features=2000,
-    max_features=15000,
+    cell_embedding_num_PCs=30,
+    num_cell_hvfs=10000,
+    min_cells=10,
+    min_features=200,
+    max_features=50000,
     tfidf_scale_factor=1e4,
     log_transform=True,
     drop_first_lsi=True,
-    doublet_detection=True,
-    num_harmony_iterations=30,
+    doublet_detection=False,
+    num_harmony_iterations=20,
     verbose=True,
 )
 ```
