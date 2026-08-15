@@ -29,7 +29,7 @@ Output lands under `output_dir/rna/`.
 
 ## 1. Preprocessing
 
-Read counts, merge metadata, QC-filter cells and genes, select HVGs, compute PCA, and run a two-pass Harmony integration. A single AnnData comes out carrying two cell-level embeddings: `obsm['Z_clust']` (sample-removed, used for clustering and composition blocks) and `obsm['Z_rmd']` (sample-preserved, used by the RMD displacement block). Normalized expression is kept in `.X`, raw counts in `.layers['counts']`, and the HVG flag in `.var['highly_variable']` (no subsetting).
+Read counts, merge metadata, QC-filter cells and genes, select HVGs, compute PCA, and run a two-pass Harmony integration. A single AnnData comes out carrying two cell-level embeddings: `obsm['Z_comp']` (sample-removed, used for clustering and composition blocks) and `obsm['Z_rmd']` (sample-preserved, used by the RMD displacement block). Normalized expression is kept in `.X`, raw counts in `.layers['counts']`, and the HVG flag in `.var['highly_variable']` (no subsetting).
 
 ```python
 from sampledisco.preparation.rna_preprocess_cpu import preprocess
@@ -54,7 +54,7 @@ adata = preprocess(
 
 ## 2. Cell-type clustering
 
-Leiden clustering on the sample-removed `Z_clust` embedding, with optional UMAP and an adaptive resolution sweep to hit `n_target_clusters` when requested. The resulting labels are written to `adata.obs["cell_type"]`, and the labeled cell-level AnnData is returned.
+Leiden clustering on the sample-removed `Z_comp` embedding, with optional UMAP and an adaptive resolution sweep to hit `n_target_clusters` when requested. The resulting labels are written to `adata.obs["cell_type"]`, and the labeled cell-level AnnData is returned.
 
 ```python
 from sampledisco.preparation.cell_type_cpu import cell_types
@@ -78,7 +78,7 @@ adata = cell_types(
 
 ## 3. Sample embedding
 
-Lift the cell-level embedding into a single sample-level embedding. SampleDisco combines multi-resolution cell-type **composition** blocks computed on `Z_clust` (coarse, medium, fine cellular states) with an **RMD displacement** block on `Z_rmd` (within-cell-type state shifts relative to a leave-one-out reference). The blocks are inverse-variance weighted, Frobenius-stacked, PCA-reduced, and Harmony-corrected at the sample level.
+Lift the cell-level embedding into a single sample-level embedding. SampleDisco combines multi-resolution cell-type **composition** blocks computed on `Z_comp` (coarse, medium, fine cellular states) with an **RMD displacement** block on `Z_rmd` (within-cell-type state shifts relative to a leave-one-out reference). The blocks are inverse-variance weighted, Frobenius-stacked, PCA-reduced, and Harmony-corrected at the sample level.
 
 The result is one key, `adata.uns['X_DR_sample']` — a pandas DataFrame of units × PCs (units = samples) — written in place. The function returns the modified `AnnData`.
 
@@ -90,7 +90,7 @@ adata = compute_sample_embedding(
     output_dir="sampledisco_demo_output/rna",
     sample_col="sample",
     celltype_col="cell_type",
-    cluster_emb_key="Z_clust",
+    comp_emb_key="Z_comp",
     rmd_emb_key=None,        # defaults to Z_rmd
     batch_col=None,
     pca_components=10,

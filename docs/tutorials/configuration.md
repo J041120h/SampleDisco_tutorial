@@ -216,7 +216,7 @@ Under `{output_dir}/{modality}/` you will find:
 
 | Directory | Produced by | What's inside |
 | --- | --- | --- |
-| `preprocess/` | `preprocess` | `adata_preprocessed.h5ad` (with `obsm['Z_clust']` and `obsm['Z_rmd']`), QC summary |
+| `preprocess/` | `preprocess` | `adata_preprocessed.h5ad` (with `obsm['Z_comp']` and `obsm['Z_rmd']`), QC summary |
 | `sample_embedding/` | `compute_sample_embedding` | `sample_embedding.csv` (`X_DR_sample` export); `uns['X_DR_sample']` is also written back into `preprocess/adata_preprocessed.h5ad`. (`pseudobulk/` and `embeddings/` appear only on the autotune path.) |
 | `Sample_distance/` | `sample_distance` | Per-metric subdirs with CSVs and heatmap PDFs |
 | `CCA/` | `CCA_Call` | 2D CCA plots, contribution plots, pseudotime CSVs |

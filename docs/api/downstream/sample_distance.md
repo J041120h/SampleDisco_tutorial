@@ -45,7 +45,7 @@ def sample_distance(
 | `cell_adata` | AnnData, optional | `None` | Cell-level AnnData (required for EMD and distributional distances). |
 | `cell_type_column` | str | `"cell_type"` | Cell-type column in `cell_adata.obs` (EMD path). |
 | `sample_column` | str | `"sample"` | Sample column in `cell_adata.obs` (EMD path). |
-| `embedding_key` | str, optional | `None` | Key in `cell_adata.obsm` for cell-type centroid computation (EMD only). When `None`, resolves to `Z_clust` (falling back to `X_pca`/`X_lsi`/`X_glue` per `data_type`). |
+| `embedding_key` | str, optional | `None` | Key in `cell_adata.obsm` for cell-type centroid computation (EMD only). When `None`, resolves to `Z_comp` (falling back to `X_pca`/`X_lsi`/`X_glue` per `data_type`). |
 | `n_pcs` | int | `20` | Number of PCs to use when computing centroids (EMD only). |
 | `proportions` | DataFrame, optional | `None` | Precomputed sample × cell-type proportion matrix (EMD only). |
 | `centroids` | DataFrame or ndarray, optional | `None` | Precomputed cell-type centroids (EMD only). |

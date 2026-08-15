@@ -434,6 +434,8 @@
       
         
       
+        
+      
     
     
     
@@ -1078,6 +1080,34 @@
     
   
     Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../legacy_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy embedding key names
   
 
     
@@ -2375,10 +2405,10 @@
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>A single file is written carrying both cell embeddings — <code>obsm['Z_clust']</code> (sample-removed) and <code>obsm['Z_rmd']</code> (sample-preserved) — and the function returns the <code>AnnData</code>.</p>
+<p>A single file is written carrying both cell embeddings — <code>obsm['Z_comp']</code> (sample-removed) and <code>obsm['Z_rmd']</code> (sample-preserved) — and the function returns the <code>AnnData</code>.</p>
 <p><strong>Writes</strong> → <code>sampledisco_demo_output/atac/preprocess/adata_preprocessed.h5ad</code>.</p>
 <h2 id="2-cell-type-clustering">2. Cell-type clustering<a class="headerlink" href="#2-cell-type-clustering" title="Permanent link">&para;</a></h2>
-<p><code>cell_types_atac</code> clusters on the ATAC DR embedding (<code>use_rep='Z_clust'</code>) and builds a dendrogram / diff-peaks view of the resulting types.</p>
+<p><code>cell_types_atac</code> clusters on the ATAC DR embedding (<code>use_rep='Z_comp'</code>) and builds a dendrogram / diff-peaks view of the resulting types.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sampledisco.preparation.ATAC_cell_type</span><span class="w"> </span><span class="kn">import</span> <span class="n">cell_types_atac</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># GPU: from sampledisco.preparation.ATAC_cell_type_gpu import cell_types_atac_gpu</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
@@ -2388,7 +2418,7 @@
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">existing_cell_types</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">n_target_clusters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">cluster_resolution</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;Z_clust&quot;</span><span class="p">,</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;Z_comp&quot;</span><span class="p">,</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">umap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">Save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;sampledisco_demo_output/atac&quot;</span><span class="p">,</span>
@@ -2400,7 +2430,7 @@
 <div class="figure-caption">Step 2 — Hierarchical dendrogram across Leiden-derived ATAC cell types (produced later by the visualization step, shown here for context).</div>
 
 <h2 id="3-sample-embedding">3. Sample embedding<a class="headerlink" href="#3-sample-embedding" title="Permanent link">&para;</a></h2>
-<p>The unified <code>compute_sample_embedding</code> handles RNA, ATAC, and multi-omics — there is no ATAC-specific flag. It combines multi-resolution composition blocks (computed on <code>Z_clust</code>) with an RMD displacement block (on <code>Z_rmd</code>), then PCA-reduces and Harmony-corrects at the sample level.</p>
+<p>The unified <code>compute_sample_embedding</code> handles RNA, ATAC, and multi-omics — there is no ATAC-specific flag. It combines multi-resolution composition blocks (computed on <code>Z_comp</code>) with an RMD displacement block (on <code>Z_rmd</code>), then PCA-reduces and Harmony-corrects at the sample level.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sampledisco.sample_embedding</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_sample_embedding</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">adata</span> <span class="o">=</span> <span class="n">compute_sample_embedding</span><span class="p">(</span>
@@ -2408,7 +2438,7 @@
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;sampledisco_demo_output/atac&quot;</span><span class="p">,</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">sample_col</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">celltype_col</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">cluster_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_clust&quot;</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">comp_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_comp&quot;</span><span class="p">,</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">rmd_emb_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>        <span class="c1"># defaults to Z_rmd</span>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">batch_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">use_gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>           <span class="c1"># CPU default; set True for RAPIDS on Linux+NVIDIA (auto-falls back to CPU)</span>

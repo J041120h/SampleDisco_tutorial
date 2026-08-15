@@ -432,6 +432,8 @@
       
         
       
+        
+      
     
     
     
@@ -979,6 +981,34 @@
     
   
     Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../legacy_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy embedding key names
   
 
     
@@ -2215,7 +2245,7 @@
 
 <h1 id="run_autotune"><code>run_autotune</code><a class="headerlink" href="#run_autotune" title="Permanent link">&para;</a></h1>
 <p>Selects the <strong>RMD-weight α</strong> that best balances the cellular-composition blocks against the reference-relative mean-displacement (RMD) block when building the sample embedding. This is SampleDisco's parameter-selection step — it replaces the removed CCA-guided cell-resolution sweep.</p>
-<p>Given a preprocessed cell-level <code>AnnData</code> (carrying <code>Z_clust</code> and <code>Z_rmd</code>), autotune builds the composition + RMD blocks <strong>once</strong>, then searches over α (grid / golden-section / Bayesian) to maximize an adaptive proxy objective — phenotype alignment (CCA / PC-R²) combined with batch-mixing scores — and rebuilds <code>uns['X_DR_sample']</code> at the winning α.</p>
+<p>Given a preprocessed cell-level <code>AnnData</code> (carrying <code>Z_comp</code> and <code>Z_rmd</code>), autotune builds the composition + RMD blocks <strong>once</strong>, then searches over α (grid / golden-section / Bayesian) to maximize an adaptive proxy objective — phenotype alignment (CCA / PC-R²) combined with batch-mixing scores — and rebuilds <code>uns['X_DR_sample']</code> at the winning α.</p>
 <p><strong>Source:</strong> <code>parameter_selection/autotune.py:543</code></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sampledisco.parameter_selection.autotune</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_autotune</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -2224,12 +2254,12 @@
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">output_dir</span><span class="p">,</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">sample_col</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">celltype_col</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">cluster_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_clust&quot;</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">comp_emb_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">grouping_col</span><span class="o">=</span><span class="s2">&quot;sev.level&quot;</span><span class="p">,</span>   <span class="c1"># phenotype to align alpha against</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">scope</span><span class="o">=</span><span class="s2">&quot;alpha_only&quot;</span><span class="p">,</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">search</span><span class="o">=</span><span class="s2">&quot;bayesian&quot;</span><span class="p">,</span>          <span class="c1"># &quot;bayesian&quot; | &quot;golden&quot; | &quot;grid&quot;</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">alpha_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">alpha_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">),</span>
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">)</span>
 </span></code></pre></div>
@@ -2247,7 +2277,7 @@
 <td><code>adata</code></td>
 <td>AnnData</td>
 <td>—</td>
-<td>Preprocessed cell-level object carrying <code>Z_clust</code> and <code>Z_rmd</code>.</td>
+<td>Preprocessed cell-level object carrying <code>Z_comp</code> and <code>Z_rmd</code>.</td>
 </tr>
 <tr>
 <td><code>output_dir</code></td>
@@ -2262,10 +2292,10 @@
 <td>Phenotype/condition column the search aligns α to (CCA / PC-R²).</td>
 </tr>
 <tr>
-<td><code>cluster_emb_key</code> / <code>rmd_emb_key</code></td>
-<td>str</td>
-<td><code>"Z_clust"</code> / <code>None</code></td>
-<td>Composition (sample-removed) and RMD (sample-preserved) embedding keys.</td>
+<td><code>comp_emb_key</code> / <code>rmd_emb_key</code></td>
+<td>str, optional</td>
+<td><code>None</code> / <code>None</code></td>
+<td>Composition (sample-removed) and RMD (sample-preserved) embedding keys; both auto-resolve from <code>.obsm</code> when <code>None</code>.</td>
 </tr>
 <tr>
 <td><code>scope</code></td>
@@ -2288,7 +2318,7 @@
 <tr>
 <td><code>alpha_bounds</code></td>
 <td>tuple</td>
-<td><code>(0.1, 10.0)</code></td>
+<td><code>(0.1, 100.0)</code></td>
 <td>Lower / upper bounds for α.</td>
 </tr>
 <tr>

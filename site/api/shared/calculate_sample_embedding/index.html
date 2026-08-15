@@ -432,6 +432,8 @@
       
         
       
+        
+      
     
     
     
@@ -979,6 +981,34 @@
     
   
     Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../legacy_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy embedding key names
   
 
     
@@ -2380,7 +2410,7 @@ API builds a <strong>single-key</strong> embedding written in place to
 </div>
 <p>Lifts a cell-level embedding into a single sample-level embedding (the SampleDisco "singleRMD" recipe). For each unit (a sample, or a <code>&lt;sample&gt;_RNA</code> / <code>&lt;sample&gt;_ATAC</code> unit in multi-omics) it combines:</p>
 <ol>
-<li><strong>Multi-resolution composition blocks</strong> computed on the sample-removed embedding <code>Z_clust</code>:</li>
+<li><strong>Multi-resolution composition blocks</strong> computed on the sample-removed embedding <code>Z_comp</code>:</li>
 <li><strong>A1</strong> — coarse cell-type composition (one-hot, mean per unit).</li>
 <li><strong>A2</strong> — soft k-means composition at <code>medium_K</code>.</li>
 <li><strong>A3</strong> — soft k-means composition at <code>fine_K</code>.</li>
@@ -2397,7 +2427,7 @@ API builds a <strong>single-key</strong> embedding written in place to
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">use_gpu</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">sample_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">celltype_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">cluster_emb_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Z_clust&quot;</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">comp_emb_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">rmd_emb_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">modality_col</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">batch_col</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2430,7 +2460,7 @@ API builds a <strong>single-key</strong> embedding written in place to
 <td><code>adata</code></td>
 <td>AnnData</td>
 <td>—</td>
-<td>Cell-level AnnData with the cluster embedding in <code>.obsm[cluster_emb_key]</code> and a cell-type column in <code>.obs</code>. Mutated in place.</td>
+<td>Cell-level AnnData with the composition embedding in <code>.obsm[comp_emb_key]</code> and a cell-type column in <code>.obs</code>. Mutated in place.</td>
 </tr>
 <tr>
 <td><code>output_dir</code></td>
@@ -2457,16 +2487,16 @@ API builds a <strong>single-key</strong> embedding written in place to
 <td>Column in <code>.obs</code> identifying cell types.</td>
 </tr>
 <tr>
-<td><code>cluster_emb_key</code></td>
-<td>str</td>
-<td><code>"Z_clust"</code></td>
-<td>obsm key for the <strong>sample-removed</strong> embedding (composition blocks).</td>
+<td><code>comp_emb_key</code></td>
+<td>str, optional</td>
+<td><code>None</code></td>
+<td>obsm key for the <strong>sample-removed</strong> embedding (composition blocks). When <code>None</code>, auto-resolves to <code>Z_comp</code>, then the legacy names (see <a href="../../../legacy_keys/">Legacy embedding key names</a>).</td>
 </tr>
 <tr>
 <td><code>rmd_emb_key</code></td>
 <td>str, optional</td>
 <td><code>None</code></td>
-<td>obsm key for the <strong>sample-preserved</strong> embedding (RMD block). When <code>None</code>, resolves to <code>"Z_rmd"</code> if present, else falls back to <code>cluster_emb_key</code>.</td>
+<td>obsm key for the <strong>sample-preserved</strong> embedding (RMD block). When <code>None</code>, resolves to <code>Z_rmd</code>, then the legacy names <code>Z_cmd</code> / <code>X_pca_harmony_nosamp</code> / <code>X_lsi_harmony_nosamp</code>. If none exist it falls back to <code>comp_emb_key</code> with a loud <code>RuntimeWarning</code> — that fallback is <strong>not</strong> the method described in the paper.</td>
 </tr>
 <tr>
 <td><code>modality_col</code></td>
@@ -2582,7 +2612,7 @@ embedding with <code>build_sample_adata</code>:</p>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;sampledisco_demo_output/rna&quot;</span><span class="p">,</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">sample_col</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">celltype_col</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">cluster_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_clust&quot;</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">comp_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_comp&quot;</span><span class="p">,</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">rmd_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_rmd&quot;</span><span class="p">,</span>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">pca_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">use_gpu</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -2595,7 +2625,7 @@ embedding with <code>build_sample_adata</code>:</p>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">adata</span><span class="p">,</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;sampledisco_demo_output/multiomics&quot;</span><span class="p">,</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">modality_col</span><span class="o">=</span><span class="s2">&quot;modality&quot;</span><span class="p">,</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">cluster_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_clust&quot;</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">comp_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_comp&quot;</span><span class="p">,</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">rmd_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_rmd&quot;</span><span class="p">,</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">)</span>
 </span></code></pre></div>

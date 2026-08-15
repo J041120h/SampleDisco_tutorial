@@ -3,8 +3,8 @@
 Full scGLUE integration pipeline for unpaired (or paired) scRNA + scATAC data. Internally runs five sub-stages, each individually toggleable via `run_preprocessing`, `run_training`, `run_merge`, `run_preprocess_per_modality`, `run_visualization`:
 
 1. **scGLUE preprocessing** — reads both modalities, merges sample metadata, selects HVGs on RNA, runs LSI on ATAC, and builds a gene-region guidance graph from an Ensembl GTF.
-2. **Adversarial scGLUE training** — fits the joint embedding with a consistency-regularized adversarial loss. The primary run produces the sample-preserved embedding (the paper's `Z_rmd`). With `run_second_glue_for_sample_removal=True`, a second run with `treat_sample_as_batch=True` produces the sample-removed embedding (`Z_clust`).
-3. **Cell-union merge** — builds an embedding-only union AnnData (`preprocess/adata_sample.h5ad`) carrying `obsm['Z_rmd']` (primary `X_glue`, aliased) and, when the second run is enabled, `obsm['Z_clust']`. No expression matrix is stored — see `multi_omics_merge.py`.
+2. **Adversarial scGLUE training** — fits the joint embedding with a consistency-regularized adversarial loss. The primary run produces the sample-preserved embedding (the paper's `Z_rmd`). With `run_second_glue_for_sample_removal=True`, a second run with `treat_sample_as_batch=True` produces the sample-removed embedding (`Z_comp`).
+3. **Cell-union merge** — builds an embedding-only union AnnData (`preprocess/adata_sample.h5ad`) carrying `obsm['Z_rmd']` (primary `X_glue`, aliased) and, when the second run is enabled, `obsm['Z_comp']`. No expression matrix is stored — see `multi_omics_merge.py`.
 4. **Per-modality preprocess** — per-modality QC + normalize (RNA) and QC + TF-IDF (ATAC), writing `preprocess/adata_rna_preprocessed.h5ad` and `preprocess/adata_atac_preprocessed.h5ad` for downstream DGE / RAISIN.
 5. **Visualization (optional)** — UMAPs/scatter on the joint space, colored by modality or user-specified columns.
 
@@ -107,7 +107,7 @@ def multiomics_preparation(
 | `data_batch_size` | int | `1024` | scGLUE minibatch size. |
 | `max_epochs` | int, optional | `None` | Cap on scGLUE training epochs (`None` = scGLUE default). |
 | `dataloader_num_workers` / `dataloader_fetches_per_worker` / `array_shuffle_num_workers` / `graph_shuffle_num_workers` | int | `0 / 4 / 0 / 0` | scGLUE dataloader throughput knobs. |
-| `run_second_glue_for_sample_removal` | bool | `False` | If `True`, run scGLUE a second time with `treat_sample_as_batch=True` to produce the sample-removed `Z_clust`, then merge both keys into the primary RNA + ATAC h5ads. |
+| `run_second_glue_for_sample_removal` | bool | `False` | If `True`, run scGLUE a second time with `treat_sample_as_batch=True` to produce the sample-removed `Z_comp`, then merge both keys into the primary RNA + ATAC h5ads. |
 | `second_run_save_prefix` | str | `"glue_no_sample"` | File prefix for the optional second (sample-removal) run. |
 | `rna_min_cells` / `rna_min_genes` | int | `500 / 500` | RNA QC filters for the per-modality downstream preprocess. |
 | `rna_pct_mito_cutoff` | float | `20.0` | RNA mitochondrial-percent cutoff. |
@@ -125,7 +125,7 @@ def multiomics_preparation(
 
 ## Returns
 
-The merged union AnnData, with the integrated embedding in `.obsm` (`Z_rmd`, and `Z_clust` when the second run is enabled) and modality metadata populated. Returns `None` only if `run_merge=False` and no existing `preprocess/adata_sample.h5ad` is found.
+The merged union AnnData, with the integrated embedding in `.obsm` (`Z_rmd`, and `Z_comp` when the second run is enabled) and modality metadata populated. Returns `None` only if `run_merge=False` and no existing `preprocess/adata_sample.h5ad` is found.
 
 ## Output files
 

@@ -434,6 +434,8 @@
       
         
       
+        
+      
     
     
     
@@ -1078,6 +1080,34 @@
     
   
     Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../legacy_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy embedding key names
   
 
     
@@ -2374,7 +2404,7 @@
 </tr>
 </tbody>
 </table>
-<p>The third file is <strong>optional</strong> — the <a href="../multiomics/">multi-omics tutorial</a> starts from it to skip scGLUE training. It already carries the GLUE joint embedding — the sample-<strong>preserved</strong> view (<code>obsm['X_glue']</code>, aliased to <code>obsm['Z_rmd']</code>) and the sample-<strong>removed</strong> view (<code>obsm['Z_clust']</code>) — plus joint cell-type labels.</p>
+<p>The third file is <strong>optional</strong> — the <a href="../multiomics/">multi-omics tutorial</a> starts from it to skip scGLUE training. It already carries the GLUE joint embedding — the sample-<strong>preserved</strong> view (<code>obsm['X_glue']</code>, aliased to <code>obsm['Z_rmd']</code>) and the sample-<strong>removed</strong> view (<code>obsm['Z_comp']</code>) — plus joint cell-type labels.</p>
 <div class="admonition tip">
 <p class="admonition-title">No metadata CSV needed</p>
 <p>All per-cell metadata is already inside each file's <code>.obs</code>: the sample identifier (<code>sample</code>), a severity phenotype (<code>sev.level</code>; <code>1</code> = healthy, <code>4</code> = severe COVID-19), and — for RNA — a <code>batch</code> column (<code>Aruna</code> vs <code>Wilk</code>) and pre-computed <code>celltype</code> labels. You do <strong>not</strong> need a separate <code>sample_meta.csv</code> or HVG list.</p>
