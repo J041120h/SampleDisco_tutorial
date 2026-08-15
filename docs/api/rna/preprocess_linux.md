@@ -1,6 +1,6 @@
 # `preprocess` (RNA)
 
-End-to-end preprocessing for scRNA-seq on the CPU code path (a drop-in GPU variant lives in `rna_preprocess_gpu.preprocess_gpu`). The function ingests a cell-level `.h5ad`, merges sample and cell metadata, applies quality-control filters, normalizes and log-transforms, flags highly variable genes, runs PCA, and corrects batch effects with **two Harmony passes**. It returns a single AnnData carrying both cell embeddings: `Z_clust` (sample-removed, used for clustering and the composition blocks) and `Z_rmd` (sample-preserved, used for the RMD displacement block). Raw counts are preserved in `.layers['counts']` for downstream sample-level differential analysis, and the result is written atomically to disk so the pipeline can resume mid-way by reading the file back in.
+End-to-end preprocessing for scRNA-seq on the CPU code path (a drop-in GPU variant lives in `rna_preprocess_gpu.preprocess_gpu`). The function ingests a cell-level `.h5ad`, merges sample and cell metadata, applies quality-control filters, normalizes and log-transforms, flags highly variable genes, runs PCA, and corrects batch effects with **two Harmony passes**. It returns a single AnnData carrying both cell embeddings: `Z_comp` (sample-removed, used for clustering and the composition blocks) and `Z_rmd` (sample-preserved, used for the RMD displacement block). Raw counts are preserved in `.layers['counts']` for downstream sample-level differential analysis, and the result is written atomically to disk so the pipeline can resume mid-way by reading the file back in.
 
 **Source:** `preparation/rna_preprocess_cpu.py:167` (GPU: `preparation/rna_preprocess_gpu.py`)
 
@@ -54,8 +54,11 @@ def preprocess(
 - `.layers['counts']` — original raw counts (for pseudobulk).
 - `.var['highly_variable']` — HVG flag (no subsetting).
 - `.obsm['X_pca']` — PCA on the HVG subset.
-- `.obsm['Z_clust']` — Harmony pass 1, **sample-removed** (cluster/composition view); input to [`cell_types`](cell_types_linux.md).
-- `.obsm['Z_rmd']` — Harmony pass 2, **sample-preserved** (RMD/displacement view). Older h5ads may carry the legacy name `Z_cmd`.
+- `.obsm['Z_comp']` — Harmony pass 1, **sample-removed** (composition view); input to [`cell_types`](cell_types_linux.md). Also written under the legacy alias `Z_clust` so the file stays readable by SampleDisco 0.2.0.
+- `.obsm['X_pca_rmd']` — PCA on the sample-naive HVG subset; the basis Harmony pass 2 corrects.
+- `.obsm['Z_rmd']` — Harmony pass 2, **sample-preserved** (RMD/displacement view).
+
+Older h5ads carry earlier names for these two views (`Z_clust`/`Z_cmd`, or `X_pca_harmony`/`X_pca_harmony_nosamp`). They are still read automatically — see [Legacy embedding key names](../../legacy_keys.md).
 
 !!! note "Single-key pipeline"
     This is the current single-output path. The old API returned a 2-tuple `(adata_cluster, adata_sample)` and wrote two files; that has been replaced by one AnnData and one file.

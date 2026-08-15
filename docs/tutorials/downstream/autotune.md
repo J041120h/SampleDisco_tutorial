@@ -1,6 +1,6 @@
 # Autotune (α / block-weight selection)
 
-The sample embedding `uns['X_DR_sample']` is a blend of two views: **composition** blocks (built on `Z_clust`) and an **RMD displacement** block (built on `Z_rmd`). The single knob that controls their relative contribution is the RMD weight **α** — composition vs displacement. `run_autotune` selects that α for you.
+The sample embedding `uns['X_DR_sample']` is a blend of two views: **composition** blocks (built on `Z_comp`) and an **RMD displacement** block (built on `Z_rmd`). The single knob that controls their relative contribution is the RMD weight **α** — composition vs displacement. `run_autotune` selects that α for you.
 
 `compute_sample_embedding` builds the **multi-resolution** composition blocks (coarse / medium / fine) in one shot, so there is no need to re-cluster at a grid of Leiden resolutions. Set a sensible Leiden resolution once in [`cell_types`](../../api/rna/cell_types_linux.md) (default `leiden_cluster_resolution=0.8`); autotune then searches over α and rebuilds the embedding at the winning weighting.
 
@@ -19,7 +19,7 @@ result = run_autotune(
     output_dir="sampledisco_demo_output/rna",
     sample_col="sample",
     celltype_col="cell_type",
-    cluster_emb_key="Z_clust",
+    comp_emb_key="Z_comp",
     rmd_emb_key=None,
     modality_col=None,
     batch_col=None,
@@ -32,6 +32,23 @@ result = run_autotune(
 ```
 
 For multi-omics, pass `modality_col="modality"` and optionally `tune_on_modality="RNA"` to score the search against one modality's labels while still building the final embedding on all units.
+
+!!! note "α is searched on a log scale"
+
+    Every strategy (`bayesian`, `golden_section`, `grid`) explores log10(α), and
+    `alpha_bounds` defaults to `(0.1, 100.0)`. The upper end matters: on datasets
+    whose signal sits in within-cell-type state rather than in composition, the
+    optimum can land above 10 — a stimulation time-course tunes to α≈18, which the
+    pre-0.3.0 ceiling of 10.0 truncated. Composition-dominated cohorts tune well
+    below 1 and are unaffected. If the reported α comes back equal to either
+    bound, widen the range and re-run: the optimum is outside the interval you
+    searched.
+
+!!! warning "α is chosen against `grouping_col`"
+
+    The objective scores how well the embedding separates `grouping_col`, so an
+    evaluation that uses that same column is circular. Judge a tuned embedding on
+    a label that did not take part in the search.
 
 See the [`run_autotune` API reference](../../api/shared/run_autotune.md) for the full parameter list.
 

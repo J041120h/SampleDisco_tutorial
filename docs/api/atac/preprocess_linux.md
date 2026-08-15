@@ -1,6 +1,6 @@
 # `preprocess` (ATAC)
 
-End-to-end preprocessing for scATAC-seq. The function reads a peak-count `.h5ad`, merges metadata, applies quality-control filters, runs TF-IDF normalization, projects via LSI, and applies a two-pass Harmony correction. It also optionally runs Scrublet doublet detection and can drop the first LSI component (which typically reflects sequencing depth). Like the RNA version, it writes a single preprocessed AnnData carrying both a sample-removed clustering embedding (`obsm['Z_clust']`) and a sample-preserved displacement embedding (`obsm['Z_rmd']`), and returns that AnnData.
+End-to-end preprocessing for scATAC-seq. The function reads a peak-count `.h5ad`, merges metadata, applies quality-control filters, runs TF-IDF normalization, projects via LSI, and applies a two-pass Harmony correction. It also optionally runs Scrublet doublet detection and can drop the first LSI component (which typically reflects sequencing depth). Like the RNA version, it writes a single preprocessed AnnData carrying both a sample-removed clustering embedding (`obsm['Z_comp']`) and a sample-preserved displacement embedding (`obsm['Z_rmd']`), and returns that AnnData.
 
 The CPU implementation lives in `preparation/atac_preprocess_cpu.py`; the GPU-accelerated variant `preprocess_gpu` lives in `preparation/atac_preprocess_gpu.py` and activates only when the RAPIDS stack is importable.
 
@@ -61,8 +61,11 @@ def preprocess(
 `AnnData` — a single preprocessed object. The raw peak counts are kept in `.layers['counts']`, `.X` holds the TF-IDF + `log1p` normalized matrix, and `.obsm` carries:
 
 - `X_lsi` — LSI on the HVF subset (with the first component dropped when `drop_first_lsi=True`).
-- `Z_clust` — sample-removed Harmony embedding (clustering / composition view).
+- `Z_comp` — sample-removed Harmony embedding (composition view). Also written under the legacy alias `Z_clust` so the file stays readable by SampleDisco 0.2.0.
+- `X_lsi_rmd` — LSI on the sample-naive HVF subset; the basis Harmony pass 2 corrects.
 - `Z_rmd` — sample-preserved Harmony embedding (RMD / displacement view).
+
+Older h5ads carry earlier names for these two views (`Z_clust`/`Z_cmd`, or `X_lsi_harmony`/`X_lsi_harmony_nosamp`). They are still read automatically — see [Legacy embedding key names](../../legacy_keys.md).
 
 ## Output files
 
@@ -88,4 +91,4 @@ adata = preprocess(
     These low-level functions are the building blocks. The supported entry point is the YAML-config wrapper, which runs ATAC preprocessing → cell typing → sample embedding → downstream analysis in one call: `sampledisco -m complex --config <config.yaml>` (set `run_atac_pipeline: true`).
 
 !!! note "ATAC cell typing"
-    ATAC has its own cell-typing routine, `cell_types_atac` (`from sampledisco.preparation.ATAC_cell_type import cell_types_atac`), which builds a dendrogram and differential peaks on the ATAC DR embedding. The shared RNA typing routine `cell_types` operates on `Z_clust`. See [`cell_types_linux`](../rna/cell_types_linux.md).
+    ATAC has its own cell-typing routine, `cell_types_atac` (`from sampledisco.preparation.ATAC_cell_type import cell_types_atac`), which builds a dendrogram and differential peaks on the ATAC DR embedding. The shared RNA typing routine `cell_types` operates on `Z_comp`. See [`cell_types_linux`](../rna/cell_types_linux.md).

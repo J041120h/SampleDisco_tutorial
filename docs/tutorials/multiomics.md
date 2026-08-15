@@ -7,7 +7,7 @@ The multi-omics branch takes paired or unpaired scRNA + scATAC data with a preco
 
 ## Inputs
 
-- **Primary:** `test_multiomics_integrated.h5ad` — the pre-computed scGLUE-integrated object (carries `obsm['X_glue']` and `obsm['Z_clust']`). The tutorial starts here.
+- **Primary:** `test_multiomics_integrated.h5ad` — the pre-computed scGLUE-integrated object (carries `obsm['X_glue']` and `obsm['Z_comp']`). The tutorial starts here.
 - **Optional (from-scratch GLUE):** `RNA.h5ad` and `ATAC.h5ad` — modality-tagged cell-level counts; plus optional per-modality metadata CSVs or an `additional_hvg_file` (a plain-text gene list forced into the HVG set). None of these are needed when phenotype columns already live in `.obs`.
 
 !!! tip "Demo data"
@@ -17,7 +17,7 @@ Output lands under `output_dir/multiomics/`.
 
 ## 1. Load the integrated data
 
-The demo ships a pre-computed scGLUE integration, so the tutorial starts from it — load `test_multiomics_integrated.h5ad` and go straight to cell typing. It already carries the joint embedding (`obsm['X_glue']`, aliased to the sample-preserved `Z_rmd`) and the sample-removed `obsm['Z_clust']`, so **no scGLUE training and no `bedtools` are needed**. Since the scGLUE import is lazy (v0.1.3+), this pre-integrated path doesn't even require scGLUE to be installed — a plain `pip install sampledisco` runs it — you only need to install scGLUE yourself (see [Installation](../installation.md)) if you want to *train* GLUE from scratch.
+The demo ships a pre-computed scGLUE integration, so the tutorial starts from it — load `test_multiomics_integrated.h5ad` and go straight to cell typing. It already carries the joint embedding (`obsm['X_glue']`, aliased to the sample-preserved `Z_rmd`) and the sample-removed `obsm['Z_comp']`, so **no scGLUE training and no `bedtools` are needed**. Since the scGLUE import is lazy (v0.1.3+), this pre-integrated path doesn't even require scGLUE to be installed — a plain `pip install sampledisco` runs it — you only need to install scGLUE yourself (see [Installation](../installation.md)) if you want to *train* GLUE from scratch.
 
 ```python
 import anndata as ad
@@ -29,7 +29,7 @@ Continue to [joint cell typing](#2-joint-cell-typing). To build this object your
 
 ### Optional — integrate from scratch with GLUE
 
-This trains scGLUE, so you must install `scglue` + the `bedtools` binary yourself first (see [Installation](../installation.md)); it is the slowest part of the pipeline. `multiomics_preparation` runs the full GLUE pipeline as toggleable sub-stages: scGLUE preprocessing (`run_preprocessing`), adversarial training (`run_training`), cell-union merge into a single integrated object (`run_merge`), per-modality QC + normalize (`run_preprocess_per_modality`), and optional visualization (`run_visualization`). Set `run_second_glue_for_sample_removal=True` to train scGLUE a second time and also obtain the sample-REMOVED cluster embedding (`obsm['Z_clust']`); the primary run's `X_glue` is aliased to the sample-PRESERVED `obsm['Z_rmd']`.
+This trains scGLUE, so you must install `scglue` + the `bedtools` binary yourself first (see [Installation](../installation.md)); it is the slowest part of the pipeline. `multiomics_preparation` runs the full GLUE pipeline as toggleable sub-stages: scGLUE preprocessing (`run_preprocessing`), adversarial training (`run_training`), cell-union merge into a single integrated object (`run_merge`), per-modality QC + normalize (`run_preprocess_per_modality`), and optional visualization (`run_visualization`). Set `run_second_glue_for_sample_removal=True` to train scGLUE a second time and also obtain the sample-REMOVED cluster embedding (`obsm['Z_comp']`); the primary run's `X_glue` is aliased to the sample-PRESERVED `obsm['Z_rmd']`.
 
 ```python
 from sampledisco.preparation.multi_omics_glue import multiomics_preparation
@@ -68,7 +68,7 @@ multiomics_preparation(
 )
 ```
 
-**Writes** → `sampledisco_demo_output/multiomics/integration/glue/` (trained model + integrated objects), `sampledisco_demo_output/multiomics/preprocess/adata_sample.h5ad` (the cell-union object), and per-modality `preprocess/adata_{rna,atac}_preprocessed.h5ad`. The integrated cells carry `obsm['Z_rmd']` (primary `X_glue`) and, with the second run enabled, `obsm['Z_clust']`.
+**Writes** → `sampledisco_demo_output/multiomics/integration/glue/` (trained model + integrated objects), `sampledisco_demo_output/multiomics/preprocess/adata_sample.h5ad` (the cell-union object), and per-modality `preprocess/adata_{rna,atac}_preprocessed.h5ad`. The integrated cells carry `obsm['Z_rmd']` (primary `X_glue`) and, with the second run enabled, `obsm['Z_comp']`.
 
 ![GLUE joint UMAP colored by modality](../resource/multiomics/scglue_umap_modality.png)
 ![UMAP split by modality](../resource/multiomics/umap_split_by_modality.png)
@@ -78,7 +78,7 @@ When it finishes, load `sampledisco_demo_output/multiomics/preprocess/adata_samp
 
 ## 2. Joint cell typing
 
-`cell_types_multiomics` clusters RNA cells with Leiden on the joint embedding, then transfers labels to ATAC via a Jaccard-weighted shared-nearest-neighbor (SNN) graph. `use_rep` should point at the sample-removed `Z_clust`; the wrapper resolves this automatically, and the default `'X_glue'` is a fallback.
+`cell_types_multiomics` clusters RNA cells with Leiden on the joint embedding, then transfers labels to ATAC via a Jaccard-weighted shared-nearest-neighbor (SNN) graph. `use_rep` should point at the sample-removed `Z_comp`; the wrapper resolves this automatically, and the default `'X_glue'` is a fallback.
 
 ```python
 from sampledisco.preparation.multi_omics_cell_type_cpu import cell_types_multiomics
@@ -90,7 +90,7 @@ adata_integrated = cell_types_multiomics(
     atac_modality_value="ATAC",
     cell_type_column="cell_type",
     cluster_resolution=0.8,
-    use_rep="Z_clust",
+    use_rep="Z_comp",
     num_PCs=50,
     k_neighbors=15,
     transfer_metric="cosine",
@@ -111,7 +111,7 @@ adata_integrated = cell_types_multiomics(
 
 ## 3. Sample embedding
 
-The unified `compute_sample_embedding` handles RNA, ATAC, and multi-omics — there is no separate multi-omics entry point. For multi-omics, pass `modality_col="modality"`; the units of the resulting embedding are `<sample>_RNA` / `<sample>_ATAC`. The composition blocks are built on the sample-removed `Z_clust`, and the RMD displacement block on the sample-preserved GLUE joint embedding — which the integrated file stores under `obsm['X_glue']` (there is no literal `Z_rmd` key). Point the RMD block at it explicitly with `rmd_emb_key="X_glue"`: the key resolver falls back to `cluster_emb_key` (`Z_clust`) when it finds neither the passed `rmd_emb_key` nor a literal `Z_rmd`, so leaving it at `None` here would silently collapse the RMD block onto the same `Z_clust` used by the composition blocks.
+The unified `compute_sample_embedding` handles RNA, ATAC, and multi-omics — there is no separate multi-omics entry point. For multi-omics, pass `modality_col="modality"`; the units of the resulting embedding are `<sample>_RNA` / `<sample>_ATAC`. The composition blocks are built on the sample-removed `Z_comp`, and the RMD displacement block on the sample-preserved GLUE joint embedding — which the integrated file stores under `obsm['X_glue']` (there is no literal `Z_rmd` key). Point the RMD block at it explicitly with `rmd_emb_key="X_glue"`: the key resolver falls back to `comp_emb_key` (`Z_comp`) when it finds neither the passed `rmd_emb_key` nor a literal `Z_rmd`, so leaving it at `None` here would silently collapse the RMD block onto the same `Z_comp` used by the composition blocks.
 
 ```python
 from sampledisco.sample_embedding import compute_sample_embedding
@@ -122,7 +122,7 @@ adata_integrated = compute_sample_embedding(
     use_gpu=False,           # CPU default; set True for RAPIDS on Linux+NVIDIA (auto-falls back to CPU)
     sample_col="sample",
     celltype_col="cell_type",
-    cluster_emb_key="Z_clust",
+    comp_emb_key="Z_comp",
     rmd_emb_key="X_glue",        # sample-preserved GLUE joint embedding (set explicitly; no literal Z_rmd here — see note above)
     modality_col="modality",
     batch_col=None,

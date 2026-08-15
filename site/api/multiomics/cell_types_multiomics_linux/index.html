@@ -432,6 +432,8 @@
       
         
       
+        
+      
     
     
     
@@ -979,6 +981,34 @@
     
   
     Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../legacy_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy embedding key names
   
 
     
@@ -2369,7 +2399,7 @@
 
 
 <h1 id="cell_types_multiomics"><code>cell_types_multiomics</code><a class="headerlink" href="#cell_types_multiomics" title="Permanent link">&para;</a></h1>
-<p>Assigns cell-type labels on the integrated RNA + ATAC object. RNA cells are clustered with Leiden on the joint embedding (the sample-removed <code>Z_clust</code>, with <code>X_glue</code> as a fallback default); ATAC cells then receive labels via cosine-metric k-nearest neighbors in the same embedding. The k-NN graph is Jaccard-weighted (SNN) and imbalanced clusters can be dropped automatically to keep label transfer robust. Optionally computes a UMAP on the joint space.</p>
+<p>Assigns cell-type labels on the integrated RNA + ATAC object. RNA cells are clustered with Leiden on the joint embedding (the sample-removed <code>Z_comp</code>, with <code>X_glue</code> as a fallback default); ATAC cells then receive labels via cosine-metric k-nearest neighbors in the same embedding. The k-NN graph is Jaccard-weighted (SNN) and imbalanced clusters can be dropped automatically to keep label transfer robust. Optionally computes a UMAP on the joint space.</p>
 <p><strong>Source:</strong> <code>preparation/multi_omics_cell_type_cpu.py:19</code> (GPU: <code>multi_omics_cell_type_gpu.cell_types_multiomics_gpu</code>)</p>
 <h2 id="signature">Signature<a class="headerlink" href="#signature" title="Permanent link">&para;</a></h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">cell_types_multiomics</span><span class="p">(</span>
@@ -2442,7 +2472,7 @@
 <td><code>use_rep</code></td>
 <td>str</td>
 <td><code>"X_glue"</code></td>
-<td>Key in <code>.obsm</code> used for clustering and k-NN transfer. Should be the sample-removed <code>Z_clust</code>; the wrapper resolves this automatically, and <code>X_glue</code> is the fallback when <code>Z_clust</code> is absent.</td>
+<td>Key in <code>.obsm</code> used for clustering and k-NN transfer. Should be the sample-removed <code>Z_comp</code>; the wrapper resolves this automatically, and <code>X_glue</code> is the fallback when <code>Z_comp</code> is absent.</td>
 </tr>
 <tr>
 <td><code>num_PCs</code></td>

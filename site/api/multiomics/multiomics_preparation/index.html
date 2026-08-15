@@ -432,6 +432,8 @@
       
         
       
+        
+      
     
     
     
@@ -979,6 +981,34 @@
     
   
     Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../legacy_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy embedding key names
   
 
     
@@ -2372,8 +2402,8 @@
 <p>Full scGLUE integration pipeline for unpaired (or paired) scRNA + scATAC data. Internally runs five sub-stages, each individually toggleable via <code>run_preprocessing</code>, <code>run_training</code>, <code>run_merge</code>, <code>run_preprocess_per_modality</code>, <code>run_visualization</code>:</p>
 <ol>
 <li><strong>scGLUE preprocessing</strong> — reads both modalities, merges sample metadata, selects HVGs on RNA, runs LSI on ATAC, and builds a gene-region guidance graph from an Ensembl GTF.</li>
-<li><strong>Adversarial scGLUE training</strong> — fits the joint embedding with a consistency-regularized adversarial loss. The primary run produces the sample-preserved embedding (the paper's <code>Z_rmd</code>). With <code>run_second_glue_for_sample_removal=True</code>, a second run with <code>treat_sample_as_batch=True</code> produces the sample-removed embedding (<code>Z_clust</code>).</li>
-<li><strong>Cell-union merge</strong> — builds an embedding-only union AnnData (<code>preprocess/adata_sample.h5ad</code>) carrying <code>obsm['Z_rmd']</code> (primary <code>X_glue</code>, aliased) and, when the second run is enabled, <code>obsm['Z_clust']</code>. No expression matrix is stored — see <code>multi_omics_merge.py</code>.</li>
+<li><strong>Adversarial scGLUE training</strong> — fits the joint embedding with a consistency-regularized adversarial loss. The primary run produces the sample-preserved embedding (the paper's <code>Z_rmd</code>). With <code>run_second_glue_for_sample_removal=True</code>, a second run with <code>treat_sample_as_batch=True</code> produces the sample-removed embedding (<code>Z_comp</code>).</li>
+<li><strong>Cell-union merge</strong> — builds an embedding-only union AnnData (<code>preprocess/adata_sample.h5ad</code>) carrying <code>obsm['Z_rmd']</code> (primary <code>X_glue</code>, aliased) and, when the second run is enabled, <code>obsm['Z_comp']</code>. No expression matrix is stored — see <code>multi_omics_merge.py</code>.</li>
 <li><strong>Per-modality preprocess</strong> — per-modality QC + normalize (RNA) and QC + TF-IDF (ATAC), writing <code>preprocess/adata_rna_preprocessed.h5ad</code> and <code>preprocess/adata_atac_preprocessed.h5ad</code> for downstream DGE / RAISIN.</li>
 <li><strong>Visualization (optional)</strong> — UMAPs/scatter on the joint space, colored by modality or user-specified columns.</li>
 </ol>
@@ -2598,7 +2628,7 @@
 <td><code>run_second_glue_for_sample_removal</code></td>
 <td>bool</td>
 <td><code>False</code></td>
-<td>If <code>True</code>, run scGLUE a second time with <code>treat_sample_as_batch=True</code> to produce the sample-removed <code>Z_clust</code>, then merge both keys into the primary RNA + ATAC h5ads.</td>
+<td>If <code>True</code>, run scGLUE a second time with <code>treat_sample_as_batch=True</code> to produce the sample-removed <code>Z_comp</code>, then merge both keys into the primary RNA + ATAC h5ads.</td>
 </tr>
 <tr>
 <td><code>second_run_save_prefix</code></td>
@@ -2687,7 +2717,7 @@
 </tbody>
 </table>
 <h2 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h2>
-<p>The merged union AnnData, with the integrated embedding in <code>.obsm</code> (<code>Z_rmd</code>, and <code>Z_clust</code> when the second run is enabled) and modality metadata populated. Returns <code>None</code> only if <code>run_merge=False</code> and no existing <code>preprocess/adata_sample.h5ad</code> is found.</p>
+<p>The merged union AnnData, with the integrated embedding in <code>.obsm</code> (<code>Z_rmd</code>, and <code>Z_comp</code> when the second run is enabled) and modality metadata populated. Returns <code>None</code> only if <code>run_merge=False</code> and no existing <code>preprocess/adata_sample.h5ad</code> is found.</p>
 <h2 id="output-files">Output files<a class="headerlink" href="#output-files" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>{output_dir}/integration/glue/</code> — preprocessing artifacts, trained model(s), per-modality scGLUE embeddings.</li>

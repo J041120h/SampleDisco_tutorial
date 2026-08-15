@@ -96,6 +96,7 @@ nav:
           - RAISIN cluster DGE: tutorials/downstream/raisin_dge.md
           - Visualization: tutorials/downstream/visualization.md
       - "Configuration guide": tutorials/configuration.md
+      - "Legacy embedding key names": legacy_keys.md
   - API reference:
       - Overview: api/index.md
       - RNA:

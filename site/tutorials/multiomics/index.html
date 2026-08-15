@@ -434,6 +434,8 @@
       
         
       
+        
+      
     
     
     
@@ -1106,6 +1108,34 @@
     
   
     Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../legacy_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy embedding key names
   
 
     
@@ -2396,7 +2426,7 @@
 </div>
 <h2 id="inputs">Inputs<a class="headerlink" href="#inputs" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Primary:</strong> <code>test_multiomics_integrated.h5ad</code> — the pre-computed scGLUE-integrated object (carries <code>obsm['X_glue']</code> and <code>obsm['Z_clust']</code>). The tutorial starts here.</li>
+<li><strong>Primary:</strong> <code>test_multiomics_integrated.h5ad</code> — the pre-computed scGLUE-integrated object (carries <code>obsm['X_glue']</code> and <code>obsm['Z_comp']</code>). The tutorial starts here.</li>
 <li><strong>Optional (from-scratch GLUE):</strong> <code>RNA.h5ad</code> and <code>ATAC.h5ad</code> — modality-tagged cell-level counts; plus optional per-modality metadata CSVs or an <code>additional_hvg_file</code> (a plain-text gene list forced into the HVG set). None of these are needed when phenotype columns already live in <code>.obs</code>.</li>
 </ul>
 <div class="admonition tip">
@@ -2405,14 +2435,14 @@
 </div>
 <p>Output lands under <code>output_dir/multiomics/</code>.</p>
 <h2 id="1-load-the-integrated-data">1. Load the integrated data<a class="headerlink" href="#1-load-the-integrated-data" title="Permanent link">&para;</a></h2>
-<p>The demo ships a pre-computed scGLUE integration, so the tutorial starts from it — load <code>test_multiomics_integrated.h5ad</code> and go straight to cell typing. It already carries the joint embedding (<code>obsm['X_glue']</code>, aliased to the sample-preserved <code>Z_rmd</code>) and the sample-removed <code>obsm['Z_clust']</code>, so <strong>no scGLUE training and no <code>bedtools</code> are needed</strong>. Since the scGLUE import is lazy (v0.1.3+), this pre-integrated path doesn't even require scGLUE to be installed — a plain <code>pip install sampledisco</code> runs it — you only need to install scGLUE yourself (see <a href="../../installation/">Installation</a>) if you want to <em>train</em> GLUE from scratch.</p>
+<p>The demo ships a pre-computed scGLUE integration, so the tutorial starts from it — load <code>test_multiomics_integrated.h5ad</code> and go straight to cell typing. It already carries the joint embedding (<code>obsm['X_glue']</code>, aliased to the sample-preserved <code>Z_rmd</code>) and the sample-removed <code>obsm['Z_comp']</code>, so <strong>no scGLUE training and no <code>bedtools</code> are needed</strong>. Since the scGLUE import is lazy (v0.1.3+), this pre-integrated path doesn't even require scGLUE to be installed — a plain <code>pip install sampledisco</code> runs it — you only need to install scGLUE yourself (see <a href="../../installation/">Installation</a>) if you want to <em>train</em> GLUE from scratch.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">adata_integrated</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/test_multiomics_integrated.h5ad&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Continue to <a href="#2-joint-cell-typing">joint cell typing</a>. To build this object yourself from the raw RNA + ATAC counts, follow the optional section below instead.</p>
 <h3 id="optional-integrate-from-scratch-with-glue">Optional — integrate from scratch with GLUE<a class="headerlink" href="#optional-integrate-from-scratch-with-glue" title="Permanent link">&para;</a></h3>
-<p>This trains scGLUE, so you must install <code>scglue</code> + the <code>bedtools</code> binary yourself first (see <a href="../../installation/">Installation</a>); it is the slowest part of the pipeline. <code>multiomics_preparation</code> runs the full GLUE pipeline as toggleable sub-stages: scGLUE preprocessing (<code>run_preprocessing</code>), adversarial training (<code>run_training</code>), cell-union merge into a single integrated object (<code>run_merge</code>), per-modality QC + normalize (<code>run_preprocess_per_modality</code>), and optional visualization (<code>run_visualization</code>). Set <code>run_second_glue_for_sample_removal=True</code> to train scGLUE a second time and also obtain the sample-REMOVED cluster embedding (<code>obsm['Z_clust']</code>); the primary run's <code>X_glue</code> is aliased to the sample-PRESERVED <code>obsm['Z_rmd']</code>.</p>
+<p>This trains scGLUE, so you must install <code>scglue</code> + the <code>bedtools</code> binary yourself first (see <a href="../../installation/">Installation</a>); it is the slowest part of the pipeline. <code>multiomics_preparation</code> runs the full GLUE pipeline as toggleable sub-stages: scGLUE preprocessing (<code>run_preprocessing</code>), adversarial training (<code>run_training</code>), cell-union merge into a single integrated object (<code>run_merge</code>), per-modality QC + normalize (<code>run_preprocess_per_modality</code>), and optional visualization (<code>run_visualization</code>). Set <code>run_second_glue_for_sample_removal=True</code> to train scGLUE a second time and also obtain the sample-REMOVED cluster embedding (<code>obsm['Z_comp']</code>); the primary run's <code>X_glue</code> is aliased to the sample-PRESERVED <code>obsm['Z_rmd']</code>.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sampledisco.preparation.multi_omics_glue</span><span class="w"> </span><span class="kn">import</span> <span class="n">multiomics_preparation</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">multiomics_preparation</span><span class="p">(</span>
@@ -2448,14 +2478,14 @@
 </span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    <span class="n">run_second_glue_for_sample_removal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 </span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="p">)</span>
 </span></code></pre></div>
-<p><strong>Writes</strong> → <code>sampledisco_demo_output/multiomics/integration/glue/</code> (trained model + integrated objects), <code>sampledisco_demo_output/multiomics/preprocess/adata_sample.h5ad</code> (the cell-union object), and per-modality <code>preprocess/adata_{rna,atac}_preprocessed.h5ad</code>. The integrated cells carry <code>obsm['Z_rmd']</code> (primary <code>X_glue</code>) and, with the second run enabled, <code>obsm['Z_clust']</code>.</p>
+<p><strong>Writes</strong> → <code>sampledisco_demo_output/multiomics/integration/glue/</code> (trained model + integrated objects), <code>sampledisco_demo_output/multiomics/preprocess/adata_sample.h5ad</code> (the cell-union object), and per-modality <code>preprocess/adata_{rna,atac}_preprocessed.h5ad</code>. The integrated cells carry <code>obsm['Z_rmd']</code> (primary <code>X_glue</code>) and, with the second run enabled, <code>obsm['Z_comp']</code>.</p>
 <p><img alt="GLUE joint UMAP colored by modality" src="../../resource/multiomics/scglue_umap_modality.png" />
 <img alt="UMAP split by modality" src="../../resource/multiomics/umap_split_by_modality.png" /></p>
 <div class="figure-caption">Step 1 — RNA and ATAC cells sharing the GLUE joint embedding. The right panel splits the modalities to confirm good mixing.</div>
 
 <p>When it finishes, load <code>sampledisco_demo_output/multiomics/preprocess/adata_sample.h5ad</code> as <code>adata_integrated</code> and continue — from here the steps are identical whether you loaded the pre-integrated file or built it yourself.</p>
 <h2 id="2-joint-cell-typing">2. Joint cell typing<a class="headerlink" href="#2-joint-cell-typing" title="Permanent link">&para;</a></h2>
-<p><code>cell_types_multiomics</code> clusters RNA cells with Leiden on the joint embedding, then transfers labels to ATAC via a Jaccard-weighted shared-nearest-neighbor (SNN) graph. <code>use_rep</code> should point at the sample-removed <code>Z_clust</code>; the wrapper resolves this automatically, and the default <code>'X_glue'</code> is a fallback.</p>
+<p><code>cell_types_multiomics</code> clusters RNA cells with Leiden on the joint embedding, then transfers labels to ATAC via a Jaccard-weighted shared-nearest-neighbor (SNN) graph. <code>use_rep</code> should point at the sample-removed <code>Z_comp</code>; the wrapper resolves this automatically, and the default <code>'X_glue'</code> is a fallback.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sampledisco.preparation.multi_omics_cell_type_cpu</span><span class="w"> </span><span class="kn">import</span> <span class="n">cell_types_multiomics</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">adata_integrated</span> <span class="o">=</span> <span class="n">cell_types_multiomics</span><span class="p">(</span>
@@ -2465,7 +2495,7 @@
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">atac_modality_value</span><span class="o">=</span><span class="s2">&quot;ATAC&quot;</span><span class="p">,</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">cell_type_column</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">cluster_resolution</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;Z_clust&quot;</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;Z_comp&quot;</span><span class="p">,</span>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">num_PCs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
 </span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">k_neighbors</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
 </span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">transfer_metric</span><span class="o">=</span><span class="s2">&quot;cosine&quot;</span><span class="p">,</span>
@@ -2484,7 +2514,7 @@
 <div class="figure-caption">Step 2 — Joint cell types on the GLUE embedding and a modality-balance check per cluster.</div>
 
 <h2 id="3-sample-embedding">3. Sample embedding<a class="headerlink" href="#3-sample-embedding" title="Permanent link">&para;</a></h2>
-<p>The unified <code>compute_sample_embedding</code> handles RNA, ATAC, and multi-omics — there is no separate multi-omics entry point. For multi-omics, pass <code>modality_col="modality"</code>; the units of the resulting embedding are <code>&lt;sample&gt;_RNA</code> / <code>&lt;sample&gt;_ATAC</code>. The composition blocks are built on the sample-removed <code>Z_clust</code>, and the RMD displacement block on the sample-preserved GLUE joint embedding — which the integrated file stores under <code>obsm['X_glue']</code> (there is no literal <code>Z_rmd</code> key). Point the RMD block at it explicitly with <code>rmd_emb_key="X_glue"</code>: the key resolver falls back to <code>cluster_emb_key</code> (<code>Z_clust</code>) when it finds neither the passed <code>rmd_emb_key</code> nor a literal <code>Z_rmd</code>, so leaving it at <code>None</code> here would silently collapse the RMD block onto the same <code>Z_clust</code> used by the composition blocks.</p>
+<p>The unified <code>compute_sample_embedding</code> handles RNA, ATAC, and multi-omics — there is no separate multi-omics entry point. For multi-omics, pass <code>modality_col="modality"</code>; the units of the resulting embedding are <code>&lt;sample&gt;_RNA</code> / <code>&lt;sample&gt;_ATAC</code>. The composition blocks are built on the sample-removed <code>Z_comp</code>, and the RMD displacement block on the sample-preserved GLUE joint embedding — which the integrated file stores under <code>obsm['X_glue']</code> (there is no literal <code>Z_rmd</code> key). Point the RMD block at it explicitly with <code>rmd_emb_key="X_glue"</code>: the key resolver falls back to <code>comp_emb_key</code> (<code>Z_comp</code>) when it finds neither the passed <code>rmd_emb_key</code> nor a literal <code>Z_rmd</code>, so leaving it at <code>None</code> here would silently collapse the RMD block onto the same <code>Z_comp</code> used by the composition blocks.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sampledisco.sample_embedding</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_sample_embedding</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">adata_integrated</span> <span class="o">=</span> <span class="n">compute_sample_embedding</span><span class="p">(</span>
@@ -2493,7 +2523,7 @@
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">use_gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>           <span class="c1"># CPU default; set True for RAPIDS on Linux+NVIDIA (auto-falls back to CPU)</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">sample_col</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">celltype_col</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">cluster_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_clust&quot;</span><span class="p">,</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">comp_emb_key</span><span class="o">=</span><span class="s2">&quot;Z_comp&quot;</span><span class="p">,</span>
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">rmd_emb_key</span><span class="o">=</span><span class="s2">&quot;X_glue&quot;</span><span class="p">,</span>        <span class="c1"># sample-preserved GLUE joint embedding (set explicitly; no literal Z_rmd here — see note above)</span>
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">modality_col</span><span class="o">=</span><span class="s2">&quot;modality&quot;</span><span class="p">,</span>
 </span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">batch_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>

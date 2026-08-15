@@ -45,13 +45,13 @@ adata = preprocess(
 )
 ```
 
-A single file is written carrying both cell embeddings — `obsm['Z_clust']` (sample-removed) and `obsm['Z_rmd']` (sample-preserved) — and the function returns the `AnnData`.
+A single file is written carrying both cell embeddings — `obsm['Z_comp']` (sample-removed) and `obsm['Z_rmd']` (sample-preserved) — and the function returns the `AnnData`.
 
 **Writes** → `sampledisco_demo_output/atac/preprocess/adata_preprocessed.h5ad`.
 
 ## 2. Cell-type clustering
 
-`cell_types_atac` clusters on the ATAC DR embedding (`use_rep='Z_clust'`) and builds a dendrogram / diff-peaks view of the resulting types.
+`cell_types_atac` clusters on the ATAC DR embedding (`use_rep='Z_comp'`) and builds a dendrogram / diff-peaks view of the resulting types.
 
 ```python
 from sampledisco.preparation.ATAC_cell_type import cell_types_atac
@@ -63,7 +63,7 @@ adata = cell_types_atac(
     existing_cell_types=False,
     n_target_clusters=None,
     cluster_resolution=0.8,
-    use_rep="Z_clust",
+    use_rep="Z_comp",
     umap=False,
     Save=True,
     output_dir="sampledisco_demo_output/atac",
@@ -79,7 +79,7 @@ A hierarchical view of the resulting cell types helps sanity-check the granulari
 
 ## 3. Sample embedding
 
-The unified `compute_sample_embedding` handles RNA, ATAC, and multi-omics — there is no ATAC-specific flag. It combines multi-resolution composition blocks (computed on `Z_clust`) with an RMD displacement block (on `Z_rmd`), then PCA-reduces and Harmony-corrects at the sample level.
+The unified `compute_sample_embedding` handles RNA, ATAC, and multi-omics — there is no ATAC-specific flag. It combines multi-resolution composition blocks (computed on `Z_comp`) with an RMD displacement block (on `Z_rmd`), then PCA-reduces and Harmony-corrects at the sample level.
 
 ```python
 from sampledisco.sample_embedding import compute_sample_embedding
@@ -89,7 +89,7 @@ adata = compute_sample_embedding(
     output_dir="sampledisco_demo_output/atac",
     sample_col="sample",
     celltype_col="cell_type",
-    cluster_emb_key="Z_clust",
+    comp_emb_key="Z_comp",
     rmd_emb_key=None,        # defaults to Z_rmd
     batch_col=None,
     use_gpu=False,           # CPU default; set True for RAPIDS on Linux+NVIDIA (auto-falls back to CPU)

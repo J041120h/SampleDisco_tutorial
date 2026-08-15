@@ -432,6 +432,8 @@
       
         
       
+        
+      
     
     
     
@@ -979,6 +981,34 @@
     
   
     Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../legacy_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy embedding key names
   
 
     
@@ -2369,7 +2399,7 @@
 
 
 <h1 id="preprocess-atac"><code>preprocess</code> (ATAC)<a class="headerlink" href="#preprocess-atac" title="Permanent link">&para;</a></h1>
-<p>End-to-end preprocessing for scATAC-seq. The function reads a peak-count <code>.h5ad</code>, merges metadata, applies quality-control filters, runs TF-IDF normalization, projects via LSI, and applies a two-pass Harmony correction. It also optionally runs Scrublet doublet detection and can drop the first LSI component (which typically reflects sequencing depth). Like the RNA version, it writes a single preprocessed AnnData carrying both a sample-removed clustering embedding (<code>obsm['Z_clust']</code>) and a sample-preserved displacement embedding (<code>obsm['Z_rmd']</code>), and returns that AnnData.</p>
+<p>End-to-end preprocessing for scATAC-seq. The function reads a peak-count <code>.h5ad</code>, merges metadata, applies quality-control filters, runs TF-IDF normalization, projects via LSI, and applies a two-pass Harmony correction. It also optionally runs Scrublet doublet detection and can drop the first LSI component (which typically reflects sequencing depth). Like the RNA version, it writes a single preprocessed AnnData carrying both a sample-removed clustering embedding (<code>obsm['Z_comp']</code>) and a sample-preserved displacement embedding (<code>obsm['Z_rmd']</code>), and returns that AnnData.</p>
 <p>The CPU implementation lives in <code>preparation/atac_preprocess_cpu.py</code>; the GPU-accelerated variant <code>preprocess_gpu</code> lives in <code>preparation/atac_preprocess_gpu.py</code> and activates only when the RAPIDS stack is importable.</p>
 <h2 id="signature">Signature<a class="headerlink" href="#signature" title="Permanent link">&para;</a></h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span>
@@ -2532,9 +2562,11 @@
 <p><code>AnnData</code> — a single preprocessed object. The raw peak counts are kept in <code>.layers['counts']</code>, <code>.X</code> holds the TF-IDF + <code>log1p</code> normalized matrix, and <code>.obsm</code> carries:</p>
 <ul>
 <li><code>X_lsi</code> — LSI on the HVF subset (with the first component dropped when <code>drop_first_lsi=True</code>).</li>
-<li><code>Z_clust</code> — sample-removed Harmony embedding (clustering / composition view).</li>
+<li><code>Z_comp</code> — sample-removed Harmony embedding (composition view). Also written under the legacy alias <code>Z_clust</code> so the file stays readable by SampleDisco 0.2.0.</li>
+<li><code>X_lsi_rmd</code> — LSI on the sample-naive HVF subset; the basis Harmony pass 2 corrects.</li>
 <li><code>Z_rmd</code> — sample-preserved Harmony embedding (RMD / displacement view).</li>
 </ul>
+<p>Older h5ads carry earlier names for these two views (<code>Z_clust</code>/<code>Z_cmd</code>, or <code>X_lsi_harmony</code>/<code>X_lsi_harmony_nosamp</code>). They are still read automatically — see <a href="../../../legacy_keys/">Legacy embedding key names</a>.</p>
 <h2 id="output-files">Output files<a class="headerlink" href="#output-files" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>{output_dir}/preprocess/adata_preprocessed.h5ad</code></li>
@@ -2558,7 +2590,7 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">ATAC cell typing</p>
-<p>ATAC has its own cell-typing routine, <code>cell_types_atac</code> (<code>from sampledisco.preparation.ATAC_cell_type import cell_types_atac</code>), which builds a dendrogram and differential peaks on the ATAC DR embedding. The shared RNA typing routine <code>cell_types</code> operates on <code>Z_clust</code>. See <a href="../../rna/cell_types_linux/"><code>cell_types_linux</code></a>.</p>
+<p>ATAC has its own cell-typing routine, <code>cell_types_atac</code> (<code>from sampledisco.preparation.ATAC_cell_type import cell_types_atac</code>), which builds a dendrogram and differential peaks on the ATAC DR embedding. The shared RNA typing routine <code>cell_types</code> operates on <code>Z_comp</code>. See <a href="../../rna/cell_types_linux/"><code>cell_types_linux</code></a>.</p>
 </div>
 
 

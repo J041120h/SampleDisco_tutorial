@@ -532,6 +532,8 @@
       
         
       
+        
+      
     
     
     
@@ -1079,6 +1081,34 @@
     
   
     Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="legacy_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy embedding key names
   
 
     
@@ -2357,9 +2387,9 @@
 
 <h2 id="four-stages">Four stages<a class="headerlink" href="#four-stages" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Preprocessing and QC.</strong> Filter cells and features, correct batch, build cell-level embeddings — a sample-removed view (<code>Z_clust</code>) and a sample-preserved view (<code>Z_rmd</code>) — via PCA/Harmony for RNA, TF-IDF/LSI/Harmony for ATAC, and scGLUE for unpaired multi-omics.</li>
+<li><strong>Preprocessing and QC.</strong> Filter cells and features, correct batch, build cell-level embeddings — a sample-removed view (<code>Z_comp</code>) and a sample-preserved view (<code>Z_rmd</code>); objects written by earlier versions carry <a href="legacy_keys/">legacy key names</a> that are still read automatically — via PCA/Harmony for RNA, TF-IDF/LSI/Harmony for ATAC, and scGLUE for unpaired multi-omics.</li>
 <li><strong>Cell-type assignment.</strong> Leiden clustering with optional target cluster count, or reuse of existing labels.</li>
-<li><strong>Sample embedding.</strong> Multi-resolution cell-type composition blocks on <code>Z_clust</code> are combined with a reference-relative mean displacement (RMD) block on <code>Z_rmd</code>; the blocks are inverse-variance weighted, stacked, PCA-reduced, and Harmony-corrected at the sample level into a single embedding stored as <code>adata.uns['X_DR_sample']</code>.</li>
+<li><strong>Sample embedding.</strong> Multi-resolution cell-type composition blocks on <code>Z_comp</code> are combined with a reference-relative mean displacement (RMD) block on <code>Z_rmd</code>; the blocks are inverse-variance weighted, stacked, PCA-reduced, and Harmony-corrected at the sample level into a single embedding stored as <code>adata.uns['X_DR_sample']</code>.</li>
 <li><strong>Downstream analysis.</strong> Distance, trajectory, differential genes, clustering, visualization — all running off the same sample embedding.</li>
 </ol>
 <h2 id="supported-inputs">Supported inputs<a class="headerlink" href="#supported-inputs" title="Permanent link">&para;</a></h2>

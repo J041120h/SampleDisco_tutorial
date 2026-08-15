@@ -432,6 +432,8 @@
       
         
       
+        
+      
     
     
     
@@ -979,6 +981,34 @@
     
   
     Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../legacy_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy embedding key names
   
 
     
@@ -2369,7 +2399,7 @@
 
 
 <h1 id="cell_types"><code>cell_types</code><a class="headerlink" href="#cell_types" title="Permanent link">&para;</a></h1>
-<p>Cell-type assignment via Leiden clustering on the sample-removed cell embedding (<code>Z_clust</code> by default). When <code>n_target_clusters</code> is set, the resolution is increased recursively until the Leiden output reaches the target; if it overshoots, a dendrogram-based aggregation merges the closest clusters (by centroid distance) until the count matches. Optionally computes and saves a UMAP. The resulting labels are written to <code>adata.obs["cell_type"]</code> as stringified integers.</p>
+<p>Cell-type assignment via Leiden clustering on the sample-removed cell embedding (<code>Z_comp</code> by default). When <code>n_target_clusters</code> is set, the resolution is increased recursively until the Leiden output reaches the target; if it overshoots, a dendrogram-based aggregation merges the closest clusters (by centroid distance) until the count matches. Optionally computes and saves a UMAP. The resulting labels are written to <code>adata.obs["cell_type"]</code> as stringified integers.</p>
 <p><strong>Source:</strong> <code>preparation/cell_type_cpu.py:12</code> (GPU variant: <code>preparation/cell_type_gpu.py</code>, function <code>cell_types_gpu</code>)</p>
 <h2 id="signature">Signature<a class="headerlink" href="#signature" title="Permanent link">&para;</a></h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">cell_types</span><span class="p">(</span>
@@ -2404,7 +2434,7 @@
 <td><code>anndata_cell</code></td>
 <td>AnnData</td>
 <td>—</td>
-<td>Cell-level object from <code>preprocess</code> carrying <code>obsm["Z_clust"]</code> (sample-removed embedding).</td>
+<td>Cell-level object from <code>preprocess</code> carrying <code>obsm["Z_comp"]</code> (sample-removed embedding).</td>
 </tr>
 <tr>
 <td><code>cell_type_column</code></td>
@@ -2458,7 +2488,7 @@
 <td><code>cell_embedding_column</code></td>
 <td>str, optional</td>
 <td><code>None</code></td>
-<td>Which embedding to cluster on. When <code>None</code>, defaults to <code>"Z_clust"</code>.</td>
+<td>Which embedding to cluster on. When <code>None</code>, defaults to <code>"Z_comp"</code>.</td>
 </tr>
 <tr>
 <td><code>cell_embedding_num_PCs</code></td>

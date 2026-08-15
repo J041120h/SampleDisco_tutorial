@@ -432,6 +432,8 @@
       
         
       
+        
+      
     
     
     
@@ -979,6 +981,34 @@
     
   
     Configuration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../legacy_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy embedding key names
   
 
     
@@ -2369,7 +2399,7 @@
 
 
 <h1 id="preprocess-rna"><code>preprocess</code> (RNA)<a class="headerlink" href="#preprocess-rna" title="Permanent link">&para;</a></h1>
-<p>End-to-end preprocessing for scRNA-seq on the CPU code path (a drop-in GPU variant lives in <code>rna_preprocess_gpu.preprocess_gpu</code>). The function ingests a cell-level <code>.h5ad</code>, merges sample and cell metadata, applies quality-control filters, normalizes and log-transforms, flags highly variable genes, runs PCA, and corrects batch effects with <strong>two Harmony passes</strong>. It returns a single AnnData carrying both cell embeddings: <code>Z_clust</code> (sample-removed, used for clustering and the composition blocks) and <code>Z_rmd</code> (sample-preserved, used for the RMD displacement block). Raw counts are preserved in <code>.layers['counts']</code> for downstream sample-level differential analysis, and the result is written atomically to disk so the pipeline can resume mid-way by reading the file back in.</p>
+<p>End-to-end preprocessing for scRNA-seq on the CPU code path (a drop-in GPU variant lives in <code>rna_preprocess_gpu.preprocess_gpu</code>). The function ingests a cell-level <code>.h5ad</code>, merges sample and cell metadata, applies quality-control filters, normalizes and log-transforms, flags highly variable genes, runs PCA, and corrects batch effects with <strong>two Harmony passes</strong>. It returns a single AnnData carrying both cell embeddings: <code>Z_comp</code> (sample-removed, used for clustering and the composition blocks) and <code>Z_rmd</code> (sample-preserved, used for the RMD displacement block). Raw counts are preserved in <code>.layers['counts']</code> for downstream sample-level differential analysis, and the result is written atomically to disk so the pipeline can resume mid-way by reading the file back in.</p>
 <p><strong>Source:</strong> <code>preparation/rna_preprocess_cpu.py:167</code> (GPU: <code>preparation/rna_preprocess_gpu.py</code>)</p>
 <h2 id="signature">Signature<a class="headerlink" href="#signature" title="Permanent link">&para;</a></h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span>
@@ -2500,9 +2530,11 @@
 <li><code>.layers['counts']</code> — original raw counts (for pseudobulk).</li>
 <li><code>.var['highly_variable']</code> — HVG flag (no subsetting).</li>
 <li><code>.obsm['X_pca']</code> — PCA on the HVG subset.</li>
-<li><code>.obsm['Z_clust']</code> — Harmony pass 1, <strong>sample-removed</strong> (cluster/composition view); input to <a href="../cell_types_linux/"><code>cell_types</code></a>.</li>
-<li><code>.obsm['Z_rmd']</code> — Harmony pass 2, <strong>sample-preserved</strong> (RMD/displacement view). Older h5ads may carry the legacy name <code>Z_cmd</code>.</li>
+<li><code>.obsm['Z_comp']</code> — Harmony pass 1, <strong>sample-removed</strong> (composition view); input to <a href="../cell_types_linux/"><code>cell_types</code></a>. Also written under the legacy alias <code>Z_clust</code> so the file stays readable by SampleDisco 0.2.0.</li>
+<li><code>.obsm['X_pca_rmd']</code> — PCA on the sample-naive HVG subset; the basis Harmony pass 2 corrects.</li>
+<li><code>.obsm['Z_rmd']</code> — Harmony pass 2, <strong>sample-preserved</strong> (RMD/displacement view).</li>
 </ul>
+<p>Older h5ads carry earlier names for these two views (<code>Z_clust</code>/<code>Z_cmd</code>, or <code>X_pca_harmony</code>/<code>X_pca_harmony_nosamp</code>). They are still read automatically — see <a href="../../../legacy_keys/">Legacy embedding key names</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Single-key pipeline</p>
 <p>This is the current single-output path. The old API returned a 2-tuple <code>(adata_cluster, adata_sample)</code> and wrote two files; that has been replaced by one AnnData and one file.</p>

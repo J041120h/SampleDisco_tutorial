@@ -1,6 +1,6 @@
 # `cell_types_multiomics`
 
-Assigns cell-type labels on the integrated RNA + ATAC object. RNA cells are clustered with Leiden on the joint embedding (the sample-removed `Z_clust`, with `X_glue` as a fallback default); ATAC cells then receive labels via cosine-metric k-nearest neighbors in the same embedding. The k-NN graph is Jaccard-weighted (SNN) and imbalanced clusters can be dropped automatically to keep label transfer robust. Optionally computes a UMAP on the joint space.
+Assigns cell-type labels on the integrated RNA + ATAC object. RNA cells are clustered with Leiden on the joint embedding (the sample-removed `Z_comp`, with `X_glue` as a fallback default); ATAC cells then receive labels via cosine-metric k-nearest neighbors in the same embedding. The k-NN graph is Jaccard-weighted (SNN) and imbalanced clusters can be dropped automatically to keep label transfer robust. Optionally computes a UMAP on the joint space.
 
 **Source:** `preparation/multi_omics_cell_type_cpu.py:19` (GPU: `multi_omics_cell_type_gpu.cell_types_multiomics_gpu`)
 
@@ -37,7 +37,7 @@ def cell_types_multiomics(
 | `atac_modality_value` | str | `"ATAC"` | Value identifying ATAC cells. |
 | `cell_type_column` | str | `"cell_type"` | Destination column for labels. |
 | `cluster_resolution` | float | `0.8` | Leiden resolution for RNA clustering. |
-| `use_rep` | str | `"X_glue"` | Key in `.obsm` used for clustering and k-NN transfer. Should be the sample-removed `Z_clust`; the wrapper resolves this automatically, and `X_glue` is the fallback when `Z_clust` is absent. |
+| `use_rep` | str | `"X_glue"` | Key in `.obsm` used for clustering and k-NN transfer. Should be the sample-removed `Z_comp`; the wrapper resolves this automatically, and `X_glue` is the fallback when `Z_comp` is absent. |
 | `num_PCs` | int, optional | `50` | Trim the joint embedding to this many components before processing. |
 | `k_neighbors` | int | `15` | Nearest RNA neighbors per ATAC cell during label transfer. |
 | `transfer_metric` | str | `"cosine"` | Distance metric used in the k-NN search. |

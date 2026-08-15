@@ -10,7 +10,7 @@
 
 Lifts a cell-level embedding into a single sample-level embedding (the SampleDisco "singleRMD" recipe). For each unit (a sample, or a `<sample>_RNA` / `<sample>_ATAC` unit in multi-omics) it combines:
 
-1. **Multi-resolution composition blocks** computed on the sample-removed embedding `Z_clust`:
+1. **Multi-resolution composition blocks** computed on the sample-removed embedding `Z_comp`:
    - **A1** — coarse cell-type composition (one-hot, mean per unit).
    - **A2** — soft k-means composition at `medium_K`.
    - **A3** — soft k-means composition at `fine_K`.
@@ -32,7 +32,7 @@ def compute_sample_embedding(
     use_gpu: bool = False,
     sample_col: str = "sample",
     celltype_col: str = "cell_type",
-    cluster_emb_key: str = "Z_clust",
+    comp_emb_key: Optional[str] = None,
     rmd_emb_key: Optional[str] = None,
     modality_col: Optional[str] = None,
     batch_col: Optional[Union[str, List[str]]] = None,
@@ -55,13 +55,13 @@ def compute_sample_embedding(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `adata` | AnnData | — | Cell-level AnnData with the cluster embedding in `.obsm[cluster_emb_key]` and a cell-type column in `.obs`. Mutated in place. |
+| `adata` | AnnData | — | Cell-level AnnData with the composition embedding in `.obsm[comp_emb_key]` and a cell-type column in `.obs`. Mutated in place. |
 | `output_dir` | str | — | Writes the embedding CSV to `{output_dir}/sample_embedding/` and re-saves `{output_dir}/preprocess/adata_preprocessed.h5ad`. |
 | `use_gpu` | bool | `False` | Dispatch to the RAPIDS GPU implementation. |
 | `sample_col` | str | `"sample"` | Column in `.obs` identifying samples. |
 | `celltype_col` | str | `"cell_type"` | Column in `.obs` identifying cell types. |
-| `cluster_emb_key` | str | `"Z_clust"` | obsm key for the **sample-removed** embedding (composition blocks). |
-| `rmd_emb_key` | str, optional | `None` | obsm key for the **sample-preserved** embedding (RMD block). When `None`, resolves to `"Z_rmd"` if present, else falls back to `cluster_emb_key`. |
+| `comp_emb_key` | str, optional | `None` | obsm key for the **sample-removed** embedding (composition blocks). When `None`, auto-resolves to `Z_comp`, then the legacy names (see [Legacy embedding key names](../../legacy_keys.md)). |
+| `rmd_emb_key` | str, optional | `None` | obsm key for the **sample-preserved** embedding (RMD block). When `None`, resolves to `Z_rmd`, then the legacy names `Z_cmd` / `X_pca_harmony_nosamp` / `X_lsi_harmony_nosamp`. If none exist it falls back to `comp_emb_key` with a loud `RuntimeWarning` — that fallback is **not** the method described in the paper. |
 | `modality_col` | str, optional | `None` | Set to `"modality"` for multi-omics; defines the RMD grouping and the `<sample>_RNA` / `<sample>_ATAC` unit ids. |
 | `batch_col` | str or list, optional | `None` | Sample-level batch column(s). The first labels the RMD grouping; supplying ≥2 enables multi-covariate sample-level Harmony. |
 | `medium_K` | int | `120` | Target k for the A2 medium-resolution soft k-means (capped by cell count). |
@@ -109,7 +109,7 @@ adata = compute_sample_embedding(
     output_dir="sampledisco_demo_output/rna",
     sample_col="sample",
     celltype_col="cell_type",
-    cluster_emb_key="Z_clust",
+    comp_emb_key="Z_comp",
     rmd_emb_key="Z_rmd",
     pca_components=10,
     use_gpu=True,
@@ -125,7 +125,7 @@ adata = compute_sample_embedding(
     adata,
     output_dir="sampledisco_demo_output/multiomics",
     modality_col="modality",
-    cluster_emb_key="Z_clust",
+    comp_emb_key="Z_comp",
     rmd_emb_key="Z_rmd",
 )
 ```
