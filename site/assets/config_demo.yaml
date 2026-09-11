@@ -2,7 +2,7 @@
 # SampleDisco — DEMO CONFIG (Zenodo tutorial data)
 # =============================================================================
 # Ready-to-run config for the demo datasets published at
-#   https://doi.org/10.5281/zenodo.20988712   (concept DOI — always resolves to the latest version)
+#   https://doi.org/10.5281/zenodo.22549610   (concept DOI — always resolves to the latest version)
 # Quick start (run from a folder that contains ./data/test_RNA.h5ad and
 # ./data/test_ATAC.h5ad — see the "Demo data" tutorial page):
 #   sampledisco -m complex --config <this-file>.yaml

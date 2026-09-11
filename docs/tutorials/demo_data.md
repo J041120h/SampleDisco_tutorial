@@ -1,6 +1,6 @@
 # Demo data
 
-Every tutorial on this site runs on the same public datasets, published on Zenodo under DOI **[10.5281/zenodo.20988712](https://doi.org/10.5281/zenodo.20988712)** (CC-BY-4.0) — this DOI always resolves to the **latest version**, so it's the link to share. The commands below fetch v1.2 (Zenodo record 21019419), which is version-pinned so the MD5s below always match.
+Every tutorial on this site runs on the same public datasets, published on Zenodo under DOI **[10.5281/zenodo.22549610](https://doi.org/10.5281/zenodo.22549610)** (CC-BY-4.0) — this DOI always resolves to the **latest version**, so it's the link to share. The commands below fetch v1.2 (Zenodo record 22549611), which is version-pinned so the MD5s below always match.
 
 ## What's in the box
 
@@ -27,20 +27,20 @@ Grab the files into a local `data/` folder:
 
     ```bash
     mkdir -p data
-    wget -O data/test_RNA.h5ad  "https://zenodo.org/records/21019419/files/test_RNA.h5ad?download=1"
-    wget -O data/test_ATAC.h5ad "https://zenodo.org/records/21019419/files/test_ATAC.h5ad?download=1"
+    wget -O data/test_RNA.h5ad  "https://zenodo.org/records/22549611/files/test_RNA.h5ad?download=1"
+    wget -O data/test_ATAC.h5ad "https://zenodo.org/records/22549611/files/test_ATAC.h5ad?download=1"
     # optional — used by the multi-omics tutorial:
-    wget -O data/test_multiomics_integrated.h5ad "https://zenodo.org/records/21019419/files/test_multiomics_integrated.h5ad?download=1"
+    wget -O data/test_multiomics_integrated.h5ad "https://zenodo.org/records/22549611/files/test_multiomics_integrated.h5ad?download=1"
     ```
 
 === "curl"
 
     ```bash
     mkdir -p data
-    curl -L -o data/test_RNA.h5ad  "https://zenodo.org/records/21019419/files/test_RNA.h5ad?download=1"
-    curl -L -o data/test_ATAC.h5ad "https://zenodo.org/records/21019419/files/test_ATAC.h5ad?download=1"
+    curl -L -o data/test_RNA.h5ad  "https://zenodo.org/records/22549611/files/test_RNA.h5ad?download=1"
+    curl -L -o data/test_ATAC.h5ad "https://zenodo.org/records/22549611/files/test_ATAC.h5ad?download=1"
     # optional — used by the multi-omics tutorial:
-    curl -L -o data/test_multiomics_integrated.h5ad "https://zenodo.org/records/21019419/files/test_multiomics_integrated.h5ad?download=1"
+    curl -L -o data/test_multiomics_integrated.h5ad "https://zenodo.org/records/22549611/files/test_multiomics_integrated.h5ad?download=1"
     ```
 
 === "Python"
@@ -48,7 +48,7 @@ Grab the files into a local `data/` folder:
     ```python
     import urllib.request, os
     os.makedirs("data", exist_ok=True)
-    base = "https://zenodo.org/records/21019419/files"
+    base = "https://zenodo.org/records/22549611/files"
     files = ["test_RNA.h5ad", "test_ATAC.h5ad", "test_multiomics_integrated.h5ad"]
     for f in files:
         urllib.request.urlretrieve(f"{base}/{f}?download=1", f"data/{f}")
@@ -80,4 +80,4 @@ test_multiomics_integrated.h5ad:   3d474460e651fe61cc0751a3911512d1
 
 ## Citation
 
-> Jiang, H., & Ji, H. *SampleDisco tutorial demo data: scRNA-seq and scATAC-seq COVID-19 PBMC subsets.* Zenodo. https://doi.org/10.5281/zenodo.20988712
+> Jiang, H., & Ji, H. *SampleDisco tutorial demo data: scRNA-seq and scATAC-seq COVID-19 PBMC subsets.* Zenodo. https://doi.org/10.5281/zenodo.22549610
