@@ -1,6 +1,6 @@
 # Configuration guide
 
-SampleDisco is driven by a single YAML configuration file. At runtime the file is parsed into a flat dictionary and handed to [`wrapper(**config)`](../api/index.md) — every key in the YAML matches a parameter name of the wrapper function, and in `complex` mode the CLI validates the YAML **exactly** against `wrapper()`'s signature (every parameter must be present, no extra keys allowed).
+SampleDisco is driven by a single YAML configuration file. At runtime the file is parsed into a flat dictionary and handed to [`wrapper(**config)`](../api/index.md) — every key in the YAML matches a parameter name of the wrapper function, and in `complex` mode the CLI validates the YAML **exactly** against `wrapper()`'s signature (every parameter must be present, no extra keys allowed). The only exceptions are the three keys added after 0.2.0, `rna_/atac_/multiomics_save_cell_adata_after_embedding`: they are optional and default to `true`, so older configs keep working.
 
 The best starting point is the shipped demo template — run `sampledisco --init-config config_demo.yaml` to write a complete, ready-to-run config (the repo also carries a fuller `code/config/config_covid_rna.yaml` example). This page walks through the config block by block so you can build your own.
 
@@ -199,7 +199,7 @@ Each stage exposes a small set of numeric/string parameters. The key prefix matc
 | Preprocess (RNA) | `rna_min_cells`, `rna_min_genes`, `rna_pct_mito_cutoff`, `rna_num_cell_hvgs`, `rna_cell_embedding_num_pcs`, `rna_num_harmony_iterations` | [preprocess](../api/rna/preprocess_linux.md) |
 | Preprocess (ATAC) | `atac_min_features`, `atac_max_features`, `atac_num_cell_hvfs`, `atac_cell_embedding_num_pcs`, `atac_tfidf_scale_factor`, `atac_drop_first_lsi`, `atac_doublet_detection` | [preprocess (ATAC)](../api/atac/preprocess_linux.md) |
 | Cell types | `*_leiden_cluster_resolution`, `*_n_target_cell_clusters`, `*_existing_cell_types`, `*_umap` | [cell_types](../api/rna/cell_types_linux.md) |
-| Sample embedding | `*_sample_embedding_medium_K`, `*_sample_embedding_fine_K`, `*_sample_embedding_rmd_dim`, `*_sample_embedding_rmd_weight`, `*_sample_embedding_use_rmd`, `*_sample_embedding_use_clr`, `*_sample_embedding_block_weights`, `*_sample_embedding_pca_components`, `*_sample_embedding_batch_method` | [compute_sample_embedding](../api/shared/calculate_sample_embedding.md) |
+| Sample embedding | `*_sample_embedding_medium_K`, `*_sample_embedding_fine_K`, `*_sample_embedding_rmd_dim`, `*_sample_embedding_rmd_weight`, `*_sample_embedding_use_rmd`, `*_sample_embedding_use_clr`, `*_sample_embedding_block_weights`, `*_sample_embedding_pca_components`, `*_sample_embedding_batch_method`, `*_save_cell_adata_after_embedding` | [compute_sample_embedding](../api/shared/calculate_sample_embedding.md) |
 | Autotune *(advanced)* | `*_autotune_enable`, `*_autotune_search`, `*_autotune_scoring`, `*_autotune_scope`, `*_autotune_alpha_bounds`, `*_autotune_grouping_col` | [run_autotune](../api/shared/run_autotune.md) — RMD-weight α tuning |
 | Sample distance | `*_sample_distance_methods`, `*_grouping_columns` | [sample_distance](../api/downstream/sample_distance.md) |
 | Trajectory | `*_trajectory_supervised`, `*_trajectory_col`, `*_n_cca_pcs`, `*_cca_pvalue`, `*_tscan_origin` | [CCA_Call](../api/downstream/trajectory_cca_call.md) · [TSCAN](../api/downstream/trajectory_tscan.md) |
@@ -305,7 +305,7 @@ Under `{output_dir}/{modality}/` you will find:
 ## Pitfalls
 
 !!! warning "Unknown or missing keys abort the run"
-    In `complex` mode the CLI validates the YAML **exactly** against `wrapper()`'s signature: a typo like `rna_leden_cluster_resolution` (an unexpected key) or any omitted parameter raises an immediate `ValueError` instead of being silently ignored. Every wrapper parameter must be present.
+    In `complex` mode the CLI validates the YAML **exactly** against `wrapper()`'s signature: a typo like `rna_leden_cluster_resolution` (an unexpected key) or any omitted parameter raises an immediate `ValueError` instead of being silently ignored. Every wrapper parameter must be present, except the three optional `*_save_cell_adata_after_embedding` keys (default `true`).
 
 !!! warning "Resume paths must match the upstream schema"
     If you disable `rna_preprocessing` you also must keep `rna_sample_col`, `rna_celltype_col`, and any `rna_*_batch_*` keys consistent with what was set when the files were originally written — the pseudobulk reads those columns from `.obs`.

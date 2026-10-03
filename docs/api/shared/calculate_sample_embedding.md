@@ -48,6 +48,7 @@ def compute_sample_embedding(
     save: bool = True,
     verbose: bool = True,
     seed: int = 42,
+    save_cell_adata: bool = True,
 ) -> AnnData
 ```
 
@@ -76,6 +77,7 @@ def compute_sample_embedding(
 | `save` | bool | `True` | Write the embedding CSV and re-save the preprocessed h5ad. |
 | `verbose` | bool | `True` | Print progress. |
 | `seed` | int | `42` | Random seed for k-means / RMD / Harmony. |
+| `save_cell_adata` | bool | `True` | With `save=True`, also re-write `{output_dir}/preprocess/adata_preprocessed.h5ad` so `.uns['X_DR_sample']` persists on disk. `False` keeps only the CSV and block files (much faster on large data); if the h5ad already holds an older `.uns['X_DR_sample']`, a warning is raised, because a later run with `derive_sample_embedding: false` would reuse that stale embedding. Config key: `*_save_cell_adata_after_embedding` (optional in the YAML). |
 
 ## Returns
 
