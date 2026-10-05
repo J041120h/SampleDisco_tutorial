@@ -1,6 +1,6 @@
 # Installation
 
-`pip install sampledisco` installs the full **CPU** pipeline (RNA, ATAC, and multi-omics from a pre-integrated file). GPU acceleration and training GLUE from scratch are optional, environment-specific add-ons.
+`pip install sampledisco` installs the full **CPU** pipeline (RNA, ATAC, and multi-omics from a pre-integrated file); it also installs PyTorch, which the pinned `harmonypy==0.2.0` requires. GPU acceleration and training GLUE from scratch are optional, environment-specific add-ons.
 
 !!! info "Requirements"
     - **Python ≥ 3.10**, **macOS or Linux**. GPU acceleration is **Linux + NVIDIA only**.
