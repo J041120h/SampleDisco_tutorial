@@ -5,7 +5,7 @@ The sample embedding `uns['X_DR_sample']` is a blend of two views: **composition
 `compute_sample_embedding` builds the **multi-resolution** composition blocks (coarse / medium / fine) in one shot, so there is no need to re-cluster at a grid of Leiden resolutions. Set a sensible Leiden resolution once in [`cell_types`](../../api/rna/cell_types_linux.md) (default `leiden_cluster_resolution=0.8`); autotune then searches over α and rebuilds the embedding at the winning weighting.
 
 !!! note "Optional step"
-    Autotuning takes longer than the rest of the pipeline because it re-builds the sample embedding for every candidate α. Most users keep the defaults (`rmd_weight=0.60`) and skip it.
+    Autotuning takes longer than the rest of the pipeline because it re-builds the sample embedding for every candidate α. Most users keep the default (`rmd_weight="equal"`: the RMD block gets the same energy as the composition blocks together) and skip it.
 
 ## Selecting α with `run_autotune`
 

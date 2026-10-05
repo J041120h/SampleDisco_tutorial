@@ -95,7 +95,7 @@ adata = compute_sample_embedding(
     batch_col=None,
     pca_components=10,
     use_rmd=True,
-    rmd_weight=0.60,
+    rmd_weight="equal",     # default; a number fixes the RMD weight α
     use_gpu=False,           # CPU default; set True for RAPIDS on Linux+NVIDIA (auto-falls back to CPU)
     save=True,
 )

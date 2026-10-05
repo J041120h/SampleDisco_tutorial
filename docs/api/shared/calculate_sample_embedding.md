@@ -42,7 +42,7 @@ def compute_sample_embedding(
     use_clr: bool = False,
     use_rmd: bool = True,
     block_weights: Optional[List[float]] = None,
-    rmd_weight: float = 0.60,
+    rmd_weight: Union[float, str] = "equal",
     pca_components: int = 10,
     batch_method: str = "harmony",
     save: bool = True,
@@ -71,13 +71,13 @@ def compute_sample_embedding(
 | `use_clr` | bool | `False` | CLR-transform the composition blocks. |
 | `use_rmd` | bool | `True` | Include the RMD displacement block. |
 | `block_weights` | list, optional | `None` | Explicit per-block weights. When `None`, weights are auto-derived from `K_c`/`medium_K`/`fine_K` via an inverse-variance schedule. |
-| `rmd_weight` | float | `0.60` | Relative weight of the RMD block in the auto-derived schedule. |
+| `rmd_weight` | float or `"equal"` | `"equal"` | Relative weight α of the RMD block. `"equal"` (default) gives the RMD block the same energy as the three composition blocks together: α² = w_A1² + w_A2² + w_A3², with w_A1 = √(K_fine/K_c), w_A2 = √(K_fine/K_med), w_A3 = 1, rounded to 2 decimals (it depends only on the number of cell types and the two k-means resolutions). A number fixes α (0.60 was the default before this release); only `"equal"` or a finite positive number is accepted. `run_autotune` searches it. |
 | `pca_components` | int | `10` | Number of PCA components in the final sample embedding. |
 | `batch_method` | str | `"harmony"` | Sample-level batch-correction method applied after PCA. |
 | `save` | bool | `True` | Write the embedding CSV and re-save the preprocessed h5ad. |
 | `verbose` | bool | `True` | Print progress. |
 | `seed` | int | `42` | Random seed for k-means / RMD / Harmony. |
-| `save_cell_adata` | bool | `True` | With `save=True`, also re-write `{output_dir}/preprocess/adata_preprocessed.h5ad` so `.uns['X_DR_sample']` persists on disk. `False` keeps only the CSV and block files (much faster on large data); if the h5ad already holds an older `.uns['X_DR_sample']`, a warning is raised, because a later run with `derive_sample_embedding: false` would reuse that stale embedding. Config key: `*_save_cell_adata_after_embedding` (optional in the YAML). |
+| `save_cell_adata` | bool | `True` | With `save=True`, also store `.uns['X_DR_sample']` (and `.uns['sample_embedding_params']`) in `{output_dir}/preprocess/adata_preprocessed.h5ad`. Only those two entries are replaced in the existing file when it holds the same object as memory (identical `obs`/`var`, same keys, and the same shape, dtype and sampled values of every matrix; for other `uns` entries only the key names are compared, not their values); otherwise, e.g. after relabelling cell types in memory, the whole file is re-written as before. `False` keeps only the CSV and block files; if the h5ad already holds an older `.uns['X_DR_sample']`, a warning is raised, because a later run with `derive_sample_embedding: false` would reuse that stale embedding. Config key: `*_save_cell_adata_after_embedding` (optional in the YAML). |
 
 ## Returns
 
