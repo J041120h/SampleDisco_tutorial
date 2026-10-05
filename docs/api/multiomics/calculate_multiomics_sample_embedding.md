@@ -27,7 +27,7 @@ def compute_sample_embedding(
     use_clr: bool = False,
     use_rmd: bool = True,
     block_weights: Optional[List[float]] = None,
-    rmd_weight: float = 0.60,
+    rmd_weight: Union[float, str] = "equal",
     pca_components: int = 10,
     batch_method: str = "harmony",
     save: bool = True,
@@ -55,7 +55,7 @@ def compute_sample_embedding(
 | `use_clr` | bool | `False` | CLR-transform the composition blocks. |
 | `use_rmd` | bool | `True` | Include the RMD displacement block. |
 | `block_weights` | list, optional | `None` | Explicit per-block weights; inverse-variance weighting is used when `None`. |
-| `rmd_weight` | float | `0.60` | Relative weight of the RMD block versus the composition blocks. |
+| `rmd_weight` | float or `"equal"` | `"equal"` | Relative weight α of the RMD block. `"equal"` (default) gives the RMD block the same energy as the three composition blocks together: α² = w_A1² + w_A2² + w_A3², with w_A1 = √(K_fine/K_c), w_A2 = √(K_fine/K_med), w_A3 = 1, rounded to 2 decimals (it depends only on the number of cell types and the two k-means resolutions). A number fixes α (0.60 was the default before this release); only `"equal"` or a finite positive number is accepted. `run_autotune` searches it. |
 | `pca_components` | int | `10` | Number of PCs in the final sample embedding. |
 | `batch_method` | str | `"harmony"` | Sample-level batch-correction method. |
 | `save` | bool | `True` | Write outputs to `output_dir`. |

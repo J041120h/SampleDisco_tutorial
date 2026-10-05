@@ -259,7 +259,7 @@ Under `{output_dir}/{modality}/` you will find:
     rna_pct_mito_cutoff: 20
     rna_num_cell_hvgs: 2000
     rna_leiden_cluster_resolution: 0.99
-    rna_sample_embedding_rmd_weight: 0.60
+    rna_sample_embedding_rmd_weight: "equal"
     rna_sample_embedding_pca_components: 10
 
     rna_trajectory_supervised: true
