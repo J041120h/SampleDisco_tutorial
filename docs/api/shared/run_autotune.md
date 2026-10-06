@@ -32,7 +32,7 @@ result = run_autotune(
 | `comp_emb_key` / `rmd_emb_key` | str, optional | `None` / `None` | Composition (sample-removed) and RMD (sample-preserved) embedding keys; both auto-resolve from `.obsm` when `None`. |
 | `scope` | str | `"alpha_only"` | Search scope. Only `"alpha_only"` is currently supported. |
 | `search` | str | `"bayesian"` | Strategy: `bayesian` (GP), `golden` (golden-section), or `grid`. |
-| `scoring` | str | `"auto"` | Proxy objective; `auto` selects an ensemble from the available metadata. |
+| `scoring` | str | `"auto"` | Proxy objective. `"auto"` averages four terms gated by the available metadata: grouping tracking and SPS (biology), iLISI and −ASW on the batch key. `"ilisi_label"` (0.4.2+) averages two: grouping tracking and batch iLISI. |
 | `alpha_bounds` | tuple | `(0.1, 100.0)` | Lower / upper bounds for α. |
 | `tune_on_modality` | str | `None` | (Multi-omics) restrict the scoring proxies to one modality's units while still building the final embedding on **all** units. |
 | `medium_K` / `fine_K` / `rmd_dim` / `pca_components` | int | `120` / `300` / `8` / `10` | Block-construction knobs (mirror `compute_sample_embedding`). |
