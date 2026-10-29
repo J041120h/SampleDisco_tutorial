@@ -20,7 +20,7 @@ SampleDisco is a config-driven Python pipeline that turns single-cell RNA, ATAC,
 1. **Preprocessing and QC.** Filter cells and features, correct batch, build cell-level embeddings — a sample-removed view (`Z_comp`) and a sample-preserved view (`Z_rmd`); objects written by earlier versions carry [legacy key names](legacy_keys.md) that are still read automatically — via PCA/Harmony for RNA, TF-IDF/LSI/Harmony for ATAC, and scGLUE for unpaired multi-omics.
 2. **Cell-type assignment.** Leiden clustering with optional target cluster count, or reuse of existing labels.
 3. **Sample embedding.** Multi-resolution cell-type composition blocks on `Z_comp` are combined with a reference-relative mean displacement (RMD) block on `Z_rmd`; the blocks are inverse-variance weighted, stacked, PCA-reduced, and Harmony-corrected at the sample level into a single embedding stored as `adata.uns['X_DR_sample']`.
-4. **Downstream analysis.** Distance, trajectory, differential genes, clustering, visualization — all running off the same sample embedding.
+4. **Downstream analysis.** Distance, trajectory, differential genes, clustering, phenotype prediction, label transfer, visualization — all running off the same sample embedding.
 
 ## Supported inputs
 

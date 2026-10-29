@@ -41,6 +41,7 @@ Each function has its own page with the call, parameters, outputs, and represent
 | [Sample clustering](cluster.md) | `cluster` | K-means on the sample embedding. |
 | [Proportion test](proportion_test.md) | `proportion_test` | Cell-type composition test across sample groups. |
 | [RAISIN cluster DGE](raisin_dge.md) | `raisinfit`, `run_pairwise_tests` | Hierarchical GLM for cluster-level differential expression. |
+| [Prediction and label transfer](prediction.md) | `predict_phenotype`, `transfer_labels` | Cross-validated phenotype prediction from the PCs; kNN label transfer with a leave-one-out accuracy (0.5.0+). |
 | [General visualization](visualization.md) | `visualization` | Cell-type dendrogram, proportion PCA, expression UMAP. |
 
 Recommended reading order: sample distance → dimension association → trajectory (CCA or TSCAN) → trajectory DGE → sample clustering → proportion test / RAISIN → general visualization.
