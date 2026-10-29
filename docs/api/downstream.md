@@ -32,6 +32,13 @@ Everything in this section runs off the single sample embedding `uns['X_DR_sampl
 | [`raisinfit`](downstream/raisinfit.md) | Fit the RAISIN hierarchical GLM. | Step 1 of cluster-level differential expression. |
 | [`run_pairwise_tests`](downstream/run_pairwise_tests.md) | Run every pairwise contrast on a fitted RAISIN model, emit volcanos + summary plots. | Step 2 of cluster-level DE. |
 
+## Prediction and label transfer
+
+| Function | Purpose | When to use |
+| --- | --- | --- |
+| [`predict_phenotype`](downstream/predict_phenotype.md) | Cross-validated prediction of a sample phenotype from the first PCs (logistic or ridge regression, donor-grouped folds); 0.5.0+. | Ask how well the embedding predicts a phenotype. |
+| [`transfer_labels`](downstream/transfer_labels.md) | k-nearest-neighbour label transfer to unlabelled samples, with a leave-one-out accuracy; 0.5.0+. | Label new samples from labelled ones. |
+
 ## Visualization
 
 | Function | Purpose |

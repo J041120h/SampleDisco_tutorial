@@ -94,6 +94,7 @@ nav:
           - Sample clustering: tutorials/downstream/cluster.md
           - Proportion test: tutorials/downstream/proportion_test.md
           - RAISIN cluster DGE: tutorials/downstream/raisin_dge.md
+          - Prediction and label transfer: tutorials/downstream/prediction.md
           - Visualization: tutorials/downstream/visualization.md
       - "Configuration guide": tutorials/configuration.md
       - "Legacy embedding key names": legacy_keys.md
@@ -127,5 +128,7 @@ nav:
           - proportion_test: api/downstream/proportion_test.md
           - raisinfit: api/downstream/raisinfit.md
           - run_pairwise_tests: api/downstream/run_pairwise_tests.md
+          - predict_phenotype: api/downstream/predict_phenotype.md
+          - transfer_labels: api/downstream/transfer_labels.md
           - visualization: api/downstream/visualization.md
           - visualize_multimodal_embedding: api/downstream/visualize_multimodal_embedding.md
