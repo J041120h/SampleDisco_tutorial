@@ -39,11 +39,10 @@ When `use_gpu: true` and the GPU stack loads, the wrapper also sets up the [RMM]
 
 ## 2. Install the GPU environment
 
-The GPU environment is the CPU environment plus RAPIDS 24.12 and PyTorch 2.5.1 (the CUDA 12.1 wheel). This one environment runs every part of SampleDisco 0.6.0: RNA, ATAC, scGLUE, MaxFuse and the GPU paths. Build it from the repo's `environment-gpu.yml`:
+The GPU environment is the CPU environment plus RAPIDS 24.12 and PyTorch 2.5.1 (the CUDA 12.1 wheel). This one environment runs every part of SampleDisco 0.6.0: RNA, ATAC, scGLUE, MaxFuse and the GPU paths. Build it from `environment-gpu.yml` (the same file as in the SampleDisco repository):
 
 ```bash
-git clone https://github.com/J041120h/SampleDisco.git
-cd SampleDisco
+curl -fLO https://j041120h.github.io/SampleDisco_tutorial/assets/environment-gpu.yml
 conda env create -f environment-gpu.yml
 conda activate sampledisco-gpu
 pip install --no-deps rapids-singlecell==0.13.1 sampledisco==0.6.0

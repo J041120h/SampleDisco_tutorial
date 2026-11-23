@@ -110,7 +110,7 @@ nav:
           - Prediction and label transfer: tutorials/downstream/prediction.md
           - Visualization: tutorials/downstream/visualization.md
       - "Legacy embedding key names": legacy_keys.md
-      - "Changelog": https://github.com/J041120h/SampleDisco/blob/main/CHANGELOG.md
+      - "Changelog": changelog.md
   - API reference:
       - Overview: api/index.md
       - Pipeline:

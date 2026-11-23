@@ -22,7 +22,7 @@ Pick the **CPU** environment, or the **GPU** environment, which is the same plus
 ## 1. CPU environment (recommended)
 
 ```bash
-curl -fLO https://raw.githubusercontent.com/J041120h/SampleDisco/main/environment-cpu.yml
+curl -fLO https://j041120h.github.io/SampleDisco_tutorial/assets/environment-cpu.yml
 conda env create -f environment-cpu.yml
 conda activate sampledisco-cpu
 ```
@@ -40,7 +40,7 @@ The first line should print `sampledisco 0.6.0`. Next: the [Quick start](tutoria
 ## 2. GPU environment (Linux + NVIDIA)
 
 ```bash
-curl -fLO https://raw.githubusercontent.com/J041120h/SampleDisco/main/environment-gpu.yml
+curl -fLO https://j041120h.github.io/SampleDisco_tutorial/assets/environment-gpu.yml
 conda env create -f environment-gpu.yml      # building on a machine without a GPU? prefix CONDA_OVERRIDE_CUDA=12.5
 conda activate sampledisco-gpu
 pip install --no-deps rapids-singlecell==0.13.1 sampledisco==0.6.0
@@ -58,10 +58,12 @@ python -c "import cuml, cupy, rapids_singlecell, torch; print('GPU OK', torch.cu
 If you would rather not use an environment file:
 
 ```bash
-conda create -n sampledisco python=3.10 pip && conda activate sampledisco
+conda create -n sampledisco -c conda-forge -c bioconda python=3.10 pip bedtools   # bedtools: binary that scGLUE / pybedtools call
+conda activate sampledisco
 pip install "sampledisco[all]"
-conda install -c bioconda -c conda-forge bedtools   # binary that scGLUE / pybedtools call
 ```
+
+Create the environment with Python and bedtools in one step, as above. On Miniconda, whose default channel is Anaconda's `defaults`, installing bedtools from conda-forge into an existing environment can replace its Python with an incompatible build, and nothing imports afterwards.
 
 | Install | What you get |
 |---|---|
@@ -95,7 +97,7 @@ This route uses PyPI's default torch wheel and does not pin numpy or scanpy to t
 - **In an environment built from an env file:** run `pip install --no-deps sampledisco==0.6.0`.
 - **In a pip-only environment:** run `pip install -U "sampledisco[all]"`.
 
-The [changelog](https://github.com/J041120h/SampleDisco/blob/main/CHANGELOG.md) lists what changed. If you stay on 0.5.0 with a fresh pip install, add `pip install "pynndescent<0.7"`.
+The [changelog](changelog.md) lists what changed. If you stay on 0.5.0 with a fresh pip install, add `pip install "pynndescent<0.7"`.
 
 ## Troubleshooting
 

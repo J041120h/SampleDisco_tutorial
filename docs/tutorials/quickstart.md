@@ -85,7 +85,7 @@ RNA pipeline completed successfully!
 Total execution time: 147.14 seconds (2.45 minutes)
 ```
 
-Leiden clustering does not give the same number of clusters on every run (18–20 across our runs), so your counts may differ; they are always merged down to the 8 cell types the config asks for. The `2 groups` line means the sample-level Harmony step ran (see step 4). The `Flipped pseudotime` line means the CCA pseudotime was turned around so that it increases with `sev.level` (see step 3).
+Leiden clustering does not give the same number of clusters on every run (17–20 across our runs), so your counts may differ; they are always merged down to the 8 cell types the config asks for. The `2 groups` line means the sample-level Harmony step ran (see step 4). The `Flipped pseudotime` line means the CCA pseudotime was turned around so that it increases with `sev.level` (see step 3).
 
 Writes → `sampledisco_demo_output/rna/`, one folder per stage (see step 4), and `sampledisco_demo_output/sys_log/main_process_status.json`.
 
