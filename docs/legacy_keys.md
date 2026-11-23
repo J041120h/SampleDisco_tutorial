@@ -61,6 +61,9 @@ This copies each legacy embedding onto its canonical name. It is **non-destructi
 | `cluster_emb_key=` | `comp_emb_key=` | accepted with a `FutureWarning`; removed in 1.0 |
 | `z_clust_key=` | `z_comp_key=` | accepted with a `FutureWarning`; removed in 1.0 |
 
-Both default to `None`, which means *auto-resolve through the table above* — the recommended setting. Passing an explicit key that is not in `.obsm` raises `KeyError` rather than silently falling back.
+Both default to `None`, which means *auto-resolve through the table above* — the recommended setting. An explicit key behaves as follows:
+- **The canonical name** (`"Z_comp"` or `"Z_rmd"`), when that key is missing but one of its legacy aliases above is present: since 0.6.0 the alias is used, with a `FutureWarning`. In 0.5.x this raised `KeyError`.
+- **Any other explicit key** that is not in `.obsm` still raises `KeyError`.
+- **Neither the canonical name nor an alias is present:** `KeyError`.
 
 No YAML configuration key changed; existing config files run unmodified.

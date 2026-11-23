@@ -1,8 +1,16 @@
 # `CCA_Call`
 
-Supervised pseudotime through Canonical Correlation Analysis. CCA projects the single sample embedding (`adata.uns['X_DR_sample']`) onto the one-dimensional axis most correlated with a phenotype column in `adata.obs` (e.g. severity, age, disease stage). The leading CCA axis is reported as a sample-level pseudotime and visualized as a 2D scatter using the PCs that contribute most to the axis. Useful when you already have a phenotype gradient and want to inspect how samples order along it.
+Supervised pseudotime by canonical correlation analysis (CCA) between the sample embedding and a numeric phenotype in `.obs` (severity, age, stage, …):
 
-**Source:** `sample_trajectory/CCA.py:372`
+1. Take the first `n_components` PCs of `X_DR_sample` (capped at the number available). `trajectory_col` is converted to numbers; samples whose value is not numeric (`NaN`) are dropped.
+2. **Score.** With `auto_select_best_2pc=True` (the default), the score is the correlation of a one-component CCA on **all** `n_components` PCs. With `auto_select_best_2pc=False` it is the CCA correlation on PC1 + PC2 only.
+3. **Plot and pseudotime.** A 2-PC pair is chosen for the scatter plot: with `auto_select_best_2pc=True` and more than 2 PCs, the pair with the highest CCA correlation among all C(n, 2) pairs; otherwise PC1 + PC2. The samples are projected on the CCA direction fitted in that pair, and the projection, min-max scaled to [0, 1], is the pseudotime. The sign of a CCA direction is arbitrary, so in 0.6.0 the pseudotime is flipped (t → 1 − t) when its Spearman correlation with `trajectory_col` is negative, and a line `[CCA] Flipped pseudotime so it increases with '<trajectory_col>' (Spearman rho before flip: …)` is printed. The pseudotime then increases with the phenotype. The score (an absolute correlation) is unchanged.
+
+The best pair is therefore used only for the plot and the pseudotime, never for the score. Any error is caught: the function then returns `(nan, nan, {}, {})` (with `verbose=True` it prints the error).
+
+**Import:** `from sampledisco.sample_trajectory.CCA import CCA_Call`
+
+**Source:** `sample_trajectory/CCA.py:377`
 
 ## Signature
 
@@ -22,40 +30,55 @@ def CCA_Call(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `adata` | AnnData | — | AnnData with the sample embedding in `.uns['X_DR_sample']` (falls back to `.obsm['X_DR_sample']`). |
-| `output_dir` | str, optional | `None` | If provided, writes to `{output_dir}/CCA/`. |
-| `trajectory_col` | str | `"sev.level"` | `.obs` column used as the CCA target. |
-| `n_components` | int | `2` | PCA components drawn from DR before running CCA. Use `10` for RNA, typically `2` for ATAC. |
-| `auto_select_best_2pc` | bool | `True` | Pick the best 2-PC combination for the 2D scatter. |
-| `verbose` | bool | `False` | Print diagnostics. |
-| `show_sample_labels` | bool | `False` | Overlay sample IDs on the plot (clutters when many samples). |
+| `adata` | AnnData | — | Sample-level AnnData with `X_DR_sample` in `.uns` (or `.obsm`) and `trajectory_col` in `.obs`. |
+| `output_dir` | str or None | `None` | If set, plots and the pseudotime CSV go to `{output_dir}/CCA/`. |
+| `trajectory_col` | str | `"sev.level"` | Phenotype column; converted with `pd.to_numeric(errors="coerce")`. |
+| `n_components` | int | `2` | Number of leading PCs used, clamped to the number of embedding columns (at most units − 1). Wrapper key: `*_n_cca_pcs`. |
+| `auto_select_best_2pc` | bool | `True` | `True`: score on all `n_components` PCs, and the best PC pair for the plot and pseudotime. `False`: PC1 + PC2 for both. Only matters when `n_components > 2`. |
+| `verbose` | bool | `False` | Print progress and errors. |
+| `show_sample_labels` | bool | `False` | Write sample ids on the scatter plot. |
 
 ## Returns
 
-`Tuple[float, float, Dict, Dict]` — a legacy 4-tuple `(score, score, pseudotime, pseudotime)`. With the single-key embedding, both score slots and both pseudotime slots hold the **same** `X_DR_sample` result; the 4-tuple shape is preserved for back-compat with the wrapper.
+A 4-tuple `(score, score, pseudotime, pseudotime)`, kept for backward compatibility; both slots hold the same `X_DR_sample` result.
 
-- `score` — CCA correlation coefficient along the leading axis.
-- `pseudotime` — `{sample_id: float}` dict mapping each sample to its position along the CCA axis (used later by [`run_trajectory_gam_differential_gene_analysis`](trajectory_gam_dge.md)).
+- `score` (float): the CCA correlation.
+- `pseudotime` (dict): `{sample_id: value in [0, 1]}`, ready for [`run_trajectory_gam_differential_gene_analysis`](trajectory_gam_dge.md).
 
 ## Output files
 
 Under `{output_dir}/CCA/`:
 
-- `pca_{n_components}d_cca_sample.pdf` — 2D scatter with the CCA direction overlay.
-- `pca_{n_components}d_cca_sample_contributions.pdf` — PC-contribution diagnostic plot.
-- `pseudotime_sample.csv` — per-sample pseudotime (`sample`, `pseudotime` columns).
+- `pca_{n_components}d_cca_sample.pdf`: the chosen PC pair with the CCA direction.
+- `pca_{n_components}d_cca_sample_contributions.pdf`: PC contributions.
+- `pseudotime_sample.csv`: columns `sample`, `pseudotime`.
 
 ## Usage
 
+Continuing from the RNA chain. `sev.level` is 1 (healthy) or 4 (severe):
+
 ```python
+import anndata as ad
+from sampledisco.sample_embedding.sample_embedding import build_sample_adata
 from sampledisco.sample_trajectory.CCA import CCA_Call
 
-score, _, pseudotime, _ = CCA_Call(
-    adata=adata,
-    output_dir="sampledisco_demo_output/rna",
-    trajectory_col="sev.level",
-    n_components=10,
-    auto_select_best_2pc=True,
-    verbose=True,
-)
+adata = ad.read_h5ad("api_demo/rna/preprocess/adata_preprocessed.h5ad")
+pseudo = build_sample_adata(adata, sample_col="sample")
+
+score, _, ptime, _ = CCA_Call(pseudo, output_dir="api_demo/rna", trajectory_col="sev.level", n_components=2)
+print(round(score, 3))
+print({s: round(float(t), 2) for s, t in ptime.items()})
 ```
+
+**Writes** → `api_demo/rna/CCA/pca_2d_cca_sample.pdf`, `pca_2d_cca_sample_contributions.pdf` and `pseudotime_sample.csv`. Printed (about 1 s):
+
+```text
+[CCA] Flipped pseudotime so it increases with 'sev.level' (Spearman rho before flip: -0.873)
+0.774
+{'CoV-3-Wilk': 0.61, 'CoV-34-Aruna': 1.0, 'CoV-36-Aruna': 0.48, 'CoV-4-Wilk': 0.6, 'HD-1-Wilk': 0.29, 'HD-20-Aruna': 0.4, 'HD-21-Aruna': 0.31, 'HD-4-Wilk': 0.0}
+```
+
+The fitted CCA direction pointed from severe to healthy, so the pseudotime was flipped. All four severe samples now lie above all four healthy ones. On 0.5.0 the same call returned the unflipped values (severe at the low end).
+
+!!! warning "Small cohorts"
+    The score is an in-sample CCA fit, so it grows with the number of PCs. Once the PCs used reach the number of samples − 1 (for example `n_components=10` on the 8-sample demo, clamped to its 7 PCs), CCA fits any labelling and the score is 1.0 by construction. Keep `n_components` well below the number of samples, and check the score with [`cca_pvalue_test`](trajectory_cca_pvalue_test.md), passing `n_pcs` equal to the number of PCs used here. See the [Sound Life walkthrough](../../tutorials/soundlife_rna.md) for a 32-sample example.

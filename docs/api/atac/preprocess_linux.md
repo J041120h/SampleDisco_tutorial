@@ -1,8 +1,15 @@
 # `preprocess` (ATAC)
 
-End-to-end preprocessing for scATAC-seq. The function reads a peak-count `.h5ad`, merges metadata, applies quality-control filters, runs TF-IDF normalization, projects via LSI, and applies a two-pass Harmony correction. It also optionally runs Scrublet doublet detection and can drop the first LSI component (which typically reflects sequencing depth). Like the RNA version, it writes a single preprocessed AnnData carrying both a sample-removed clustering embedding (`obsm['Z_comp']`) and a sample-preserved displacement embedding (`obsm['Z_rmd']`), and returns that AnnData.
+End-to-end preprocessing for scATAC-seq. It reads a cell × peak `.h5ad`, merges optional metadata, filters peaks, cells and samples, optionally removes Scrublet doublets, applies TF-IDF (+ `log1p`), and builds the two cell embeddings SampleDisco needs:
 
-The CPU implementation lives in `preparation/atac_preprocess_cpu.py`; the GPU-accelerated variant `preprocess_gpu` lives in `preparation/atac_preprocess_gpu.py` and activates only when the RAPIDS stack is importable.
+- `Z_comp`, **sample removed**: LSI on a sample-aware highly-variable-feature (HVF) set, then Harmony with the sample (plus `cell_level_batch_key`) as covariates.
+- `Z_rmd`, **sample preserved**: LSI on a second, sample-naive HVF set, then Harmony on `cell_level_batch_key` only. With no `cell_level_batch_key`, this pass is skipped and `Z_rmd` is that LSI as is.
+
+Raw counts are kept in `.layers['counts']`. The result is written to `{output_dir}/preprocess/adata_preprocessed.h5ad` and returned.
+
+**Import:** `from sampledisco.preparation.atac_preprocess_cpu import preprocess`
+
+**Source:** `preparation/atac_preprocess_cpu.py:180`. GPU variant: `preprocess_gpu` in `preparation/atac_preprocess_gpu.py:167`.
 
 ## Signature
 
@@ -35,37 +42,38 @@ def preprocess(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `h5ad_path` | str | — | Cell × peak `.h5ad`. |
-| `sample_meta_path` | str | — | Per-sample metadata CSV. |
-| `output_dir` | str | — | Writes to `{output_dir}/preprocess/`. |
-| `sample_column` | str | `"sample"` | Sample identifier column. |
-| `cell_meta_path` | str, optional | `None` | Per-cell metadata CSV (indexed by `barcode`) merged into `.obs`. |
-| `sample_level_batch_key` | str or list, optional | `None` | Sample-level Harmony batch. Leave `None` to skip. |
-| `cell_embedding_num_PCs` | int | `50` | Number of LSI components. |
-| `num_harmony_iterations` | int | `30` | Max Harmony iterations. |
-| `num_cell_hvfs` | int | `50000` | Number of highly variable features for the clustering track. |
-| `min_cells` | int | `1` | Drop features seen in fewer than this many cells. |
-| `min_features` | int | `2000` | Drop cells with fewer than this many features. |
-| `max_features` | int | `15000` | Drop cells with more than this many features. |
-| `min_cells_per_sample` | int | `1` | Drop samples with fewer than this many surviving cells. |
-| `exclude_features` | list, optional | `None` | Feature IDs to drop before HVF selection. |
-| `cell_level_batch_key` | list, optional | `None` | Cell-level Harmony batch keys; sample id is always included. |
-| `doublet_detection` | bool | `True` | Run Scrublet doublet detection before clustering. |
-| `tfidf_scale_factor` | float | `1e4` | Scaling factor inside TF-IDF normalization. |
-| `log_transform` | bool | `True` | Apply `log1p` after TF-IDF. |
-| `drop_first_lsi` | bool | `True` | Discard LSI component 1 (typically depth-correlated). |
+| `h5ad_path` | str | — | Cell × peak `.h5ad` with raw counts. |
+| `sample_meta_path` | str or None | — (required positional) | Per-sample metadata CSV merged into `.obs`; `None` to skip. |
+| `output_dir` | str | — | The file goes to `{output_dir}/preprocess/`. |
+| `sample_column` | str | `"sample"` | Sample column; inferred from `obs_names` (text before the first `:`) if missing. |
+| `cell_meta_path` | str or None | `None` | Per-cell metadata CSV indexed by a `barcode` column. |
+| `sample_level_batch_key` | str, list or None | `None` | Only checked to exist in `.obs`; it does not reach Harmony. Sample-level batch correction happens in [`compute_sample_embedding`](../shared/calculate_sample_embedding.md) via `batch_col`. |
+| `cell_embedding_num_PCs` | int | `50` | LSI components computed. With `drop_first_lsi=True` the embeddings keep `cell_embedding_num_PCs − 1` (49 by default). |
+| `num_harmony_iterations` | int | `30` | Maximum Harmony iterations. |
+| `num_cell_hvfs` | int | `50000` | Features per HVF set (Seurat v3 on the TF-IDF matrix); flagged, not subset. |
+| `min_cells` | int | `1` | Drop peaks detected in fewer cells. |
+| `min_features` / `max_features` | int | `2000` / `15000` | Keep cells whose detected-peak count is within these bounds. |
+| `min_cells_per_sample` | int | `1` | Drop samples with fewer surviving cells. |
+| `exclude_features` | list or None | `None` | Peak IDs removed after doublet removal. |
+| `cell_level_batch_key` | list or None | `None` | Cell-level batch columns. Pass 1 (`Z_comp`) uses these plus `sample_column`; pass 2 (`Z_rmd`) uses these without `sample_column`. |
+| `doublet_detection` | bool | `True` | Run Scrublet per sample and drop predicted doublets (skipped with a message if Scrublet fails). |
+| `tfidf_scale_factor` | float | `1e4` | Scale factor in TF-IDF. |
+| `log_transform` | bool | `True` | `log1p` after TF-IDF. |
+| `drop_first_lsi` | bool | `True` | Drop LSI component 1, which mostly tracks sequencing depth. |
 | `verbose` | bool | `True` | Print progress. |
+
+After these filters, peaks detected in fewer than 0.1% of the remaining cells are dropped.
 
 ## Returns
 
-`AnnData` — a single preprocessed object. The raw peak counts are kept in `.layers['counts']`, `.X` holds the TF-IDF + `log1p` normalized matrix, and `.obsm` carries:
+`AnnData`, also written to disk. `.X` holds TF-IDF (+ `log1p`) values, `.layers['counts']` the raw counts, and `.var['highly_variable']` / `.var['highly_variable_rmd']` the two HVF sets. `.obsm` carries:
 
-- `X_lsi` — LSI on the HVF subset (with the first component dropped when `drop_first_lsi=True`).
-- `Z_comp` — sample-removed Harmony embedding (composition view). Also written under the legacy alias `Z_clust` so the file stays readable by SampleDisco 0.2.0.
-- `X_lsi_rmd` — LSI on the sample-naive HVF subset; the basis Harmony pass 2 corrects.
-- `Z_rmd` — sample-preserved Harmony embedding (RMD / displacement view).
+- `X_lsi`: LSI on the sample-aware HVFs (first component dropped by default). Its presence is how [`cell_types`](../rna/cell_types_linux.md) recognizes ATAC.
+- `Z_comp`: Harmony pass 1, sample removed. Also written as the 0.2.0 alias `Z_clust`.
+- `X_lsi_rmd`: LSI on the sample-naive HVFs.
+- `Z_rmd`: Harmony pass 2, sample preserved (or `X_lsi_rmd` itself without `cell_level_batch_key`).
 
-Older h5ads carry earlier names for these two views (`Z_clust`/`Z_cmd`, or `X_lsi_harmony`/`X_lsi_harmony_nosamp`). They are still read automatically — see [Legacy embedding key names](../../legacy_keys.md).
+Older files use earlier names for these views; see [Legacy embedding key names](../../legacy_keys.md).
 
 ## Output files
 
@@ -73,22 +81,36 @@ Older h5ads carry earlier names for these two views (`Z_clust`/`Z_cmd`, or `X_ls
 
 ## Usage
 
-```python
-from sampledisco.preparation.atac_preprocess_cpu import preprocess  # GPU: atac_preprocess_gpu.preprocess_gpu
+The ATAC demo has no batch column, so no batch key is passed:
 
-adata = preprocess(
+```python
+from sampledisco.preparation.atac_preprocess_cpu import preprocess
+
+adata_atac = preprocess(
     h5ad_path="data/test_ATAC.h5ad",
     sample_meta_path=None,
-    output_dir="sampledisco_demo_output/atac",
-    cell_embedding_num_PCs=50,
-    num_cell_hvfs=50000,
-    doublet_detection=True,
-    drop_first_lsi=True,
+    output_dir="api_demo/atac",
+    sample_column="sample",
 )
+print(adata_atac)
 ```
 
-!!! note "Prefer the config-driven wrapper"
-    These low-level functions are the building blocks. The supported entry point is the YAML-config wrapper, which runs ATAC preprocessing → cell typing → sample embedding → downstream analysis in one call: `sampledisco -m complex --config <config.yaml>` (set `run_atac_pipeline: true`).
+**Writes** → `api_demo/atac/preprocess/adata_preprocessed.h5ad`. From the log: QC keeps 25,196 of 29,021 cells, Scrublet removes 3 doublets, and 228,586 peaks remain; pass 1 uses `sample` as the only covariate and pass 2 is skipped (`no extra batch covariate → using raw X_lsi_rmd`). The returned object:
 
-!!! note "ATAC cell typing"
-    ATAC has its own cell-typing routine, `cell_types_atac` (`from sampledisco.preparation.ATAC_cell_type import cell_types_atac`), which builds a dendrogram and differential peaks on the ATAC DR embedding. The shared RNA typing routine `cell_types` operates on `Z_comp`. See [`cell_types_linux`](../rna/cell_types_linux.md).
+```text
+AnnData object with n_obs × n_vars = 25193 × 228586
+    ...
+    obsm: 'X_lsi', 'Z_comp', 'Z_clust', 'X_lsi_rmd', 'Z_rmd'
+    varm: 'LSI'
+    layers: 'counts'
+```
+
+`Z_comp`, `X_lsi_rmd` and `Z_rmd` have 49 columns (50 LSI components minus the first). 5.5–6.5 minutes and 8.3 GB peak RAM on 8 cores (two runs).
+
+Next step: [`cell_types`](../rna/cell_types_linux.md) (the ATAC example there), then [`compute_sample_embedding`](../shared/calculate_sample_embedding.md).
+
+!!! note "GPU"
+    `preprocess_gpu` runs only when called directly or when the wrapper config sets `use_gpu: true` (with a CPU fallback if RAPIDS does not import). Its `sample_level_batch_key` defaults to `"batch"`, so on data without a `batch` column pass `sample_level_batch_key=None`; positionally, `cell_meta_path` comes before `sample_column`. See [GPU acceleration](../../tutorials/gpu.md).
+
+!!! note "Prefer the config-driven wrapper"
+    `sampledisco -m complex --config <config.yaml>` with `run_atac_pipeline: true` runs ATAC preprocessing → [`cell_types`](../rna/cell_types_linux.md) → sample embedding → downstream analysis.

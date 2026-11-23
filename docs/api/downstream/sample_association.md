@@ -1,8 +1,10 @@
 # `run_dimension_association_analysis`
 
-Per-PC variance-explained decomposition of the sample embedding against every metadata variable. For the single sample embedding stored in the pseudobulk object (`X_DR_sample`) and every sample-level metadata column, the function fits a linear model of the component on the variable and records how much variance it explains. Continuous variables use design `[1, x]` (R² = squared Pearson correlation); categorical variables use `[1, one-hot(levels, drop-first)]` (R² = one-way ANOVA η²). Significance is assessed by permuting the variable and refitting, producing a directly-comparable metric across variable types and components.
+How much of each embedding PC is explained by each sample-level variable. For every (variable, PC) pair it fits a linear model of the PC on the variable and records R²: continuous variables use the design `[1, x]` (R² = squared Pearson correlation), categorical ones `[1, one-hot(levels, drop first)]` (R² = one-way ANOVA η²). Significance comes from permuting the variable and refitting, so continuous and categorical variables get directly comparable p-values; BH-FDR is applied across the table.
 
-Use this when you want to know which covariates (batch, age, study, sex, phenotype, ...) drive each PC of the sample embedding — it's the standard confounder / leading-covariate check before downstream tests.
+Use it to see which covariates (batch, age, sex, phenotype, …) drive which PCs before testing anything downstream.
+
+**Import:** `from sampledisco.sample_association.association import run_dimension_association_analysis`
 
 **Source:** `sample_association/association.py:541`
 
@@ -25,49 +27,68 @@ def run_dimension_association_analysis(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `pseudo_adata` | AnnData | — | Sample-level pseudobulk with `X_DR_sample` in `.uns` (DataFrame) or `.obsm` and per-sample metadata in `.obs`. |
-| `output_dir` | str | — | Root directory. Created if missing. |
-| `continuous_cols` | list, optional | `None` | Override automatic classification. Leave as `None` to auto-detect numeric columns. |
-| `categorical_cols` | list, optional | `None` | Override automatic classification. Leave as `None` to auto-detect categorical columns. |
-| `n_permutations` | int | `999` | Permutation count for the R² null. Set to `0` to skip. |
-| `sample_col` | str | `"sample"` | Sample-id column excluded from testing. |
-| `random_state` | int | `42` | Seed for the permutation RNG. |
-| `verbose` | bool | `True` | Print progress and variable classification. |
+| `pseudo_adata` | AnnData | — | Sample-level AnnData with `X_DR_sample` in `.uns` (DataFrame) or `.obsm`, and sample metadata in `.obs`. |
+| `output_dir` | str | — | Output folder; created if missing. |
+| `continuous_cols` | list or None | `None` | Continuous variables. `None`: detected automatically from `.obs`. |
+| `categorical_cols` | list or None | `None` | Categorical variables. `None`: detected automatically. Each list is resolved on its own, so passing only one still auto-detects the other. |
+| `n_permutations` | int | `999` | Permutations for the R² null; `0` skips them. |
+| `sample_col` | str | `"sample"` | Sample column, excluded from testing. |
+| `random_state` | int | `42` | Seed for the permutations. |
+| `verbose` | bool | `True` | Print progress and the variable lists. |
+
+Columns that vary within a sample are dropped. On an object from [`build_sample_adata`](../shared/build_sample_adata.md) every row is one sample, so per-cell columns (`n_genes`, `celltype`, …) are not caught by that rule and would be tested; pass both lists explicitly, as below.
 
 ## Returns
 
-`dict` with keys:
+`dict` with:
 
 | Key | Value |
 | --- | --- |
-| `"results"` | `{embedding_key: DataFrame}` of per-variable, per-component association tables (single key `X_DR_sample`). |
-| `"continuous_cols"` | Final list of continuous variables tested. |
-| `"categorical_cols"` | Final list of categorical variables tested. |
-| `"dropped_non_sample_level"` | Columns dropped because they vary within at least one sample (e.g. per-cell QC). |
-
-Each table has columns: `variable`, `component`, `kind`, `n_levels`, `r2`, `perm_p`, `n`, `pearson_r`, `spearman_r`, `fdr`.
+| `"results"` | `{"X_DR_sample": DataFrame}`, one row per (variable, PC) with columns `variable`, `component`, `kind`, `n_levels`, `r2`, `perm_p`, `n`, `pearson_r`, `spearman_r`, `fdr`. |
+| `"continuous_cols"`, `"categorical_cols"` | The variables actually tested. |
+| `"dropped_non_sample_level"` | Variables dropped because they vary within a sample. |
 
 ## Output files
 
 Under `{output_dir}/`:
 
-- `variance_explained_sample.csv` — the full R² table.
-- `figures/sample_variance_heatmap.pdf` — component × variable R² heatmap.
-- `figures/sample_top_associations.pdf` — curated panel of the strongest associations.
+- `variance_explained_sample.csv`: the full table.
+- `figures/sample_variance_heatmap.pdf`: PC × variable R² heatmap.
+- `figures/sample_top_associations.pdf`: the strongest associations.
 
 ## Usage
 
+Continuing from the RNA chain:
+
 ```python
+import anndata as ad
+from sampledisco.sample_embedding.sample_embedding import build_sample_adata
 from sampledisco.sample_association.association import run_dimension_association_analysis
 
-assoc = run_dimension_association_analysis(
-    pseudo_adata=pseudo_adata,
-    output_dir="sampledisco_demo_output/rna/sample_association",
-    n_permutations=999,
-    sample_col="sample",
-    verbose=True,
-)
+adata = ad.read_h5ad("api_demo/rna/preprocess/adata_preprocessed.h5ad")
+pseudo = build_sample_adata(adata, sample_col="sample")
 
-sample_df = assoc["results"]["X_DR_sample"]
-sample_df.query("perm_p < 0.05").sort_values("r2", ascending=False).head(10)
+assoc = run_dimension_association_analysis(
+    pseudo,
+    "api_demo/rna/sample_association",
+    continuous_cols=["sev.level"],
+    categorical_cols=["batch"],
+    n_permutations=999,
+)
+df = assoc["results"]["X_DR_sample"]
+print(df[["variable", "component", "r2", "perm_p", "fdr"]].sort_values("r2", ascending=False).head(6))
 ```
+
+**Writes** → `api_demo/rna/sample_association/variance_explained_sample.csv` (14 rows: 2 variables × 7 PCs), `figures/sample_variance_heatmap.pdf` and `figures/sample_top_associations.pdf`. Printed (about 9 s, 2.1 GB):
+
+```text
+     variable component        r2  perm_p       fdr
+13      batch       PC7  0.601255   0.022  0.196000
+0   sev.level       PC1  0.577817   0.028  0.196000
+4   sev.level       PC5  0.205550   0.383  0.945000
+10      batch       PC4  0.197458   0.193  0.900667
+3   sev.level       PC4  0.172404   0.299  0.945000
+7       batch       PC1  0.108850   0.454  0.945000
+```
+
+With 8 samples nothing survives FDR; severity loads mostly on PC1, and the batch residual on the last PC.

@@ -1,14 +1,14 @@
 # `visualization`
 
-Bundle of general-purpose diagnostic plots. Given the cell-level AnnData and the sample-level pseudobulk, it can emit three categories of figure (each individually toggleable):
+General diagnostic plots, each behind a flag:
 
-1. **Cell-type dendrogram** — hierarchical clustering of cell types based on their pseudobulk expression profiles.
-2. **Cell-type proportion PCA** — PCA of per-sample cell-type proportions with samples colored by a user-specified grouping column.
-3. **Cell-type expression UMAP** — UMAP of samples on the pseudobulk expression embedding.
+1. **Cell-type dendrogram** (`plot_dendrogram_flag`): the mean cell embedding of each cell type (`Z_comp`, else a legacy composition key, else `X_glue`), Euclidean distances, Ward linkage. The cell-type column is the first of `cell_type`, `celltype`, `cluster`, `leiden`, `seurat_clusters` found in `AnnData_cell.obs`.
+2. **"Proportion" scatter** (`plot_cell_type_proportions_pca_flag`): samples on PC1 vs PC2 of `X_DR_sample`, colored by each grouping column (`RdYlBu` colormap).
+3. **"Expression" scatter** (`plot_cell_type_expression_umap_flag`): the **same** PC1 vs PC2 scatter of `X_DR_sample`, `viridis` colormap. Despite the flag names, neither plot is a PCA of proportions or a UMAP of expression; both names survive from the old two-embedding layout.
 
-Supply one or more `grouping_columns` (and optionally `age_bin_size` for age-based faceting) to control how samples are colored.
+**Import:** `from sampledisco.visualization.visualization_other import visualization`
 
-**Source:** `visualization/visualization_other.py:73`
+**Source:** `visualization/visualization_other.py:71`
 
 ## Signature
 
@@ -31,41 +31,49 @@ def visualization(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `AnnData_cell` | AnnData | — | Cell-level AnnData carrying the cell-type labels. |
-| `pseudobulk_anndata` | AnnData | — | Sample-level pseudobulk with DR in `.obsm`. |
-| `output_dir` | str | — | Writes plots under a grouping-aware subdirectory of `{output_dir}/visualization/`. |
-| `grouping_columns` | list, optional | `None` | `.obs` columns used for sample coloring. Required for proportion PCA / expression UMAP plots. |
-| `age_bin_size` | int, optional | `None` | Optional age bin width; enables age-as-category coloring. |
-| `age_column` | str | `"age"` | Column holding sample age. |
+| `AnnData_cell` | AnnData | — | Cell-level AnnData (cell types and the cell embedding, for the dendrogram). |
+| `pseudobulk_anndata` | AnnData | — | Sample-level AnnData ([`build_sample_adata`](../shared/build_sample_adata.md)) with `X_DR_sample` and the grouping columns in `.obs`. |
+| `output_dir` | str | — | Output folder; see Output files for the `visualization/` subfolder rule. |
+| `grouping_columns` | list or None | `None` | `.obs` columns of `pseudobulk_anndata`, one scatter per column. Required (non-empty) for the two scatter flags. Missing columns raise `ValueError`. |
+| `age_bin_size` | int or None | `None` | Only adds `age_column` to the columns checked to exist; no binning is done. |
+| `age_column` | str | `"age"` | See `age_bin_size`. |
 | `verbose` | bool | `True` | Print progress. |
-| `plot_dendrogram_flag` | bool | `True` | Emit the cell-type dendrogram PNG. |
-| `plot_cell_type_proportions_pca_flag` | bool | `False` | Emit proportion PCAs per grouping column. |
-| `plot_cell_type_expression_umap_flag` | bool | `False` | Emit expression UMAPs per grouping column. |
+| `plot_dendrogram_flag` | bool | `True` | Write the dendrogram. |
+| `plot_cell_type_proportions_pca_flag` | bool | `False` | Write the `proportion_embedding_*` scatters. |
+| `plot_cell_type_expression_umap_flag` | bool | `False` | Write the `expression_embedding_*` scatters. |
 
 ## Returns
 
-`None`. Side effects only.
+`None`.
 
 ## Output files
 
-Under `{output_dir}/visualization/`:
+With `grouping_columns` set, the files go to `{output_dir}/visualization/`; with `grouping_columns=None`, directly to `{output_dir}/`.
 
 - `cell_type_dendrogram.png`
-- `proportion_embedding_{grouping_column}.png` (per flag)
-- `expression_embedding_{grouping_column}.png` (per flag)
+- `proportion_embedding_{column}.png`, one per grouping column
+- `expression_embedding_{column}.png`, one per grouping column
 
 ## Usage
 
+Continuing from the RNA chain:
+
 ```python
+import anndata as ad
+from sampledisco.sample_embedding.sample_embedding import build_sample_adata
 from sampledisco.visualization.visualization_other import visualization
 
+adata = ad.read_h5ad("api_demo/rna/preprocess/adata_preprocessed.h5ad")
+pseudo = build_sample_adata(adata, sample_col="sample")
+
 visualization(
-    AnnData_cell=adata_cell,
-    pseudobulk_anndata=pseudo_adata,
-    output_dir="sampledisco_demo_output/rna",
+    adata,
+    pseudo,
+    "api_demo/rna",
     grouping_columns=["sev.level"],
     plot_dendrogram_flag=True,
     plot_cell_type_proportions_pca_flag=True,
-    plot_cell_type_expression_umap_flag=False,
 )
 ```
+
+**Writes** → `api_demo/rna/visualization/cell_type_dendrogram.png` (8 cell types) and `api_demo/rna/visualization/proportion_embedding_sev.level.png`. About 2 s.

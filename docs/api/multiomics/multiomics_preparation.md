@@ -1,19 +1,21 @@
 # `multiomics_preparation`
 
-Full scGLUE integration pipeline for unpaired (or paired) scRNA + scATAC data. Internally runs five sub-stages, each individually toggleable via `run_preprocessing`, `run_training`, `run_merge`, `run_preprocess_per_modality`, `run_visualization`:
+The scGLUE stage of the multi-omics pipeline, for unpaired scRNA + scATAC data. It runs up to five sub-stages, each switched by a flag:
 
-1. **scGLUE preprocessing** — reads both modalities, merges sample metadata, selects HVGs on RNA, runs LSI on ATAC, and builds a gene-region guidance graph from an Ensembl GTF.
-2. **Adversarial scGLUE training** — fits the joint embedding with a consistency-regularized adversarial loss. The primary run produces the sample-preserved embedding (the paper's `Z_rmd`). With `run_second_glue_for_sample_removal=True`, a second run with `treat_sample_as_batch=True` produces the sample-removed embedding (`Z_comp`).
-3. **Cell-union merge** — builds an embedding-only union AnnData (`preprocess/adata_sample.h5ad`) carrying `obsm['Z_rmd']` (primary `X_glue`, aliased) and, when the second run is enabled, `obsm['Z_comp']`. No expression matrix is stored — see `multi_omics_merge.py`.
-4. **Per-modality preprocess** — per-modality QC + normalize (RNA) and QC + TF-IDF (ATAC), writing `preprocess/adata_rna_preprocessed.h5ad` and `preprocess/adata_atac_preprocessed.h5ad` for downstream DGE / RAISIN.
-5. **Visualization (optional)** — UMAPs/scatter on the joint space, colored by modality or user-specified columns.
+1. **`run_preprocessing`**: reads both files, merges optional sample metadata, selects RNA HVGs and top ATAC peaks, runs PCA (RNA) and LSI (ATAC), and builds the gene–peak guidance graph from an Ensembl GTF (downloaded for `ensembl_release` / `species`). Needs `bedtools` on `PATH`.
+2. **`run_training`**: trains scGLUE. The primary run gives `obsm['X_glue']`, which keeps per-sample variance (the sample-preserved view, `Z_rmd`). With `run_second_glue_for_sample_removal=True`, a second run with the sample as scGLUE batch gives the sample-removed view; both are then written into the primary per-modality files as `obsm['Z_rmd']` and `obsm['Z_comp']`. After training, a consistency score is computed and the log prints `RELIABLE` or `UNRELIABLE` against `consistency_threshold`; nothing else depends on it.
+3. **`run_merge`**: builds the **embedding-only union** `preprocess/adata_sample.h5ad`: all RNA and ATAC cells, `obs['modality']`, `obs['original_barcode']`, cell ids suffixed `_RNA` / `_ATAC`, an empty `X`, and the embeddings present in both files (`X_glue`, plus `Z_comp` / `Z_clust` / `Z_rmd` after a second run, and `X_umap` if present). This is done by `build_embedding_union` in `preparation/multi_omics_merge.py`.
+4. **`run_preprocess_per_modality`**: per-modality QC and normalization (RNA: the [RNA preprocess](../rna/preprocess_linux.md) filters + normalize/log1p; ATAC: the [ATAC](../atac/preprocess_linux.md) filters + TF-IDF), written to `preprocess/adata_rna_preprocessed.h5ad` and `preprocess/adata_atac_preprocessed.h5ad`. Trajectory DGE and RAISIN read the RNA file.
+5. **`run_visualization`**: UMAP plots of the union under `{output_dir}/visualization/`, colored by `plot_columns`.
 
-The returned object is the merged union AnnData with the integrated embedding in `.obsm`, ready for [`cell_types_multiomics`](cell_types_multiomics_linux.md). The single sample embedding for downstream analysis is produced later by `compute_sample_embedding` and stored in `uns['X_DR_sample']`.
+Without a second scGLUE run the union has only `X_glue`; the wrapper then derives `Z_comp` with [`harmonize_xglue`](harmonize_xglue.md) (which also aliases `X_glue` as `Z_rmd`). The returned union is the input to [`cell_types_multiomics`](cell_types_multiomics_linux.md).
+
+**Import:** `from sampledisco.preparation.multi_omics_glue import multiomics_preparation` (needs `scglue`; importing the module fails without it).
+
+**Source:** `preparation/multi_omics_glue.py:838`
 
 !!! note "Gene-activity step removed"
-    Earlier versions ran a fourth sub-stage that imputed per-cell gene activity by KNN on the joint embedding. That step has been removed; the union is now built directly from the per-modality scGLUE embeddings (`build_embedding_union`). The old `run_gene_activity`, `k_neighbors`, `use_rep`, `metric`, and `use_gpu` arguments no longer exist.
-
-**Source:** `preparation/multi_omics_glue.py:801`
+    Earlier versions imputed per-cell gene activity for ATAC cells by KNN on the joint embedding. That step is gone; the old `run_gene_activity`, `k_neighbors`, `use_rep`, `metric` and `use_gpu` arguments no longer exist.
 
 ## Signature
 
@@ -84,78 +86,49 @@ def multiomics_preparation(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `rna_file`, `atac_file` | str | — | Input `.h5ad` files. |
-| `rna_sample_meta_file`, `atac_sample_meta_file` | str, optional | `None` | Per-modality sample metadata CSVs. |
-| `additional_hvg_file` | str, optional | `None` | Plain-text list of extra HVGs forced into the RNA HVG set. |
-| `run_preprocessing` / `_training` / `_merge` / `_preprocess_per_modality` / `_visualization` | bool | `True` | Toggle individual sub-stages. |
-| `ensembl_release` | int | `98` | Ensembl release used for GTF retrieval. |
-| `species` | str | `"homo_sapiens"` | Species key matching Ensembl. |
-| `use_highly_variable` | bool | `True` | Restrict scGLUE training to HVGs. |
-| `n_top_genes` | int | `2000` | HVG count for RNA. |
-| `n_top_peaks` | int | `50000` | Top peak count for ATAC. |
-| `atac_min_cells_floor` | int | `10` | Floor on the per-feature min-cells filter for ATAC. |
-| `n_pca_comps` / `n_lsi_comps` | int | `50 / 50` | Components for RNA PCA and ATAC LSI. |
-| `gtf_by` | str | `"gene_name"` | Gene identifier column used in the GTF. |
-| `flavor` | str | `"seurat_v3"` | HVG selection flavor. |
-| `generate_umap` | bool | `False` | UMAP after preprocessing only. |
-| `rna_sample_column` / `atac_sample_column` | str | `"sample"` | Sample columns in each modality. |
-| `consistency_threshold` | float | `0.05` | scGLUE consistency loss weight threshold. |
-| `treat_sample_as_batch` | bool | `False` | If `True`, each sample becomes its own batch during training (removes per-sample variance). Default `False` preserves per-sample variance for the primary (RMD) embedding. |
-| `save_prefix` | str | `"glue"` | Prefix for saved model and integrated files. |
-| `batch_key` | str, optional | `None` | Batch column for `scglue.configure_dataset(use_batch=...)`. With `batch_key` set and `treat_sample_as_batch=False`, scGLUE removes the named batch column while preserving per-sample variance, so the primary `X_glue` is suitable as the `Z_rmd` embedding. |
-| `sample_key` | str | `"sample"` | Sample identifier column used by training and the union merge. |
+| `rna_file`, `atac_file` | str | — | Input `.h5ad` files (raw counts). |
+| `rna_sample_meta_file`, `atac_sample_meta_file` | str or None | `None` | Per-modality sample metadata CSVs. |
+| `additional_hvg_file` | str or None | `None` | Plain-text list of genes added to the RNA HVG set. |
+| `run_preprocessing` / `run_training` / `run_merge` / `run_preprocess_per_modality` / `run_visualization` | bool | `True` | Sub-stage switches (see above). Without `run_merge`, an existing `preprocess/adata_sample.h5ad` is read and returned. |
+| `ensembl_release` | int | `98` | Ensembl release for the GTF. |
+| `species` | str | `"homo_sapiens"` | Ensembl species name. |
+| `use_highly_variable` | bool | `True` | Train scGLUE on HVGs / top peaks only. |
+| `n_top_genes` / `n_top_peaks` | int | `2000` / `50000` | RNA HVGs and ATAC peaks for training. |
+| `atac_min_cells_floor` | int | `10` | Floor on the per-peak min-cells filter in the scGLUE preprocessing. |
+| `n_pca_comps` / `n_lsi_comps` | int | `50` / `50` | RNA PCA and ATAC LSI components. |
+| `gtf_by` | str | `"gene_name"` | GTF attribute matched to the RNA gene names. |
+| `flavor` | str | `"seurat_v3"` | HVG flavor. |
+| `generate_umap` | bool | `False` | UMAPs during the scGLUE preprocessing. |
+| `rna_sample_column` / `atac_sample_column` | str | `"sample"` | Sample columns per modality. |
+| `consistency_threshold` | float | `0.05` | Threshold for the post-training consistency check (log only). |
+| `treat_sample_as_batch` | bool | `False` | Use the sample as scGLUE batch in the primary run (removes per-sample variance from `X_glue`; not what the pipeline wants for `Z_rmd`). |
+| `save_prefix` | str | `"glue"` | Prefix of the primary run's files. |
+| `batch_key` | str or None | `None` | scGLUE batch column (`use_batch`) for the primary run; removes that batch while keeping per-sample variance. Wrapper key: `multiomics_batch_col`. |
+| `sample_key` | str | `"sample"` | Sample column for training and the union. |
 | `data_batch_size` | int | `1024` | scGLUE minibatch size. |
-| `max_epochs` | int, optional | `None` | Cap on scGLUE training epochs (`None` = scGLUE default). |
-| `dataloader_num_workers` / `dataloader_fetches_per_worker` / `array_shuffle_num_workers` / `graph_shuffle_num_workers` | int | `0 / 4 / 0 / 0` | scGLUE dataloader throughput knobs. |
-| `run_second_glue_for_sample_removal` | bool | `False` | If `True`, run scGLUE a second time with `treat_sample_as_batch=True` to produce the sample-removed `Z_comp`, then merge both keys into the primary RNA + ATAC h5ads. |
-| `second_run_save_prefix` | str | `"glue_no_sample"` | File prefix for the optional second (sample-removal) run. |
-| `rna_min_cells` / `rna_min_genes` | int | `500 / 500` | RNA QC filters for the per-modality downstream preprocess. |
-| `rna_pct_mito_cutoff` | float | `20.0` | RNA mitochondrial-percent cutoff. |
-| `rna_exclude_genes` | list, optional | `None` | RNA genes to drop. |
-| `atac_min_cells` | int | `1` | ATAC per-feature min-cells filter. |
-| `atac_min_features` / `atac_max_features` | int | `2000 / 15000` | ATAC per-cell feature-count bounds. |
-| `atac_min_cells_per_sample` | int | `1` | Minimum cells required per sample for ATAC. |
-| `atac_exclude_features` | list, optional | `None` | ATAC features to drop. |
-| `atac_doublet_detection` | bool | `True` | Run doublet detection on ATAC. |
-| `atac_tfidf_scale_factor` | float | `1e4` | TF-IDF scale factor for ATAC. |
-| `atac_log_transform` | bool | `True` | Log-transform ATAC after TF-IDF. |
+| `max_epochs` | int or None | `None` | Cap on training epochs (`None`: scGLUE's default). |
+| `dataloader_num_workers` / `dataloader_fetches_per_worker` / `array_shuffle_num_workers` / `graph_shuffle_num_workers` | int | `0` / `4` / `0` / `0` | scGLUE data-loading workers. The wrapper's defaults are higher (`4` / `8` / `4` / `4`). |
+| `run_second_glue_for_sample_removal` | bool | `False` | Train a second scGLUE model with the sample as batch and store its embedding as `Z_comp`. Wrapper key: `multiomics_run_glue_twice_for_sample_removal`. |
+| `second_run_save_prefix` | str | `"glue_no_sample"` | Prefix of the second run's files. |
+| `rna_min_cells` … `atac_log_transform` | | as in the preprocess functions | QC for the per-modality files (sub-stage 4); same meaning as in the [RNA](../rna/preprocess_linux.md) and [ATAC](../atac/preprocess_linux.md) `preprocess`. |
 | `verbose` | bool | `True` | Print progress. |
-| `plot_columns` | list, optional | `None` | `.obs` columns to color UMAPs by during the visualization sub-stage. |
-| `output_dir` | str | `"./glue_results"` | Writes scGLUE artifacts under `{output_dir}/integration/glue/` and union/per-modality outputs under `{output_dir}/preprocess/`. |
+| `plot_columns` | list or None | `None` | `.obs` columns to color the sub-stage 5 UMAPs by. |
+| `output_dir` | str | `"./glue_results"` | Root output directory. |
 
 ## Returns
 
-The merged union AnnData, with the integrated embedding in `.obsm` (`Z_rmd`, and `Z_comp` when the second run is enabled) and modality metadata populated. Returns `None` only if `run_merge=False` and no existing `preprocess/adata_sample.h5ad` is found.
+The union `AnnData` from sub-stage 3 (or read from `preprocess/adata_sample.h5ad` when `run_merge=False`); `None` if `run_merge=False` and that file does not exist.
 
 ## Output files
 
-- `{output_dir}/integration/glue/` — preprocessing artifacts, trained model(s), per-modality scGLUE embeddings.
-- `{output_dir}/preprocess/adata_sample.h5ad` — canonical embedding-only union object picked up by downstream stages.
-- `{output_dir}/preprocess/adata_rna_preprocessed.h5ad`, `{output_dir}/preprocess/adata_atac_preprocessed.h5ad` — per-modality QC'd objects for downstream DGE / RAISIN.
+- `{output_dir}/integration/glue/`: scGLUE preprocessing files, trained model(s) (`{save_prefix}.dill`), per-modality embeddings (`{save_prefix}-rna-emb.h5ad`, `{save_prefix}-atac-emb.h5ad`), the guidance graph, and the same for `second_run_save_prefix` when enabled.
+- `{output_dir}/preprocess/adata_sample.h5ad`: the embedding-only union.
+- `{output_dir}/preprocess/adata_rna_preprocessed.h5ad`, `adata_atac_preprocessed.h5ad`: per-modality files for DGE / RAISIN.
+- `{output_dir}/visualization/`: sub-stage 5 plots.
 
 ## Usage
 
-```python
-from sampledisco.preparation.multi_omics_glue import multiomics_preparation
-
-multiomics_preparation(
-    rna_file="data/test_RNA.h5ad",
-    atac_file="data/test_ATAC.h5ad",
-    additional_hvg_file=None,
-    output_dir="sampledisco_demo_output/multiomics",
-    ensembl_release=98,
-    species="homo_sapiens",
-    consistency_threshold=0.05,
-    treat_sample_as_batch=False,
-    run_second_glue_for_sample_removal=True,
-)
-```
+scGLUE training on the demo takes long enough that this page does not run it. [Multi-omics from a config](../../tutorials/multiomics_config.md) and the [multi-omics tutorial](../../tutorials/multiomics.md) run it, with measured runtimes; the config keys are listed in the [config key reference](../../tutorials/config_reference.md) (`multiomics_run_glue_*`, `multiomics_n_top_genes`, …). To skip scGLUE, start from the pre-integrated demo file as in the [multi-omics example chain](../index.md#running-the-examples).
 
 !!! tip "Prefer the config-driven wrapper"
-    In practice you rarely call `multiomics_preparation` directly. The supported entry point is the YAML-config wrapper, which runs preprocessing → cell embedding → cell typing → sample embedding → downstream analysis for you:
-
-    ```bash
-    sampledisco -m complex --config config.yaml
-    ```
-
-    scGLUE and `pybedtools` require the `bedtools` binary (`conda install -c bioconda bedtools`). GPU paths activate automatically when the RAPIDS stack is importable.
+    With `run_multiomics_pipeline: true`, the wrapper runs this function, then [`harmonize_xglue`](harmonize_xglue.md), [`cell_types_multiomics`](cell_types_multiomics_linux.md), the sample embedding and the downstream steps. scGLUE needs the `bedtools` binary (`conda install -c bioconda bedtools`).

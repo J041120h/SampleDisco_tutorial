@@ -1,12 +1,15 @@
 # `visualize_multimodal_embedding`
 
-Flexible scatter-plot visualization of the multi-omics sample embeddings. When called with `show_default=True` (the default), renders side-by-side plots of the single-key sample embedding `X_DR_sample` with every sample visible. When `modality_col`, `color_col`, and `target_modality` are all provided, highlights one modality and colors by an arbitrary `.obs` column. `visualization_grouping_column` fans out additional colored panels — one per column — on top of whatever base layout you requested.
+Scatter plots (first two PCs) of the multi-omics sample embedding, one point per `<sample>_<modality>` unit. It has two modes:
 
-The `expression_key` / `proportion_key` arguments survive for backward compatibility but now both default to the same single key, `X_DR_sample` (the unified sample embedding produced by `compute_sample_embedding`); the two-key `X_DR_expression` / `X_DR_proportion` layout no longer exists.
+- **Default mode**, used when `show_default=True` (the default) or when `modality_col`, `color_col` and `target_modality` are all `None`. Without `visualization_grouping_column`, all units are drawn in one color. With `visualization_grouping_column`, the plain plots are **replaced** by one set of plots per column, colored by that column (categorical or numeric, detected automatically).
+- **Modality mode**, used only with `show_default=False` and all three of `modality_col`, `color_col`, `target_modality`: units of `target_modality` are colored by `color_col`, the other modality is drawn in grey. `visualization_grouping_column` is not used here.
+
+`expression_key` and `proportion_key` are leftovers of the old two-embedding layout. Both default to `X_DR_sample`, so the "Expression" and "Proportion" panels show the **same** embedding and differ only in title. The key is looked up in `.obsm` first, then `.uns`.
 
 **Import:** `from sampledisco.visualization.multi_omics_visualization import visualize_multimodal_embedding`
 
-**Source:** `sampledisco/visualization/multi_omics_visualization.py:512`
+**Source:** `visualization/multi_omics_visualization.py:512`
 
 ## Signature
 
@@ -36,56 +39,71 @@ def visualize_multimodal_embedding(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `adata` | AnnData | — | Sample-level AnnData with the sample embedding in `.obsm` or `.uns` (`X_DR_sample`). |
-| `modality_col` | str, optional | `None` | `.obs` column marking modality (required for modality-specific plots). |
-| `color_col` | str, optional | `None` | `.obs` column for point coloring (required when not using default plot). |
-| `target_modality` | str, optional | `None` | Which modality to highlight in modality-specific plots. |
-| `expression_key` | str | `"X_DR_sample"` | Key in `.obsm`/`.uns` for the "Expression" panel. Back-compat alias — now the single sample-embedding key. |
-| `proportion_key` | str | `"X_DR_sample"` | Key in `.obsm`/`.uns` for the "Proportion" panel. Back-compat alias — now the same single key. |
-| `figsize` | tuple | `(20, 8)` | Matplotlib figure size. |
-| `point_size` | int | `60` | Scatter marker size. |
-| `alpha` | float | `0.8` | Marker opacity. |
-| `colormap` | str | `"viridis"` | Colormap for numerical `color_col` values. |
-| `categorical_cmap` | str | `"tab10"` | Colormap for categorical `color_col` values. |
-| `output_dir` | str, optional | `None` | File or directory. Each generated panel is saved under a descriptive filename. |
-| `show_sample_names` | bool | `False` | Overlay sample IDs — best left off unless you have few samples. |
-| `force_data_type` | `"numerical"` / `"categorical"` / `None` | `None` | Override the auto-detection for `color_col`. |
-| `show_default` | bool | `True` | Always produce the default side-by-side view without requiring modality args. |
+| `adata` | AnnData | — | Sample-level AnnData of the units, e.g. [`build_sample_adata(mo, modality_col="modality")`](../shared/build_sample_adata.md). |
+| `modality_col` | str or None | `None` | Modality column (modality mode). |
+| `color_col` | str or None | `None` | Column to color `target_modality` by (modality mode). |
+| `target_modality` | str or None | `None` | Modality to highlight (modality mode). |
+| `expression_key`, `proportion_key` | str | `"X_DR_sample"` | Embedding keys of the two panels; leave both at the default. |
+| `figsize` | tuple | `(20, 8)` | Size of side-by-side figures. |
+| `point_size`, `alpha` | int, float | `60`, `0.8` | Marker size and opacity. |
+| `colormap` | str | `"viridis"` | Colormap for numeric colors. |
+| `categorical_cmap` | str | `"tab10"` | Colormap for categorical colors (default mode). |
+| `output_dir` | str or None | `None` | A **folder** (an existing directory or a path without extension) becomes `{output_dir}/visualization/`; a path with an extension is used as a file name base. `None`: nothing is saved and figures are returned. |
+| `show_sample_names` | bool | `False` | Write unit ids next to the points. |
+| `force_data_type` | str or None | `None` | `"numerical"` or `"categorical"` to override the detection. |
+| `show_default` | bool | `True` | Default mode; set `False` for modality mode. |
 | `verbose` | bool | `True` | Print progress. |
-| `visualization_grouping_column` | list, optional | `None` | Extra `.obs` columns; generates one colored panel per entry. |
+| `visualization_grouping_column` | str, list or None | `None` | Default mode: one set of colored plots per column. Missing columns raise `ValueError`. |
 
 ## Returns
 
-`Tuple[matplotlib.figure.Figure, numpy.ndarray]` — the figure and axes array when the plots are rendered, `None` when saved separately.
+With a folder `output_dir`: `(None, None)`. Without `output_dir`: `(fig, axes)`; in default mode with several grouping columns, a dict `{column: (fig, axes)}`.
 
 ## Output files
 
-Under `{output_dir}/`:
+With `output_dir` a folder, under `{output_dir}/visualization/`:
 
-- `all_samples_expression.png`, `all_samples_proportion.png` — default panel pair (both drawn from the single `X_DR_sample` key).
-- `all_samples_combined.png` — default side-by-side combined panel.
-- `all_samples_expression_by_{col}.png`, `all_samples_proportion_by_{col}.png` — per grouping column.
-- `all_samples_combined_by_{col}.png` — combined side-by-side with shared colorbar.
-- `{target_modality}_modality_split_by_{col}.png` — modality-specific view when all of `modality_col`, `color_col`, `target_modality` are supplied.
+| Mode | Files |
+| --- | --- |
+| default, no grouping columns | `all_samples_expression.png`, `all_samples_proportion.png` |
+| default, with grouping columns | per column: `all_samples_expression_by_{col}.png`, `all_samples_proportion_by_{col}.png`, `all_samples_combined_by_{col}.png` |
+| modality mode | `{target_modality}_{color_col}_expression.png`, `{target_modality}_{color_col}_proportion.png` |
 
 ## Usage
 
+Last step of the multi-omics chain (after [`save_embedding_to_h5ad`](../shared/save_embedding_to_h5ad.md) stored the embedding in the union file):
+
 ```python
+import anndata as ad
+from sampledisco.sample_embedding.sample_embedding import build_sample_adata
 from sampledisco.visualization.multi_omics_visualization import visualize_multimodal_embedding
 
+mo = ad.read_h5ad("api_demo/multiomics/preprocess/adata_sample.h5ad")
+pseudo_mo = build_sample_adata(mo, sample_col="sample", modality_col="modality")
+
+# default mode, colored by severity and by modality
 visualize_multimodal_embedding(
-    adata=pseudo_adata,
+    pseudo_mo,
+    visualization_grouping_column=["sev.level", "modality"],
+    output_dir="api_demo/multiomics",
+)
+# modality mode: ATAC units colored by severity, RNA units in grey
+visualize_multimodal_embedding(
+    pseudo_mo,
     modality_col="modality",
+    color_col="sev.level",
     target_modality="ATAC",
-    color_col=None,
-    expression_key="X_DR_sample",
-    proportion_key="X_DR_sample",
-    visualization_grouping_column=["sev.level"],
-    figsize=(20, 8),
-    point_size=60,
-    alpha=0.8,
-    colormap="viridis",
-    output_dir="sampledisco_demo_output/multiomics/visualization",
-    show_default=True,
+    show_default=False,
+    output_dir="api_demo/multiomics",
 )
 ```
+
+**Writes** → under `api_demo/multiomics/visualization/` (about 3 s in total):
+
+- default mode: `all_samples_expression_by_sev.level.png`, `all_samples_proportion_by_sev.level.png`, `all_samples_combined_by_sev.level.png`, and the same three `*_by_modality.png`;
+- modality mode: `ATAC_sev.level_expression.png`, `ATAC_sev.level_proportion.png`.
+
+`sev.level` is detected as numeric (2 values) and `modality` as categorical. Both calls return `(None, None)` because `output_dir` is set.
+
+!!! note "Wrapper behaviour"
+    `downstream_analysis` (and so the wrapper, with `multiomics_visualize_embedding: true`) calls this function without `show_default`, i.e. in default mode, with `output_dir=<multiomics output dir>` and `visualization_grouping_column=multiomics_visualization_grouping_column`. The keys `multiomics_color_col` and `multiomics_target_modality` are passed but have no effect there.
