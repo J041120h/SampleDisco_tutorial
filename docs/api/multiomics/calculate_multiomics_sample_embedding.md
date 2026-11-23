@@ -4,7 +4,7 @@ There is no separate multi-omics function: the shared [`compute_sample_embedding
 
 **Import:** `from sampledisco.sample_embedding import compute_sample_embedding`
 
-**Source:** `sample_embedding/__init__.py:23` (CPU/GPU dispatcher) → `sample_embedding/sample_embedding.py:143` (CPU) or `sample_embedding/sample_embedding_gpu.py:162` (GPU).
+**Source:** `sample_embedding/__init__.py:23` (CPU/GPU dispatcher) → `sample_embedding/sample_embedding.py:162` (CPU) or `sample_embedding/sample_embedding_gpu.py:164` (GPU).
 
 !!! warning "Renamed and unified"
     The old `calculate_multiomics_sample_embedding` and its two-key output (`X_DR_expression`, `X_DR_proportion`) are gone. The current function writes one key, `uns['X_DR_sample']`.

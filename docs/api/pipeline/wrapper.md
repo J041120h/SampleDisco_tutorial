@@ -7,10 +7,9 @@ Runs the whole pipeline for RNA, ATAC and/or multi-omics from keyword arguments.
 
 **Import:** `from sampledisco.wrapper.wrapper import wrapper`
 
-**Source:** `wrapper/wrapper.py:538`
+**Source:** `wrapper/wrapper.py:586`
 
-!!! warning "Import it from `sampledisco.wrapper.wrapper`"
-    On 0.5.0, `from sampledisco import wrapper` gives the `sampledisco.wrapper` subpackage, which is not callable (`TypeError: 'module' object is not callable`). In 0.6.0 that subpackage is callable, so `sampledisco.wrapper(**cfg)` runs the pipeline, and `sampledisco.wrapper.wrapper.wrapper` is still this function. `from sampledisco.wrapper.wrapper import wrapper` works on both.
+`from sampledisco import wrapper` also works: it gives a callable package, so `sampledisco.wrapper(**cfg)` runs the pipeline. (On 0.5.0 it gave a non-callable module; the spelling above works on every release.)
 
 ## Signature (abridged)
 
@@ -53,7 +52,7 @@ def wrapper(
 | `continue_on_error` | `False` | `False`: an exception in a modality is re-raised. `True`: it is recorded as `results['<modality>_error']` and the next modality runs. |
 | `random_state` | `42` | Seed for the RNA/ATAC sample embedding and for RAISIN (all modalities). The multi-omics `harmonize_xglue` step uses `multiomics_random_state` instead. |
 
-Required per modality: `rna_count_data_path` for RNA and `atac_count_data_path` for ATAC (both even when resuming with `*_preprocessing: false`); `multiomics_rna_file` and `multiomics_atac_file` for multi-omics (also when `multiomics_integration: false`).
+Required per modality: `rna_count_data_path` for RNA and `atac_count_data_path` for ATAC (both even when resuming with `*_preprocessing: false`); `multiomics_rna_file` and `multiomics_atac_file` for multi-omics with `multiomics_integration: true` (not needed when starting from a pre-integrated file).
 
 ## Returns
 
@@ -63,7 +62,7 @@ A `dict`:
 | --- | --- |
 | `status_flags` | `{"rna": {...}, "atac": {...}, "multiomics": {...}, "system_info": {...}}`: which steps completed. |
 | `system_info` | `platform`, `python_version`, `use_gpu`, `gpu_available` (whether the GPU path was actually enabled). |
-| `rna_results` / `atac_results` / `multiomics_results` | For each modality that ran: `adata` (the cell-level AnnData, or the multi-omics union, with `uns['X_DR_sample']`), `pseudo_adata` (the sample-level AnnData from `build_sample_adata`, or `None` if no embedding was derived) and `status_flags`. In 0.6.0, `rna_results` / `atac_results` also hold `celltype_col`: the cell-type column the embedding and downstream steps used (`"cell_type"` after cell typing). |
+| `rna_results` / `atac_results` / `multiomics_results` | For each modality that ran: `adata` (the cell-level AnnData, or the multi-omics union, with `uns['X_DR_sample']`), `pseudo_adata` (the sample-level AnnData from `build_sample_adata`, or `None` if no embedding was derived) and `status_flags`. `rna_results` / `atac_results` also hold `celltype_col`: the cell-type column the embedding and downstream steps used (`"cell_type"` after cell typing). |
 | `rna_error` / `atac_error` / `multiomics_error` | Only with `continue_on_error=True` and a failure: the error message. |
 
 ## Output files
@@ -102,14 +101,14 @@ print(results["rna_results"]["pseudo_adata"])
 - `rna/Sample_distance/cosine/` and `rna/Sample_distance/correlation/` (the default methods), five files each
 - `rna/sample_cluster/kmeans_clusters_sample.csv`, `kmeans_sample_embedding.png`
 
-The input file is only read. Printed at the end (about 18 s in total, 3.4 GB):
+The input file is only read. Printed at the end (20–45 s in total, 3.0 GB):
 
 ```text
-Total execution time: 18.19 seconds (0.30 minutes)
+Total execution time: 42.95 seconds (0.72 minutes)
 ['rna_results', 'status_flags', 'system_info']
 ['adata', 'celltype_col', 'pseudo_adata', 'status_flags']
 AnnData object with n_obs × n_vars = 8 × 7
-    obs: 'celltype', 'sample', 'old', 'large', 'batch', 'sev.level', 'n_genes', 'n_genes_by_counts', 'total_counts', 'total_counts_mt', 'pct_counts_mt', 'cell_type', 'cell_type_original', 'cluster_sample_kmeans'
+    obs: 'sample', 'batch', 'sev.level', 'cluster_sample_kmeans'
     uns: 'X_DR_sample', 'sample_embedding_params'
     obsm: 'X_DR_sample'
 ```

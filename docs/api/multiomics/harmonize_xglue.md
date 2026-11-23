@@ -42,7 +42,7 @@ def harmonize_xglue(
 | `batch_col` | str or None | `None` | Optional batch column, added as a covariate when it has at least 2 levels. Wrapper key: `multiomics_batch_col`. |
 | `in_key` | str | `"X_glue"` | Input `.obsm` key (the sample-preserved embedding). |
 | `out_key` | str | `"Z_comp"` | Output `.obsm` key. |
-| `use_gpu` | bool | `False` | Passed to harmony-pytorch (ignored by the harmonypy fallback). |
+| `use_gpu` | bool | `False` | Passed to [`harmonize_embedding`](../utils/harmonize_embedding.md) (Harmony on the GPU). |
 | `max_iter` | int | `50` | Maximum Harmony iterations. Wrapper key: `multiomics_harmonize_xglue_max_iter`. |
 | `random_state` | int | `0` | Harmony seed. |
 | `verbose` | bool | `True` | Print progress. |

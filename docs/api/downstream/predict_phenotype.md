@@ -1,6 +1,6 @@
 # `predict_phenotype`
 
-Out-of-fold prediction of a sample phenotype from the first `n_pcs` PCs of `X_DR_sample` (0.5.0+). The standardized PCs feed an L2 logistic regression (binary or multiclass) or, with `task="regression"`, a ridge regression. In each outer training split, an inner 3-fold grouped cross-validation picks the penalty (scored by AUC for two classes, balanced accuracy for more, R² for regression; ties go to the weakest penalty). The outer split has `n_splits` folds and is seeded by `random_state`; for classification it is stratified by class. With `group_col` (e.g. a donor), all samples of a group stay in the same fold, outer and inner, so no donor is in training and test at once. Samples with a missing label are left out.
+Out-of-fold prediction of a sample phenotype from the first `n_pcs` PCs of `X_DR_sample`. The standardized PCs feed an L2 logistic regression (binary or multiclass) or, with `task="regression"`, a ridge regression. In each outer training split, an inner 3-fold grouped cross-validation picks the penalty (scored by AUC for two classes, balanced accuracy for more, R² for regression; ties go to the weakest penalty). The outer split has `n_splits` folds and is seeded by `random_state`; for classification it is stratified by class. With `group_col` (e.g. a donor), all samples of a group stay in the same fold, outer and inner, so no donor is in training and test at once. Samples with a missing label are left out.
 
 **Import:** `from sampledisco import predict_phenotype` (or `from sampledisco.sample_prediction import predict_phenotype`)
 
@@ -78,4 +78,4 @@ HD-4-Wilk        1         4    0.25    0.75     2
 With `sev.level` values 1 and 4, class `4` is the positive class for the AUC. Below chance here; an earlier run on another node gave AUC 0.5. Six training samples per fold are not enough to learn anything stable.
 
 !!! warning "Eight samples"
-    With 8 samples each test fold holds 2, so AUC and accuracy jump in steps and change with `random_state`. The [prediction tutorial](../../tutorials/downstream/prediction.md) and the [Sound Life walkthrough](../../tutorials/soundlife_rna.md) show it on 32 donors.
+    With 8 samples each test fold holds 2, so AUC and accuracy jump in steps and change with `random_state`. See [Prediction and label transfer](../../tutorials/downstream/index.md#prediction) and [`group_col` and `score_by`](../../tutorials/downstream_details.md#prediction).

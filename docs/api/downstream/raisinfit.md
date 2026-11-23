@@ -2,11 +2,11 @@
 
 Python port of the RAISIN hierarchical model for differential expression between groups of samples, from single-cell data. For each gene it estimates the per-sample means and two variance components: between samples within a group (`sigma2`) and between cells within a sample (`omega2`), with empirical-Bayes shrinkage. With `batch_col`, ComBat is applied first (preserving the group effect). The returned fit is tested with [`run_pairwise_tests`](run_pairwise_tests.md). Designs: `"unpaired"` (groups of samples), `"paired"` (with `individual_col`), `"continuous"` and `"custom"`.
 
-Expression is read from `adata.raw.X` when present, otherwise from `adata.X` (log-normalized after SampleDisco preprocessing), densified to genes × cells, so memory grows with genes × cells.
+Expression is read from `adata.raw.X` when present, otherwise from `adata.X` (log-normalized after SampleDisco preprocessing). With `batch_col`, ComBat corrects that same matrix (the `.raw` genes when `.raw` exists), and the model is fitted on the corrected values. The matrix is densified to genes × cells for the fit, so memory grows with genes × cells.
 
 **Import:** `from sampledisco.sample_clustering.RAISIN import raisinfit`
 
-**Source:** `sample_clustering/RAISIN.py:209`
+**Source:** `sample_clustering/RAISIN.py:219`
 
 ## Signature
 
@@ -46,7 +46,7 @@ def raisinfit(
 | `filtergene` | bool | `False` | Drop lowly expressed genes first. |
 | `filtergenequantile` | float | `0.5` | Quantile used by `filtergene`. |
 | `max_features` | int or None | `None` | Keep only the most variable genes, to bound memory. |
-| `n_jobs` | int or None | `None` | Processes; `None` or `-1` = the CPUs available to the process (its CPU-affinity mask; in 0.6.0 also capped at `SLURM_CPUS_PER_TASK` when set). |
+| `n_jobs` | int or None | `None` | Processes; `None` or `-1` = the CPUs available to the process (its CPU-affinity mask, capped at `SLURM_CPUS_PER_TASK` when set). |
 | `verbose` | bool | `True` | Print progress. |
 | `seed` | int | `42` | Random seed. |
 
@@ -61,7 +61,7 @@ def raisinfit(
 | `"omega2"` | genes × samples, within-sample (cell-level) variance |
 | `"X"`, `"Z"` | fixed- and random-effect design matrices |
 | `"group"` | variance group of each random effect |
-| `"failgroup"` | groups whose variance could not be estimated (no residual degrees of freedom, e.g. a group with a single sample); their variance is set to 0, and in 0.6.0 `run_pairwise_tests` skips every contrast that uses them |
+| `"failgroup"` | groups whose variance could not be estimated (no residual degrees of freedom, e.g. a group with a single sample); their variance is set to 0, and `run_pairwise_tests` skips every contrast that uses them |
 | `"eb_fallback"` | per group, genes whose shrunken variance was not finite and was set to 1 (as in R) |
 | `"sample_names"` | sample order |
 | `"batch_corrected"` | whether ComBat ran |

@@ -9,7 +9,7 @@ Raw counts are kept in `.layers['counts']`. The result is written to `{output_di
 
 **Import:** `from sampledisco.preparation.rna_preprocess_cpu import preprocess`
 
-**Source:** `preparation/rna_preprocess_cpu.py:170`. GPU variant: `preprocess_gpu` in `preparation/rna_preprocess_gpu.py:168`.
+**Source:** `preparation/rna_preprocess_cpu.py:175`. GPU variant: `preprocess_gpu` in `preparation/rna_preprocess_gpu.py:168`.
 
 ## Signature
 
@@ -103,7 +103,7 @@ AnnData object with n_obs × n_vars = 29680 × 9936
 45–55 s and 2.9 GB peak RAM on 8 CPU cores (two runs).
 
 !!! note "GPU"
-    The GPU variant runs only when you ask for it: call `preprocess_gpu` yourself, or set `use_gpu: true` in the wrapper config (the wrapper falls back to this CPU function if the RAPIDS modules do not import). Having RAPIDS installed is not enough. `preprocess_gpu` takes the same arguments, but `cell_meta_path` comes before `sample_column` positionally and `sample_level_batch_key` defaults to `"batch"`; on data without a `batch` column, pass `sample_level_batch_key=None` or the call stops with a `KeyError`. See [GPU acceleration](../../tutorials/gpu.md).
+    The GPU variant runs only when you ask for it: call `preprocess_gpu` yourself, or set `use_gpu: true` in the wrapper config (the wrapper falls back to this CPU function if the RAPIDS modules do not import). Having RAPIDS installed is not enough. `preprocess_gpu` takes the same arguments and defaults, but `cell_meta_path` comes before `sample_column` positionally. See [GPU acceleration](../../tutorials/gpu.md).
 
 !!! tip "Prefer the config-driven wrapper"
     `sampledisco -m complex --config config.yaml` with `run_rna_pipeline: true` runs preprocessing, cell typing, sample embedding and the downstream steps. The keys `rna_cell_level_batch_key`, `rna_sample_level_batch_col`, `rna_min_cells`, … map one-to-one onto the arguments above.

@@ -128,7 +128,7 @@ The union `AnnData` from sub-stage 3 (or read from `preprocess/adata_sample.h5ad
 
 ## Usage
 
-scGLUE training on the demo takes long enough that this page does not run it. [Multi-omics from a config](../../tutorials/multiomics_config.md) and the [multi-omics tutorial](../../tutorials/multiomics.md) run it, with measured runtimes; the config keys are listed in the [config key reference](../../tutorials/config_reference.md) (`multiomics_run_glue_*`, `multiomics_n_top_genes`, …). To skip scGLUE, start from the pre-integrated demo file as in the [multi-omics example chain](../index.md#running-the-examples).
+scGLUE training on the demo takes long enough that this page does not run it. The [multi-omics tutorial](../../tutorials/multiomics.md) runs it, with measured runtimes; the [Configuration guide](../../tutorials/configuration.md) shows how to run it from a config, and the config keys are listed in the [config key reference](../../tutorials/config_reference.md) (`multiomics_run_glue_*`, `multiomics_n_top_genes`, …). To skip scGLUE, start from the pre-integrated demo file as in the [multi-omics example chain](../index.md#running-the-examples).
 
 !!! tip "Prefer the config-driven wrapper"
     With `run_multiomics_pipeline: true`, the wrapper runs this function, then [`harmonize_xglue`](harmonize_xglue.md), [`cell_types_multiomics`](cell_types_multiomics_linux.md), the sample embedding and the downstream steps. scGLUE needs the `bedtools` binary (`conda install -c bioconda bedtools`).

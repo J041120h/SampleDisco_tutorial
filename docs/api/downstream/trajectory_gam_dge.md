@@ -6,7 +6,7 @@ The spline basis is shrunk automatically for small cohorts, and a feature is fit
 
 **Import:** `from sampledisco.sample_trajectory.trajectory_diff_gene import run_trajectory_gam_differential_gene_analysis`
 
-**Source:** `sample_trajectory/trajectory_diff_gene.py:973`
+**Source:** `sample_trajectory/trajectory_diff_gene.py:993`
 
 ## Signature
 
@@ -56,7 +56,7 @@ def run_trajectory_gam_differential_gene_analysis(
 | `effect_size_threshold` | float | `1.0` | Minimum effect size (used when `top_n_genes` is `None`). |
 | `top_n_genes` | int or None | `100` | Number of pseudoDEGs; `None` switches to the threshold rule. |
 | `num_splines` / `spline_order` | int | `5` / `3` | Requested GAM basis; reduced automatically for small cohorts (see above). |
-| `n_jobs` | int | `-1` | Processes for the per-feature fits (`-1` = all cores; results are identical to serial). |
+| `n_jobs` | int | `-1` | Worker processes for the per-feature fits (`-1` = the CPUs usable by the job, capped at `SLURM_CPUS_PER_TASK`). Each worker uses one BLAS thread, and each feature gets its own spline terms, so results do not depend on `n_jobs`. |
 | `output_dir` | str | `"trajectory_diff_gene_results_single"` | Output folder. The wrapper uses `{modality dir}/trajectoryDEG`. |
 | `visualization_gene_list` | list or None | `None` | Genes that always get their own plots (under `gene_visualizations/`). |
 | `generate_visualizations` | bool | `True` | Write the plot set below. |
@@ -123,5 +123,5 @@ print(len(res), "features fitted;", int(res["significant"].sum()), "with FDR < 0
 
 The function also warns (`RuntimeWarning`) that a spline GAM is underpowered below about 12 samples: on 8 samples an empty result says little. About 18 s, 3.2 GB including the worker processes.
 
-!!! note "When nothing can be fitted (0.6.0)"
-    If no feature passes the identifiability check (for example `spline_order=3` on 8 samples), 0.6.0 raises a `RuntimeWarning` that names the number of non-zero samples needed and the adjusted spline settings, and still returns a DataFrame (empty) and writes the tables. It does not return `None`.
+!!! note "When nothing can be fitted"
+    If no feature passes the identifiability check (for example `spline_order=3` on 8 samples), the function raises a `RuntimeWarning` that names the number of non-zero samples needed and the adjusted spline settings. It still returns an empty DataFrame and writes the tables.

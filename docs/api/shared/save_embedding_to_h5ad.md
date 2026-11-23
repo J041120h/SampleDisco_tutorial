@@ -9,7 +9,7 @@ Stores the sample embedding of an in-memory AnnData (`uns['X_DR_sample']` and `u
 
 **Import:** `from sampledisco.sample_embedding.blocks import save_embedding_to_h5ad`
 
-**Source:** `sample_embedding/blocks.py:282`
+**Source:** `sample_embedding/blocks.py:283`
 
 ## Signature
 
@@ -21,7 +21,7 @@ def save_embedding_to_h5ad(path: str, adata) -> str
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `path` | str | — | The `.h5ad` file. In 0.6.0 a missing file is simply written in full (returns `"rewrite"`); in 0.5.0 it raises `FileNotFoundError`. |
+| `path` | str | — | The `.h5ad` file. A missing file is written in full (returns `"rewrite"`). |
 | `adata` | AnnData | — | The object holding both `uns['X_DR_sample']` and `uns['sample_embedding_params']`. |
 
 ## Returns
@@ -50,4 +50,4 @@ mo = compute_sample_embedding(mo, "api_demo/multiomics", modality_col="modality"
 print(save_embedding_to_h5ad(union_path, mo))
 ```
 
-It prints `in-place`: the file still matched the object, so only the two `uns` entries were replaced. The `compute_sample_embedding` call also rewrites `api_demo/multiomics/sample_embedding/`. About 7 s and 1.8 GB. On a path that does not exist, 0.6.0 writes the whole object there (checked separately); 0.5.0 raised `FileNotFoundError` (from h5py).
+It prints `in-place`: the file still matched the object, so only the two `uns` entries were replaced. The `compute_sample_embedding` call also rewrites `api_demo/multiomics/sample_embedding/`. About 7 s and 1.8 GB. On a path that does not exist it writes the whole object there (checked separately).

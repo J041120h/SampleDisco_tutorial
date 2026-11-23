@@ -49,6 +49,6 @@ The examples on these pages start from the RNA chain's output; see [Running the 
 | [`visualize_multimodal_embedding`](downstream/visualize_multimodal_embedding.md) | Scatter plots of the first two embedding PCs for multi-omics units, colored by columns or with one modality highlighted. |
 
 !!! note "Eight samples"
-    On the 8-sample demo, CCA correlations, permutation p-values, prediction scores and DGE calls are degenerate or noisy; the examples show the calls and the files they write. For a cohort large enough to interpret, see the [Sound Life walkthrough](../tutorials/soundlife_rna.md).
+    On the 8-sample demo, CCA correlations, permutation p-values, prediction scores and DGE calls are degenerate or noisy; the examples show the calls and the files they write. The limits are listed under [Small cohorts](../tutorials/downstream_details.md#small-cohorts).
 
-For worked analyses, see the [Downstream tutorials](../tutorials/downstream/index.md).
+For a worked run of every analysis, see [Downstream analysis](../tutorials/downstream/index.md); for options and caveats, [Downstream options and caveats](../tutorials/downstream_details.md).

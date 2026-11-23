@@ -2,8 +2,8 @@
 
 Tests every pair of groups in a [`raisinfit`](raisinfit.md) fit (or every group against `control_group`) with `raisintest`: a contrast of the two group coefficients, a test statistic per gene, and p-values calibrated against `n_permutations` permuted statistics (t or normal, whichever fits the permutations better), then FDR. Each comparison gets its own folder with a results table and volcano plots; summary tables and plots across comparisons follow. A comparison whose group is not in the design, or whose test fails, is skipped and marked with a `FAILED` file.
 
-!!! note "Groups with a single sample (0.6.0)"
-    `raisinfit` cannot estimate the variance of a group with no residual degrees of freedom (e.g. a single sample). It lists such groups in `fit['failgroup']` and sets their variance to 0, which would make every gene look significant. In 0.6.0, `run_pairwise_tests` warns once (`RuntimeWarning`), skips every comparison whose variance uses such a group, writes `{g1}_vs_{g2}/FAILED` ("variance not estimable … not tested"), and records it in `raisin_summary.csv` with an empty `n_sig`. Skipped comparisons are not in the returned dicts. Calling `raisintest` directly on such a contrast returns `stat`, `pvalue` and `FDR` as `NaN` (the `Foldchange` is kept) and writes `raisin_results.csv` but no volcano plot. With k-means groups from [`cluster`](cluster.md), keep k low enough that every cluster has at least 2 samples.
+!!! note "Groups with a single sample"
+    `raisinfit` cannot estimate the variance of a group with no residual degrees of freedom (e.g. a single sample). It lists such groups in `fit['failgroup']` and sets their variance to 0, which would make every gene look significant, so `run_pairwise_tests` warns once (`RuntimeWarning`), skips every comparison whose variance uses such a group, writes `{g1}_vs_{g2}/FAILED` ("variance not estimable … not tested"), and records it in `raisin_summary.csv` with an empty `n_sig`. Skipped comparisons are not in the returned dicts. Calling `raisintest` directly on such a contrast returns `stat`, `pvalue` and `FDR` as `NaN` (the `Foldchange` is kept) and writes `raisin_results.csv` but no volcano plot. With k-means groups from [`cluster`](cluster.md), keep k low enough that every cluster has at least 2 samples.
 
 **Import:** `from sampledisco.sample_clustering.RAISIN_TEST import run_pairwise_tests`
 
@@ -91,4 +91,4 @@ ZYG11B   -0.038858 -0.405257  0.685288  0.999956
 ZXDC      0.024459  0.254218  0.799327  0.999956
 ```
 
-About 80 s (both calls) and 4.6 GB including workers. Four samples per group leave RAISIN little power; the [RAISIN tutorial](../../tutorials/downstream/raisin_dge.md) and the [Sound Life walkthrough](../../tutorials/soundlife_rna.md) cover larger designs.
+About 80 s (both calls) and 4.6 GB including workers. Four samples per group leave RAISIN little power; see [RAISIN in the downstream tutorial](../../tutorials/downstream/index.md#clustering) and its [`group_col` and design options](../../tutorials/downstream_details.md#group-col).

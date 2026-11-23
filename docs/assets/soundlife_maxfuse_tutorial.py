@@ -1,8 +1,8 @@
 # SampleDisco tutorial: unpaired scRNA-seq + spectral flow cytometry (Sound Life) with MaxFuse.
 # Run from the folder that holds data/soundlife_RNA.h5ad and data/soundlife_FLOW.h5ad.
-# Each "# %% Step" block is one section of the tutorial page.
+# Each "# %%" block is one section of the tutorial page "RNA + flow cytometry (MaxFuse)".
 
-# %% Step 1 - load the data
+# %% Load the data
 import anndata as ad
 import numpy as np
 import pandas as pd
@@ -12,7 +12,7 @@ rna = ad.read_h5ad("data/soundlife_RNA.h5ad")    # raw counts
 flow = ad.read_h5ad("data/soundlife_FLOW.h5ad")  # X = arcsinh(unmixed / 3000)
 print(rna, flow, sep="\n")
 
-# %% Step 2 - MaxFuse inputs
+# %% Step 1 - build the linked features
 # Flow marker -> gene(s) encoding it. CD45, CD45RA and CD15 have no usable gene and stay flow-only.
 LINKS = {
     "CD3": ["CD3E", "CD3D", "CD3G"], "CD19": ["CD19"], "CD56": ["NCAM1"], "CD14": ["CD14"],
@@ -50,7 +50,7 @@ rna_active = zscore(act[:, act.var["highly_variable"]].X.toarray())
 flow_active = flow_z
 print(f"shared {rna_shared.shape[1]} features, active RNA {rna_active.shape[1]} HVGs / flow {flow_active.shape[1]} markers")
 
-# %% Step 3 - run MaxFuse
+# %% Step 2 - run MaxFuse
 import maxfuse as mf
 
 n_shared = rna_shared.shape[1] - 1
@@ -67,13 +67,9 @@ fusor.filter_bad_matches(target="pivot", filter_prop=0.3)
 rna_cca, flow_cca = fusor.get_embedding(active_arr1=fusor.active_arr1, active_arr2=fusor.active_arr2)
 print("joint embedding:", rna_cca.shape, flow_cca.shape)
 
-# %% Step 4 - flow cell types and the RNA + flow union
-from scipy import sparse
+# %% Step 3 - transfer the cell types to flow
 from sklearn.neighbors import NearestNeighbors
-from sampledisco.utils.harmony_compat import harmonize_embedding
-from sampledisco.preparation.multi_omics_batch_correction import harmonize_xglue
 
-# each flow event takes the majority RNA cell type among its 15 nearest RNA cells in the joint space
 _, nbr = NearestNeighbors(n_neighbors=15).fit(rna_cca).kneighbors(flow_cca)
 codes, names = pd.factorize(rna.obs["cell_type"].astype(str))
 flow_ct = names[[np.bincount(row, minlength=len(names)).argmax() for row in codes[nbr]]]
@@ -83,6 +79,11 @@ to_lineage = {"T cell": "T", "B cell": "B", "NK cell": "NK", "Monocyte": "Mono",
 l1 = rna.obs.groupby("cell_type", observed=True)["cell_type_l1"].first().astype(str)
 flow_lin = pd.Series(flow_ct).map(l1).map(to_lineage).fillna("other").to_numpy()
 print(f"lineage agreement with flow gates: {(flow_lin == flow.obs['lineage'].to_numpy()).mean():.3f}")
+
+# %% Step 4 - build the union with Harmony
+from scipy import sparse
+from sampledisco.utils.harmony_compat import harmonize_embedding
+from sampledisco.preparation.multi_omics_batch_correction import harmonize_xglue
 
 meta = ["sample", "batch", "subject", "visit", "age_group", "age_at_draw", "sex", "cmv"]
 obs = pd.concat([
@@ -110,24 +111,17 @@ from sampledisco.sample_embedding import compute_sample_embedding
 union = compute_sample_embedding(
     union,
     output_dir="sampledisco_soundlife_output/multiomics",
-    use_gpu=False,
     sample_col="sample",
     celltype_col="cell_type",
     comp_emb_key="Z_comp",
     rmd_emb_key="Z_rmd",
     modality_col="modality",
     batch_col="batch",
-    medium_K=120,
-    fine_K=300,
-    rmd_dim_per_cluster=8,
     rmd_weight=0.60,
-    pca_components=10,
-    batch_method="harmony",
-    save=True,
 )
-print(union.uns["X_DR_sample"].iloc[:4, :4])
+print(union.uns["X_DR_sample"].shape)   # 64 units x 10 PCs
 
-# %% Step 6 - what the sample embedding captures
+# %% Step 6 - downstream
 from sampledisco.sample_embedding.sample_embedding import build_sample_adata
 from sampledisco.sample_association.association import run_dimension_association_analysis
 from sampledisco.visualization.multi_omics_visualization import visualize_multimodal_embedding
@@ -139,12 +133,6 @@ assoc = run_dimension_association_analysis(
     continuous_cols=["age_at_draw"],
     categorical_cols=["age_group", "sex", "cmv"],
     n_permutations=999,
-    sample_col="sample",
-    random_state=42,
 )
-visualize_multimodal_embedding(
-    adata=sample_adata,
-    visualization_grouping_column=["age_group", "modality"],
-    output_dir="sampledisco_soundlife_output/multiomics",   # plots go to <output_dir>/visualization/
-    show_default=True,
-)
+visualize_multimodal_embedding(adata=sample_adata, visualization_grouping_column=["age_group", "modality"],
+                               output_dir="sampledisco_soundlife_output/multiomics")   # plots go to .../visualization/

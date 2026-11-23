@@ -80,9 +80,8 @@ GOTCHAS = [
      "replace same-named `.obs` columns."),
     (r"^(rna|atac)_cell_meta_path$", "Optional cell-level CSV with a `barcode` column matching `obs_names`."),
     (r"^(rna|atac|multiomics)_sample_col$",
-     "A column literally named `sample` is safest. With a sample-metadata CSV, 0.6.0 keeps this "
-     "column and adds a `sample` copy; in 0.5.0 the merge renamed it and preprocessing failed "
-     "with a `KeyError`."),
+     "A column literally named `sample` is safest. With a sample-metadata CSV, this column is "
+     "kept and a `sample` copy is added."),
     (r"^(rna|atac)_sample_level_batch_col$",
      "A string or a list. Two or more columns give multi-covariate sample-level Harmony. Harmony "
      "runs only with at least 8 samples and more than one batch value."),
@@ -96,16 +95,19 @@ GOTCHAS = [
      "Cell typing always writes its labels to `obs['cell_type']`, and once it has run the "
      "embedding and downstream steps use that column. This key is the label source with "
      "`{p}existing_cell_types: true`, and the column the embedding reads when "
-     "`{p}cell_type_cluster: false`. In 0.5.0 the embedding always read this column."),
+     "`{p}cell_type_cluster: false`."),
     (r"^(rna|atac)_existing_cell_types$",
      "Use labels already in `obs[{p}celltype_col]`; they are copied to `obs['cell_type']` (and "
-     "merged down to `{p}n_target_cell_clusters` if that is set)."),
+     "merged down to `{p}n_target_cell_clusters` if that is smaller, with a warning)."),
     (r"^rna_min_cells$",
      "Used twice: genes detected in fewer cells are dropped, and samples with fewer cells are dropped."),
     (r"^(rna|atac|multiomics)_sample_embedding_pca_components$",
      "Capped at n_units - 1 (8 demo samples give 7 PCs)."),
     (r"^(rna|atac|multiomics)_sample_embedding_rmd_weight$",
-     "Validated by the CLI: `\"equal\"` or a number >= 0."),
+     "Validated by the CLI: `\"equal\"` or a positive number."),
+    (r"^(rna|atac|multiomics)_sample_embedding_batch_method$",
+     "`\"harmony\"`, `\"linear\"` or `\"none\"`; any other value is rejected by the CLI and by "
+     "`compute_sample_embedding`."),
     (r"^(rna|atac|multiomics)_sample_embedding_(use_clr|use_rmd|block_weights|rmd_weight)$",
      "Ignored when `{p}autotune_enable: true`."),
     (r"^(rna|atac|multiomics)_save_cell_adata_after_embedding$",
@@ -126,8 +128,7 @@ GOTCHAS = [
      "to n_samples - 1 CCA fits any labelling perfectly."),
     (r"^(rna|atac|multiomics)_cca_pvalue$",
      "Permutation test with the same number of PCs as the observed score. When the PCs approach "
-     "n_samples - 1 every permuted score is ~1: 0.6.0 warns and the p-value is meaningless "
-     "(0.5.0 crashes with a histogram `ValueError`)."),
+     "n_samples - 1 every permuted score is ~1: the step warns and the p-value is meaningless."),
     (r"^(rna|atac|multiomics)_tscan_origin$", "An integer: the index of the endpoint cluster to start from."),
     (r"^(rna|atac|multiomics)_tscan_pseudotime_mode$", "`\"rank\"` or `\"distance\"`; anything else raises."),
     (r"^(rna|atac|multiomics)_spline_order$",
@@ -143,23 +144,25 @@ GOTCHAS = [
      "(needs `{p}sample_cluster: true`)."),
     (r"^(rna|atac|multiomics)_summary_sample_csv_path$",
      "Written by the distance step and deleted after the trajectory step: always for the default "
-     "path, and for a path you supply only if the run created it (0.5.0 deleted it in every case)."),
+     "path, and for a path you supply only if the run created it."),
     (r"^multiomics_(rna|atac)_file$",
-     "Must be set whenever the multi-omics pipeline runs, even with `multiomics_integration: false`."),
+     "Raw counts for scGLUE training: needed only with `multiomics_integration: true`."),
     (r"^multiomics_integrated_h5ad_path$",
      "Input only: read when `{{multiomics output}}/preprocess/adata_sample.h5ad` does not exist "
-     "yet; every update goes to that output file. In 0.5.0 this file was preferred and the cell "
-     "types and embedding were written into it."),
+     "yet; every update goes to that output file."),
     (r"^(rna|atac|multiomics)_sample_distance_methods$",
      "SciPy metrics on the embedding (`euclidean`, `cosine`, `correlation`, … 12 in all) and "
      "`EMD`, `chi_square`, `jensen_shannon` on the cell-type composition; unknown names are "
-     "skipped with a warning. `chi_square` and `jensen_shannon` raised a `NameError` in 0.5.0."),
+     "skipped with a warning."),
     (r"^multiomics_use_gpu$", "GPU runs only if the global `use_gpu` is also `true`."),
     (r"^multiomics_random_state$",
      "Seeds the `harmonize_xglue` pass only; the multi-omics sample embedding uses its built-in seed 42."),
-    (r"^multiomics_(color_col|target_modality)$",
-     "Effectively ignored: the wrapper always draws the default plots (`show_default=True`), "
-     "which do not use this key."),
+    (r"^multiomics_target_modality$",
+     "When set, the embedding plots also include modality-highlight plots "
+     "`<modality>_<column>_{expression,proportion}.png`, coloured by `multiomics_color_col` or else "
+     "the first grouping column. `null` skips them."),
+    (r"^multiomics_color_col$",
+     "Colour column of the modality-highlight plots (see `multiomics_target_modality`)."),
     (r"^multiomics_visualization_grouping_column$",
      "Without it the multi-omics embedding plots are uncoloured."),
     (r"^multiomics_cell_type_cluster$",
@@ -295,6 +298,13 @@ class FuncAnalysis:
             if isinstance(node, ast.Assign):
                 src = value_names(node.value)
                 for t in node.targets:
+                    if (isinstance(t, (ast.Tuple, ast.List)) and isinstance(node.value, (ast.Tuple, ast.List))
+                            and len(t.elts) == len(node.value.elts)):
+                        # `a, b = x, y`: pair element-wise, not all targets with all sources
+                        for te, ve in zip(t.elts, node.value.elts):
+                            for n in target_names(te):
+                                assigns.append((n, value_names(ve)))
+                        continue
                     for n in target_names(t):
                         assigns.append((n, src))
             elif isinstance(node, (ast.AugAssign, ast.AnnAssign)) and node.value is not None:
@@ -710,24 +720,13 @@ def main():
       f"**{len(keys)} keys** "
       + "(" + ", ".join(f"{g} {sum(1 for k in keys if group_of(k) == g)}" for g, _ in GROUPS) + ").")
     w("")
-    w("This page is generated by [`gen_config_reference.py`](../assets/gen_config_reference.py) from the "
-      "package itself, not written by hand:")
-    w("")
-    w("- **Default** is the `wrapper()` default (`inspect.signature`). A key you leave out of a "
-      "Python call takes this value. The CLI requires every key except the "
-      f"{len(OPTIONAL_KEYS)} optional ones.")
-    w("- **Demo** is the value in the template that `sampledisco --init-config` writes "
-      "(identical to [`config_demo.yaml`](../assets/config_demo.yaml)). Bold means it differs from the default.")
-    w("- **Consumed by** is found by reading the wrapper source: the pipeline function and "
-      "parameter the value is passed to, or the stage it switches on. `switch in X` means the "
-      "key is an `if` condition inside `X`; the functions it gates follow.")
-    w("- **Notes** gives the stage switches a key depends on (\"Only used when …\"), a "
-      "**dead** flag for keys that are accepted but have no effect, short hand-written "
-      "gotchas, and the template's own comment.")
-    w("")
-    w("For how the keys fit together (stages, resuming, Python use), read the "
-      "[Configuration guide](configuration.md) first. For your own data, see "
-      "[Using your own data](own_data.md).")
+    w("Generated from the package by [`gen_config_reference.py`](../assets/gen_config_reference.py); "
+      "do not edit by hand. **Default** is the `wrapper()` default, which a key left out of a Python "
+      "call takes; the CLI requires every key except the "
+      f"{len(OPTIONAL_KEYS)} optional ones. **Demo** is the value in the template that "
+      "`sampledisco --init-config` writes, in bold when it differs. **Consumed by** is the function "
+      "and parameter the value reaches, or the stage it switches (`switch in X`). How the keys fit "
+      "together is in the [Configuration guide](configuration.md).")
     w("")
     w(f'!!! warning "{len(dead)} keys are accepted but ignored"')
     w("    The CLI requires them, so leave them in the file, but changing them has no effect:")

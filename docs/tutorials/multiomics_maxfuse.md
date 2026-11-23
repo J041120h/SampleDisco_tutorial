@@ -1,33 +1,19 @@
-# RNA + flow cytometry with MaxFuse
+# RNA + flow cytometry (MaxFuse)
 
-SampleDisco needs only a joint cell embedding across modalities; it does not care which method produced it. scGLUE (the [multi-omics tutorial](multiomics.md)) links RNA and ATAC through a gene–peak graph. For **RNA + protein** — CITE-seq ADT or flow / spectral cytometry measured on *different* cells — the natural choice is [MaxFuse](https://github.com/shuxiaoc/maxfuse) (Chen et al., *Nat. Biotechnol.* 42, 1096–1106 (2024), [doi:10.1038/s41587-023-01935-0](https://doi.org/10.1038/s41587-023-01935-0)), which matches cells through the handful of proteins that have a coding gene.
+SampleDisco only needs a joint cell embedding across modalities, whatever method produced it. For **RNA + protein** measured on *different* cells, such as flow or spectral cytometry, [MaxFuse](https://github.com/shuxiaoc/maxfuse) (Chen et al., *Nat. Biotechnol.* 2024, [doi:10.1038/s41587-023-01935-0](https://doi.org/10.1038/s41587-023-01935-0)) links the cells through the proteins that have a coding gene. This page builds that embedding for a subset of the Sound Life cohort, then one sample embedding over both modalities, in which age group and CMV status stand out. MaxFuse 0.0.2 comes with the all-in-one environment and with `pip install "sampledisco[maxfuse]"` (see [Installation](../installation.md)). It is distributed under its authors' Academic Software License.
 
-This tutorial runs MaxFuse on a subsample of the **Sound Life** cohort (Allen Institute for Immunology; Gong et al., *Nature* 2025): unpaired scRNA-seq and spectral flow cytometry (panel PS1) of PBMCs from young and older adults. It then builds the two cell embeddings SampleDisco uses and derives one sample embedding over both modalities.
+## The data
 
-In short:
+Unpaired scRNA-seq and spectral flow cytometry (panel PS1) of PBMCs from 32 Sound Life donors: one baseline visit each, 16 young and 16 older adults, four per sex × CMV group, with 1,000 cells per sample in each modality. The two modalities share **samples**, not cells. Both files carry the sample columns `sample`, `subject`, `age_group`, `age_at_draw`, `sex`, `cmv` and the processing `batch`.
 
-1. **MaxFuse** embeds RNA cells and flow events in one space → `X_maxfuse`.
-2. **Harmony on `batch`** → `Z_rmd` (sample differences preserved).
-3. **Harmony on `batch` + `sample`** → `Z_comp` (sample removed).
-4. **`compute_sample_embedding`** → one embedding of every `<sample>_RNA` / `<sample>_FLOW` unit in `uns['X_DR_sample']`.
+- `soundlife_RNA.h5ad`: raw UMI counts, 32,000 cells × 18,456 genes, with AIFI L2 cell types in `obs['cell_type']`.
+- `soundlife_FLOW.h5ad`: `arcsinh(x / 3000)` of the unmixed values, 32,000 events × 24 markers, with marker-gated lineages in `obs['lineage']`.
 
-!!! info "MaxFuse is part of the standard environment"
-    Both environment files ([Installation](../installation.md)) and `pip install "sampledisco[maxfuse]"` (or `[all]`) install MaxFuse 0.0.2 with the **anndata < 0.13** it needs. To add it to an older environment without touching other packages, run `pip install --no-deps maxfuse==0.0.2`. MaxFuse is distributed under its authors' Academic Software License (see its [repository](https://github.com/shuxiaoc/maxfuse)).
-
-## Inputs
-
-Download `soundlife_RNA.h5ad` and `soundlife_FLOW.h5ad` from the [demo dataset](demo_data.md) into a local `data/` folder. They hold **32 samples** — one baseline visit (Flu Year 1 Day 0) per donor, 16 young and 16 older adults, four per sex × CMV group — with **1,000 cells per sample in each modality**.
-
-| File | `.X` | Shape | Per-cell `.obs` |
-| --- | --- | --- | --- |
-| `soundlife_RNA.h5ad` | raw UMI counts | 32,000 cells × 18,456 genes | `sample`, `subject`, `age_group`, `age_at_draw`, `sex`, `cmv`, `batch`, `cell_type` (AIFI L2), `cell_type_l1` |
-| `soundlife_FLOW.h5ad` | `arcsinh(x / 3000)` of the unmixed values (raw values in `layers['unmixed']`) | 32,000 events × 24 markers | same sample columns, `batch`, `lineage` (marker gates) |
-
-The two modalities share **samples**, not cells, so this is the unpaired setting. The whole script is also available as one file: [`soundlife_maxfuse_tutorial.py`](../assets/soundlife_maxfuse_tutorial.py).
-
-Output lands under `sampledisco_soundlife_output/multiomics/`. On 8 CPU cores the full tutorial takes about 17 minutes and peaks at 3.5 GB of RAM; MaxFuse is most of it.
-
-## 1. Load the data
+```bash
+mkdir -p data
+curl -fL -o data/soundlife_RNA.h5ad  "https://zenodo.org/records/24451067/files/soundlife_RNA.h5ad?download=1"
+curl -fL -o data/soundlife_FLOW.h5ad "https://zenodo.org/records/24451067/files/soundlife_FLOW.h5ad?download=1"
+```
 
 ```python
 import anndata as ad
@@ -40,14 +26,14 @@ flow = ad.read_h5ad("data/soundlife_FLOW.h5ad")  # X = arcsinh(unmixed / 3000)
 print(rna, flow, sep="\n")
 ```
 
-## 2. MaxFuse inputs
+The page takes 4 to 20 minutes on 8 CPU cores, depending on the CPU, and peaks at about 3.5 GB of RAM; MaxFuse is most of it. All its code is also one script: [`soundlife_maxfuse_tutorial.py`](../assets/soundlife_maxfuse_tutorial.py).
 
-MaxFuse takes two views of each modality:
+## 1. Build the linked features
 
-- **Shared features** — the 21 flow markers with a coding gene, expanded to 25 gene–protein pairs (CD3 → *CD3E*, *CD3D*, *CD3G*, …). The linked genes are normalized to the flow scale and log-transformed so the two sides are comparable; pairs that are constant on either side are dropped.
-- **Active features** — everything informative within a modality: the RNA highly variable genes and all 24 flow markers.
+MaxFuse takes two views of each modality. The settings are those of the MaxFuse authors' CITE-seq tutorial, except that the flow side keeps its `arcsinh` transform, because unmixed values are partly negative.
 
-These are the settings of the MaxFuse authors' CITE-seq tutorial, except that the flow side keeps its `arcsinh` transform (spectrally unmixed values are partly negative, so the ADT row-normalization does not apply).
+- **Shared features** link the two sides: each flow marker with a coding gene is paired with that gene (CD3 → *CD3E*, *CD3D*, *CD3G*, …), and the linked genes are normalized to the flow scale and log-transformed. Pairs that are constant on either side are dropped, which leaves 25 pairs.
+- **Active features** are everything informative within one modality: the RNA highly variable genes and all 24 flow markers.
 
 ```python
 # Flow marker -> gene(s) encoding it. CD45, CD45RA and CD15 have no usable gene and stay flow-only.
@@ -88,9 +74,9 @@ flow_active = flow_z
 print(f"shared {rna_shared.shape[1]} features, active RNA {rna_active.shape[1]} HVGs / flow {flow_active.shape[1]} markers")
 ```
 
-## 3. Run MaxFuse
+## 2. Run MaxFuse
 
-MaxFuse matches metacells across modalities on the shared features, refines the matches iteratively with CCA on the active features, discards the weakest 30% of matched pairs, and embeds every cell of both modalities with the CCA fitted on the surviving pairs.
+MaxFuse matches metacells across the modalities on the shared features, refines the matches with CCA on the active features, and drops the weakest 30% of them. It then embeds every cell of both modalities with the final CCA: 20 dimensions, `X_maxfuse`.
 
 ```python
 import maxfuse as mf
@@ -110,24 +96,13 @@ rna_cca, flow_cca = fusor.get_embedding(active_arr1=fusor.active_arr1, active_ar
 print("joint embedding:", rna_cca.shape, flow_cca.shape)
 ```
 
-`rna_cca` and `flow_cca` (20 dimensions each) are the joint embedding, `X_maxfuse`.
+## 3. Transfer the cell types to flow
 
-## 4. Flow cell types and the RNA + flow union
-
-SampleDisco's composition blocks need one cell-type vocabulary across modalities. The RNA cells carry the AIFI L2 labels; each flow event takes the majority label of its 15 nearest RNA cells in the joint space. The lineage agreement with the flow marker gates is a quick check of the integration — it should be high (this run: 0.93).
-
-The union then gets the two embeddings SampleDisco uses, built from `X_maxfuse` with two Harmony passes:
-
-- `Z_rmd` = Harmony on `batch` — technical batch removed, **sample differences preserved** (feeds the RMD displacement block);
-- `Z_comp` = Harmony on `batch` + `sample` — **sample removed** (feeds the composition blocks).
+The composition blocks need one cell-type vocabulary across modalities. Each flow event takes the majority AIFI L2 label of its 15 nearest RNA cells in the joint space. As a check, the transferred lineage should agree with the flow marker gates; here it does for 92% of the events.
 
 ```python
-from scipy import sparse
 from sklearn.neighbors import NearestNeighbors
-from sampledisco.utils.harmony_compat import harmonize_embedding
-from sampledisco.preparation.multi_omics_batch_correction import harmonize_xglue
 
-# each flow event takes the majority RNA cell type among its 15 nearest RNA cells in the joint space
 _, nbr = NearestNeighbors(n_neighbors=15).fit(rna_cca).kneighbors(flow_cca)
 codes, names = pd.factorize(rna.obs["cell_type"].astype(str))
 flow_ct = names[[np.bincount(row, minlength=len(names)).argmax() for row in codes[nbr]]]
@@ -137,6 +112,19 @@ to_lineage = {"T cell": "T", "B cell": "B", "NK cell": "NK", "Monocyte": "Mono",
 l1 = rna.obs.groupby("cell_type", observed=True)["cell_type_l1"].first().astype(str)
 flow_lin = pd.Series(flow_ct).map(l1).map(to_lineage).fillna("other").to_numpy()
 print(f"lineage agreement with flow gates: {(flow_lin == flow.obs['lineage'].to_numpy()).mean():.3f}")
+```
+
+## 4. Build the union with Harmony
+
+Stack both modalities into one `AnnData` and build the two views SampleDisco uses from `X_maxfuse`:
+
+- `Z_rmd`: Harmony on `batch`. The technical batch is removed and the **sample differences are kept**; this view feeds the RMD displacement block.
+- `Z_comp`: Harmony on `batch` + `sample`. The **sample effect is removed**; this view feeds the composition blocks.
+
+```python
+from scipy import sparse
+from sampledisco.utils.harmony_compat import harmonize_embedding
+from sampledisco.preparation.multi_omics_batch_correction import harmonize_xglue
 
 meta = ["sample", "batch", "subject", "visit", "age_group", "age_at_draw", "sex", "cmv"]
 obs = pd.concat([
@@ -159,12 +147,9 @@ harmonize_xglue(union, sample_col="sample", batch_col="batch", in_key="Z_rmd", o
 print(union)
 ```
 
-!!! note "Batch labels in Sound Life"
-    `batch` is the Allen processing-batch ID. For most samples the RNA and flow batch IDs are the same label, so the `batch` correction mainly removes processing-run effects rather than the RNA-vs-flow offset; modality is handled explicitly at the sample level (next step), where units are `<sample>_RNA` / `<sample>_FLOW` and Harmony uses `modality × batch`. This mirrors the full Sound Life run.
-
 ## 5. Sample embedding
 
-Identical to the other pipelines: composition blocks on `Z_comp`, the RMD displacement block on `Z_rmd`, units `<sample>_RNA` and `<sample>_FLOW`.
+The same call as for RNA + ATAC, with one unit per sample and modality (`<sample>_RNA`, `<sample>_FLOW`). `batch` is corrected at the unit level too, and `rmd_weight=0.60` sets the weight of the RMD block (see [Sample embedding in depth](sample_embedding.md)).
 
 ```python
 from sampledisco.sample_embedding import compute_sample_embedding
@@ -172,29 +157,20 @@ from sampledisco.sample_embedding import compute_sample_embedding
 union = compute_sample_embedding(
     union,
     output_dir="sampledisco_soundlife_output/multiomics",
-    use_gpu=False,
     sample_col="sample",
     celltype_col="cell_type",
     comp_emb_key="Z_comp",
     rmd_emb_key="Z_rmd",
     modality_col="modality",
     batch_col="batch",
-    medium_K=120,
-    fine_K=300,
-    rmd_dim_per_cluster=8,
     rmd_weight=0.60,
-    pca_components=10,
-    batch_method="harmony",
-    save=True,
 )
-print(union.uns["X_DR_sample"].iloc[:4, :4])
+print(union.uns["X_DR_sample"].shape)   # 64 units x 10 PCs
 ```
 
-**Writes** → `uns['X_DR_sample']` (64 units × 10 PCs) on the returned `AnnData`, and `sample_embedding/sample_embedding.csv` plus the per-block features (`sample_embedding_blocks.npz`) under `sampledisco_soundlife_output/multiomics/`.
+## 6. Downstream
 
-## 6. What the sample embedding captures
-
-`build_sample_adata` turns the embedding into a one-row-per-unit `AnnData` that every downstream module accepts. Here it feeds the per-PC association analysis (variance explained by age, sex and CMV, with permutation p-values) and a scatter of the units. Modality is not tested there: it varies within a sample, and the association runs on sample-level variables.
+`build_sample_adata` turns the embedding into one row per unit, which every downstream module accepts. Here it feeds the per-PC association test (variance explained by age, sex and CMV, with permutation p-values) and the embedding plots. Every other analysis on the [Downstream analysis](downstream/index.md) page (distances, trajectories, clustering, proportion tests) runs on this embedding in the same way.
 
 ```python
 from sampledisco.sample_embedding.sample_embedding import build_sample_adata
@@ -208,30 +184,20 @@ assoc = run_dimension_association_analysis(
     continuous_cols=["age_at_draw"],
     categorical_cols=["age_group", "sex", "cmv"],
     n_permutations=999,
-    sample_col="sample",
-    random_state=42,
 )
-visualize_multimodal_embedding(
-    adata=sample_adata,
-    visualization_grouping_column=["age_group", "modality"],
-    output_dir="sampledisco_soundlife_output/multiomics",   # plots go to <output_dir>/visualization/
-    show_default=True,
-)
+visualize_multimodal_embedding(adata=sample_adata, visualization_grouping_column=["age_group", "modality"],
+                               output_dir="sampledisco_soundlife_output/multiomics")   # plots go to .../visualization/
 ```
 
-In our run, two of the ten PCs carry the donor biology. **Age group explains 47% of PC2** (age at draw: Pearson r = −0.68), and **CMV serostatus explains 36% of PC4** — both with permutation p = 0.001 (FDR 0.013) on just 32 donors. The figures plot the first two PCs:
+Two of the ten PCs carry the donor biology. **Age group explains 45% of PC2** (age at draw: Pearson r = −0.66), and **CMV serostatus explains 37% of PC4**, both with permutation p = 0.001 (FDR 0.013) on 32 donors. The percentages move by a few points between environments; the p-values do not.
 
 ![Sample embedding colored by age group](../resource/multiomics_maxfuse/sample_embedding_by_age_group.png)
-![Sample embedding colored by modality](../resource/multiomics_maxfuse/sample_embedding_by_modality.png)
-<div class="figure-caption">Step 6 — PC1 vs PC2 of the 64 units (32 donors × RNA / flow). Young and older donors separate along PC2 in <b>both</b> modalities; the flow units spread less than the RNA units, since 24 markers carry less information than a transcriptome.</div>
+<div class="figure-caption">PC1 against PC2 of the 64 units (32 donors × RNA / flow). Young and older donors separate along PC2 in both modalities.</div>
 
-Exact values move slightly with the platform and library versions (k-means and Harmony are seeded but not bit-identical across BLAS builds). Across the three environments we tested, age group explained 43–47% of PC2 and CMV 34–37% of PC4, every time with p = 0.001.
+**Output**, under `sampledisco_soundlife_output/multiomics/`:
 
----
-
-Every downstream analysis — sample distance, CCA / TSCAN trajectories, clustering, proportion tests — runs on `uns['X_DR_sample']` exactly as for RNA or RNA + ATAC; continue with the [Downstream analysis tutorials](downstream/index.md).
-
-!!! tip "Scaling up"
-    The full Sound Life data (868 samples, 4.3 M RNA cells and 4.3 M flow events) is too large for one MaxFuse fit. There the same recipe runs on 40 random shards (each holding cells of every sample and batch) to collect pivot pairs, after which one CCA is fitted on all pooled pivots and every cell is embedded with it — the construction `get_embedding` uses above.
+- `sample_embedding/sample_embedding.csv`: 64 units × 10 PCs.
+- `sample_association/variance_explained_sample.csv`: R², permutation p-value and FDR for every variable and PC.
+- `visualization/all_samples_*_by_{age_group,modality}.png`: the embedding plots.
 
 *Data: Gong Q. et al. Longitudinal multi-omic immune profiling reveals age-related immune cell dynamics in healthy adults. Nature (2025), [doi:10.1038/s41586-025-09686-5](https://doi.org/10.1038/s41586-025-09686-5); Allen Institute for Immunology, Human Immune System Explorer, [doi:10.57785/bn17-3h16](https://doi.org/10.57785/bn17-3h16). Redistributed for noncommercial use under the Allen Institute Terms of Use.*

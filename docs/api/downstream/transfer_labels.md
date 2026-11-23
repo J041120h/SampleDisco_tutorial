@@ -1,6 +1,6 @@
 # `transfer_labels`
 
-k-nearest-neighbor label transfer in the sample embedding `X_DR_sample` (0.5.0+). **References** are the samples with a label that are not in `query`; every other sample is a **query** (by default, the unlabelled samples). Each query takes the majority label of its `n_neighbors` nearest references (Euclidean distance on the first `n_pcs` PCs), optionally weighting votes by 1/distance; ties go to the label of the nearest tied neighbor. To estimate reliability, every reference is also labelled from the other references (leave-one-out; with `group_col`, references of the same group are left out too).
+k-nearest-neighbor label transfer in the sample embedding `X_DR_sample`. **References** are the samples with a label that are not in `query`; every other sample is a **query** (by default, the unlabelled samples). Each query takes the majority label of its `n_neighbors` nearest references (Euclidean distance on the first `n_pcs` PCs), optionally weighting votes by 1/distance; ties go to the label of the nearest tied neighbor. To estimate reliability, every reference is also labelled from the other references (leave-one-out; with `group_col`, references of the same group are left out too).
 
 **Import:** `from sampledisco import transfer_labels` (or `from sampledisco.sample_prediction import transfer_labels`)
 
@@ -78,4 +78,4 @@ HD-4-Wilk        1  False         1    1.000000
 
 `label` keeps the true value of the two held-out queries, so you can see that one of them (`CoV-3-Wilk`) is mislabelled. With only 2 severe references left, 3 neighbors mostly vote "1"; on 8 samples this is a demonstration of the call, not a test of the method.
 
-See the [prediction tutorial](../../tutorials/downstream/prediction.md).
+See [Prediction and label transfer](../../tutorials/downstream/index.md#prediction) and [its options](../../tutorials/downstream_details.md#prediction).

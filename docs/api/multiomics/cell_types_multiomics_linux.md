@@ -66,8 +66,7 @@ With `output_dir` set:
 - `{output_dir}/preprocess/visualization/` (with `generate_plots=True`): `label_transfer_confidence.png`, `celltype_modality_heatmap.png` and `celltype_modality_distribution.csv` (cells per cell type × modality), plus `umap_cell_type.png`, `umap_modality.png` and `umap_split_by_modality.png` when `obsm['X_umap']` exists.
 - The AnnData at `defined_output_path`, or with `save=True` at `{output_dir}/preprocess/adata_preprocessed.h5ad`.
 
-!!! note "Path change in 0.6.0"
-    In 0.6.0, `save=True` without `defined_output_path` writes `{output_dir}/preprocess/adata_preprocessed.h5ad`. In 0.5.0 it wrote `{output_dir}/preprocess/preprocess/adata_preprocessed.h5ad` (a doubled folder). Pass `defined_output_path`, as below and as the wrapper does, to get the same path on both versions.
+The wrapper passes `defined_output_path` (the union file), as in the example below.
 
 ## Usage
 
@@ -112,8 +111,7 @@ cell_type
 
 About 2.5 minutes (mostly the UMAP of 59,010 cells; 75 s on a faster node) and 2.8 GB.
 
-!!! warning "Modality values other than RNA/ATAC on 0.5.0"
-    In 0.5.0 the balance filter in step 3 always compared the values `"RNA"` and `"ATAC"`, whatever `rna_modality_value` / `atac_modality_value` said. With any other second modality, every cluster looked imbalanced and all cells were removed (6,000 of 6,000 on a demo subset relabelled `RNA` / `FLOW`). 0.6.0 uses the function's own modality values: the same `RNA` / `FLOW` subset with `atac_modality_value="FLOW"` now keeps all 6,000 cells. On 0.5.0, rename the second modality to `"ATAC"` before calling the function.
+Other modality names work through `rna_modality_value` / `atac_modality_value`, which the balance filter also uses: a 6,000-cell demo subset relabelled `RNA` / `FLOW` and called with `atac_modality_value="FLOW"` kept all 6,000 cells.
 
 !!! note "Wrapper behaviour"
     The wrapper resolves `use_rep` (`multiomics_use_rep_celltype`, default `Z_comp`), passes `k_neighbors=3`, `save=True`, `output_dir=<multiomics output dir>` and `defined_output_path=<union file>`, and then copies the labels onto the per-modality files `preprocess/adata_rna_preprocessed.h5ad` / `adata_atac_preprocessed.h5ad` for DGE. It uses `cell_types_multiomics_gpu` only when `use_gpu` and `multiomics_use_gpu` are both true.

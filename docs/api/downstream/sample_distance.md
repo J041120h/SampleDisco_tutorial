@@ -4,7 +4,7 @@ Pairwise distances between samples. Three families of `method`:
 
 - **Vector metrics**, on the sample embedding `adata.uns['X_DR_sample']`: `euclidean`, `sqeuclidean`, `minkowski`, `cityblock`, `chebyshev`, `cosine`, `correlation`, `hamming`, `jaccard`, `canberra`, `braycurtis`, `matching` (passed to `scipy.spatial.distance.pdist`). The matrix is divided by its maximum, so values lie in [0, 1].
 - **`"EMD"`**: Earth Mover's Distance between samples' cell-type proportions, with ground distances between cell-type centroids in a cell-level embedding. Needs `cell_adata`.
-- **`"chi_square"`**, **`"jensen_shannon"`**: distances between cell-type proportion vectors. Need `cell_adata`. Broken on 0.5.0; see the warning under Output files.
+- **`"chi_square"`**, **`"jensen_shannon"`**: distances between cell-type proportion vectors. Need `cell_adata`.
 
 For every method, `grouping_columns` drives a **group check**: the mean between-group distance divided by the mean within-group distance (above 1 means the groups separate), written to a text file and, with `summary_csv_path`, into a summary CSV. If the grouping cannot be resolved, the check is skipped with a warning and the distance matrix is still written.
 
@@ -38,7 +38,7 @@ def sample_distance(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `adata` | AnnData | — | AnnData with `uns['X_DR_sample']`, normally the sample-level one from [`build_sample_adata`](../shared/build_sample_adata.md). Its `.obs` supplies the groups for vector metrics. In 0.6.0 the group check also accepts the cell-level object: it then takes the first grouping value per `obs['sample']` (0.5.0 skipped the check with a warning in that case). |
+| `adata` | AnnData | — | AnnData with `uns['X_DR_sample']`, normally the sample-level one from [`build_sample_adata`](../shared/build_sample_adata.md). Its `.obs` supplies the groups for vector metrics. The group check also accepts the cell-level object: it then takes the first grouping value per `obs['sample']`. |
 | `output_dir` | str | — | Parent folder (see Output files). |
 | `method` | str | — | A vector metric above, `"EMD"`, `"chi_square"` or `"jensen_shannon"`. Anything else prints a warning and returns `None`. |
 | `data_type` | str | `"ATAC"` | `"RNA"`, `"ATAC"` or `"multiomics"`. Only used by EMD to pick the fallback cell embedding when `Z_comp` is missing (`X_pca`, `X_lsi`, `X_glue`). |
@@ -65,8 +65,7 @@ def sample_distance(
 | `"EMD"` | `{output_dir}/EMD_distance/` | `distance_matrix_EMD.csv`, `cell_type_proportions.csv`, `cell_type_centroids.csv`, `distance_matrix_EMD_heatmap.pdf`, `distance_check_results_EMD_EMD.txt` |
 | `"chi_square"` / `"jensen_shannon"` | `{output_dir}/chi_square/` or `{output_dir}/jensen_shannon/` | `distance_statistics_summary_<method>.csv`, and under `proportion_DR_distance/`: `proportion_DR_coordinates.csv`, `distance_matrix_proportion_DR.csv`, `cell_type_abundances.pdf`, `sample_distance_proportion_DR_heatmap.pdf`, `distance_check_results_proportion_DR_<method>.txt` |
 
-!!! bug "`chi_square` and `jensen_shannon` fail on 0.5.0"
-    In 0.5.0 both methods stop with `NameError: name 'plot_cell_type_abundances' is not defined`, right after writing `proportion_DR_coordinates.csv` and `distance_matrix_proportion_DR.csv`, and their group check is skipped because `grouping_columns` is not passed on. In the wrapper, listing either method in `*_sample_distance_methods` stops the modality's run. Both are fixed in 0.6.0 (on the demo, with `grouping_columns=["sev.level"]`, the group-check scores were 1.215 for chi-square and 1.122 for Jensen–Shannon). On 0.5.0, use a vector metric or `"EMD"`.
+On the demo, with `grouping_columns=["sev.level"]`, the chi-square and Jensen–Shannon group-check scores were 1.215 and 1.122.
 
 ## Usage
 

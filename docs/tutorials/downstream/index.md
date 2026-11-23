@@ -1,146 +1,259 @@
 # Downstream analysis
 
-Every downstream module reads one object: the sample embedding `uns['X_DR_sample']`, a samples × PCs DataFrame that `compute_sample_embedding` writes into the cell-level AnnData. The functions are the same for RNA, ATAC and multi-omics; only the input AnnData changes.
-
-These pages run on the RNA branch of the 8-sample COVID-19 demo (4 healthy, `sev.level = 1`; 4 severe, `sev.level = 4`). Each page shows the Python call, the files it writes and what came out of our run.
+Every downstream function reads the sample embedding `uns['X_DR_sample']` (samples × PCs) that the [RNA tutorial](../rna.md) or the [Quick start](../quickstart.md) stores in the cell-level AnnData. This page runs each analysis once on the 8-sample COVID demo (4 healthy, `sev.level = 1`; 4 severe, `sev.level = 4`). The calls are the same for ATAC and multi-omics; only the input file changes.
 
 !!! warning "8 samples is enough to run everything, not to conclude anything"
-    CCA scores, permutation p-values, trajectory DGE and prediction scores are degenerate or very noisy with 8 samples. Use the demo to learn the calls and the outputs. For results that mean something, see the 32-donor [Sound Life RNA tutorial](../soundlife_rna.md).
+    With 8 samples, p-values sit at their floor, CCA fits almost any labels and no gene passes FDR. Use the demo to learn the calls and the files. The limits are listed under [Small cohorts](../downstream_details.md#small-cohorts).
 
-## Config keys, functions and outputs
+## Setup
 
-The config-driven run (`sampledisco --config config.yaml`, see the [Quick start](../quickstart.md)) runs these stages in the order of the table, after the sample embedding. Each stage has an on/off flag, shown here with the `rna_` prefix; the ATAC and multi-omics branches use the same keys with `atac_` and `multiomics_`. Folders are relative to the branch output, `sampledisco_demo_output/rna/` in the demo.
-
-| Stage | Config flag → main keys | Function | Output folder | Page |
-| --- | --- | --- | --- | --- |
-| Autotune α (replaces the plain embedding) | `rna_autotune_enable` → `rna_autotune_{search,scoring,scope,alpha_bounds,grouping_col}` | `run_autotune` | `sample_embedding/` | [Autotune](autotune.md) |
-| Sample distance | `rna_sample_distance_calculation` → `rna_sample_distance_methods`, `rna_grouping_columns`, `rna_summary_sample_csv_path` | `sample_distance` | `Sample_distance/<method>/` | [Sample distance](sample_distance.md) |
-| Trajectory, supervised (CCA) | `rna_trajectory_analysis` with `rna_trajectory_supervised: true` → `rna_trajectory_col`, `rna_n_cca_pcs` | `CCA_Call` | `CCA/` | [CCA](trajectory_cca.md) |
-| CCA permutation p-value | `rna_cca_pvalue` (CCA only) | `cca_pvalue_test` | `CCA_test/` | [CCA](trajectory_cca.md) |
-| Trajectory, unsupervised (TSCAN) | `rna_trajectory_analysis` with `rna_trajectory_supervised: false` → `rna_tscan_{n_clusters,origin,pseudotime_mode}`, `rna_trajectory_visualization_label` | `TSCAN` | `TSCAN/` | [TSCAN](trajectory_tscan.md) |
-| Trajectory DGE (runs only inside the trajectory stage) | `rna_trajectory_dge` → `rna_num_splines`, `rna_spline_order`, `rna_fdr_threshold`, `rna_effect_size_threshold`, `rna_top_n_genes`, `rna_trajectory_diff_gene_covariate`, `rna_visualization_gene_list` | `run_trajectory_gam_differential_gene_analysis` | `trajectoryDEG/` | [Trajectory DGE](trajectory_dge.md) |
-| Sample clustering (k-means) | `rna_sample_cluster` → `rna_cluster_number` | `cluster` | `sample_cluster/` | [Clustering](cluster.md) |
-| Proportion test | `rna_proportion_test` → `rna_cluster_differential_gene_group_col` | `proportion_test` | `sample_cluster/proportion_test/` | [Proportion test](proportion_test.md) |
-| RAISIN differential expression | `rna_cluster_dge` → `rna_cluster_differential_gene_group_col` | `raisinfit` + `run_pairwise_tests` | `raisin_results/` | [RAISIN](raisin_dge.md) |
-| Visualization | `rna_visualize_data` → `rna_plot_dendrogram_flag`, `rna_plot_cell_type_proportions_pca_flag`, `rna_plot_cell_type_expression_umap_flag`, `rna_grouping_columns`, `rna_age_bin_size`, `rna_age_column` | `visualization` | `visualization/` | [Visualization](visualization.md) |
-| Dimension association | `rna_dimension_association_analysis` → `rna_association_{continuous_cols,categorical_cols,n_permutations}` | `run_dimension_association_analysis` | `sample_association/` | [Association](sample_association.md) |
-| Prediction, label transfer | not in the config | `predict_phenotype`, `transfer_labels` | none (they return tables) | [Prediction](prediction.md) |
-
-Points that the flags alone don't tell you:
-
-- **`rna_cluster_differential_gene_group_col` replaces the clusters.** When it is set, the proportion test and RAISIN compare the groups of that column and ignore the k-means clusters. The demo config sets it to `sev.level`, so its `sample_cluster/proportion_test/` compares healthy with severe, not cluster with cluster.
-- **Several keys default to the COVID demo.** `rna_grouping_columns` and `rna_trajectory_visualization_label` default to `["sev.level"]` and `rna_trajectory_col` to `"sev.level"`. On your own data, set them to columns that exist, or the visualization stage raises an error and stops the run.
-- **Small-sample settings.** The demo config sets `rna_n_cca_pcs: 5` and `rna_spline_order: 2`; the [CCA](trajectory_cca.md) and [trajectory DGE](trajectory_dge.md) pages explain both. Its `rna_cluster_number: 3` left two single-sample clusters on our embedding; the [clustering page](cluster.md) uses 2.
-- **Rerunning only the downstream stages from the config:** set `rna_preprocessing`, `rna_cell_type_cluster` and `rna_derive_sample_embedding` to `false`. The run then reads `rna/preprocess/adata_preprocessed.h5ad` (or `rna_adata_cell_path`) and uses the `uns['X_DR_sample']` already stored in it.
-
-## Choosing a trajectory method
-
-| | CCA (supervised) | TSCAN (unsupervised) |
-| --- | --- | --- |
-| Use when | You have a phenotype to follow: severity, age, time point | You have no phenotype, or want to see whether one emerges |
-| Needs | A **numeric** `trajectory_col` (non-numeric values become NaN and those samples are dropped) | Nothing beyond the embedding; `grouping_columns` only colors the plots and orients the path |
-| Key settings | `n_components`: the first k PCs. Keep k well below n_samples − 1; with k ≥ n − 1 the fit is perfect for any labels | `n_clusters` (`None` = choose by BIC), `origin` (an endpoint cluster, 0-based integer), `pseudotime_mode` (`"rank"` or `"distance"`) |
-| Significance | `cca_pvalue_test` with `n_pcs` equal to `n_components` | none |
-| Pseudotime | Every sample, projected on the best-aligned pair of PCs, scaled to [0, 1] and (since 0.6.0) oriented to increase with `trajectory_col` | Samples on the main path of the cluster tree; samples on side branches get a branch pseudotime only |
-
-Both return a `{sample: pseudotime}` dict that [trajectory DGE](trajectory_dge.md) accepts.
-
-## Before you start
-
-The pages pick up where the [RNA tutorial](../rna.md) or the RNA config run stops: `sampledisco_demo_output/rna/preprocess/adata_preprocessed.h5ad`, a cell-level AnnData with cell types in `obs['cell_type']` and, usually, the sample embedding in `uns['X_DR_sample']`. Run every page from the folder that holds `sampledisco_demo_output/`, and start each Python session with this block:
+Run from the folder that holds `sampledisco_demo_output/`, in one Python session for the whole page:
 
 ```python
 import anndata as ad
-from sampledisco.sample_embedding import compute_sample_embedding
 from sampledisco.sample_embedding.sample_embedding import build_sample_adata
 
 OUT = "sampledisco_demo_output/rna"
-adata = ad.read_h5ad(f"{OUT}/preprocess/adata_preprocessed.h5ad")   # cells x genes
-
-if "X_DR_sample" not in adata.uns:
-    # Only when the RNA run did not store the embedding in the h5ad.
-    # batch_col=["batch"] matches rna_sample_level_batch_col in the demo config.
-    adata = compute_sample_embedding(
-        adata, OUT, sample_col="sample", celltype_col="cell_type",
-        batch_col=["batch"], use_gpu=False, save=True,
-    )
-
-pseudo_adata = build_sample_adata(adata, sample_col="sample")   # one row per sample
+adata = ad.read_h5ad(f"{OUT}/preprocess/adata_preprocessed.h5ad")  # cells x genes, with uns['X_DR_sample']
+pseudo_adata = build_sample_adata(adata, sample_col="sample")      # one row per sample
 print(adata.shape, pseudo_adata.shape)
-print(pseudo_adata.obs[["sev.level", "batch"]])
+print(pseudo_adata.obs["sev.level"].to_dict())
 ```
 
 ```text
+[build_sample_adata] dropped 10 obs column(s) that vary within a sample (per-cell values): ['celltype', 'old', 'large', 'n_genes', 'n_genes_by_counts', 'total_counts', 'total_counts_mt', 'pct_counts_mt', 'cell_type', 'cell_type_original']
 (29988, 12301) (8, 7)
-              sev.level  batch
-sample
-CoV-3-Wilk            4   Wilk
-CoV-34-Aruna          4  Aruna
-CoV-36-Aruna          4  Aruna
-CoV-4-Wilk            4   Wilk
-HD-1-Wilk             1   Wilk
-HD-20-Aruna           1  Aruna
-HD-21-Aruna           1  Aruna
-HD-4-Wilk             1   Wilk
+{'CoV-3-Wilk': 4, 'CoV-34-Aruna': 4, 'CoV-36-Aruna': 4, 'CoV-4-Wilk': 4, 'HD-1-Wilk': 1, 'HD-20-Aruna': 1, 'HD-21-Aruna': 1, 'HD-4-Wilk': 1}
 ```
 
-- `adata` is the cell-level object. The trajectory DGE, proportion test, RAISIN, EMD distance and the dendrogram read it.
-- `pseudo_adata` has one row per sample, with the embedding in `uns['X_DR_sample']` and `obsm['X_DR_sample']`. Every other function reads it.
-- The embedding has 7 PCs, not the requested 10: SampleDisco caps the PC count at n_samples − 1.
-- Loading the h5ad took 2 to 5 s and 1.3 GB of RAM. When the embedding is missing, computing it took 1.5 to 10 s on 8 CPUs, and saving it back into the h5ad up to half a minute more on our network file system; the result matched the stored embedding exactly.
+`adata` (cells) feeds the steps that need expression or cell types: EMD, trajectory DGE, the proportion test, RAISIN and the dendrogram. `pseudo_adata` (one row per sample, sample-level `obs` columns only) feeds everything else. The embedding has 7 PCs: SampleDisco caps the PC count at n_samples − 1. The whole page runs in 3 to 5 minutes and needs about 5 GB of RAM on 8 CPUs.
 
-!!! warning "Only some columns of `pseudo_adata.obs` are sample-level"
-    `build_sample_adata` copies **every** column of `adata.obs` and keeps the value of the first cell of each sample. For columns that are constant within a sample (`sample`, `batch`, `sev.level` in the demo) that is the sample's value. For cell-level columns (`n_genes`, `total_counts`, `pct_counts_mt`, `celltype`, `cell_type`, ...) it is one arbitrary cell's value, and it means nothing at the sample level. Name the real sample-level columns explicitly wherever a function takes metadata columns, as the [association page](sample_association.md) does.
+## What runs where
 
-## The whole downstream stack from Python
+The config run (`sampledisco --config config.yaml`) runs these stages after the sample embedding. Flags carry the `rna_` prefix (`atac_` and `multiomics_` for the other branches), and folders are relative to `sampledisco_demo_output/rna/`. All stages go through [`downstream_analysis`](../../api/pipeline/downstream_analysis.md), and each stage's settings are in [Downstream options and caveats](../downstream_details.md).
 
-`downstream_analysis` (in `sampledisco/wrapper/wrapper.py`; see its [API page](../../api/pipeline/downstream_analysis.md)) is the function the config run calls after the embedding. It takes the same settings as the config keys above, without the `rna_` prefix, and runs every enabled stage on an embedding you already have. Some defaults differ from the demo config; this call sets the ones that matter on 8 samples:
+| Analysis | Config flag | Python function | Output folder |
+| --- | --- | --- | --- |
+| [Sample distance](#sample-distance) | `rna_sample_distance_calculation` | `sample_distance` | `Sample_distance/<method>/` |
+| [Dimension association](#dimension-association) | `rna_dimension_association_analysis` | `run_dimension_association_analysis` | `sample_association/` |
+| [Trajectory: CCA](#trajectory) | `rna_trajectory_analysis`, `rna_trajectory_supervised: true`; `rna_cca_pvalue` | `CCA_Call`; `cca_pvalue_test` | `CCA/`; `CCA_test/` |
+| [Trajectory: TSCAN](#trajectory) | `rna_trajectory_analysis`, `rna_trajectory_supervised: false` | `TSCAN` | `TSCAN/` |
+| [Trajectory DGE](#trajectory-dge) | `rna_trajectory_dge` | `run_trajectory_gam_differential_gene_analysis` | `trajectoryDEG/` |
+| [Sample clustering](#clustering) | `rna_sample_cluster` | `cluster` | `sample_cluster/` |
+| [Proportion test](#clustering) | `rna_proportion_test` | `proportion_test` | `sample_cluster/proportion_test/` |
+| [RAISIN DGE](#clustering) | `rna_cluster_dge` | `raisinfit`, `run_pairwise_tests` | `raisin_results/` |
+| [Prediction, label transfer](#prediction) | none (Python only) | `predict_phenotype`, `transfer_labels` | none: they return tables |
+| [Visualization](#visualization) | `rna_visualize_data` | `visualization` | `visualization/` |
+| [Autotune α](#autotune) | `rna_autotune_enable` | `run_autotune` | `sample_embedding/` |
+
+## Sample distance {#sample-distance}
+
+`sample_distance` writes a sample × sample distance matrix, a clustered heatmap and a group-separation score (mean distance between groups / within groups; above 1, the groups separate). Cosine works on the embedding; EMD works on cell-type proportions, so it also needs the cells.
 
 ```python
-from sampledisco.wrapper.wrapper import downstream_analysis
+from sampledisco.sample_distance.sample_distance import sample_distance
 
-res = downstream_analysis(
-    pseudo_adata=pseudo_adata,
-    output_dir="sampledisco_demo_output/rna_downstream",   # a separate folder
-    modality="rna",
-    status_flags={"rna": {}},
-    adata_cell=adata,
-    adata_sample=adata,             # cell-level object for the proportion test and RAISIN
-    batch_col="batch",
-    grouping_columns=["sev.level"],
-    trajectory_supervised=True,     # CCA; False = TSCAN (the default)
-    trajectory_col="sev.level",
-    n_cca_pcs=3,
-    spline_order=2,                 # the default 3 fits no gene on 8 samples
-    cluster_number=2,               # the default 4 (and the demo's 3) leave 1-sample clusters
-    proportion_test=True,
-    dimension_association_analysis=True,
-    association_continuous_cols=[],
-    association_categorical_cols=["sev.level", "batch"],
+sample_distance(adata=pseudo_adata, output_dir=f"{OUT}/Sample_distance", method="cosine",
+                data_type="RNA", grouping_columns=["sev.level"])
+sample_distance(adata=pseudo_adata, output_dir=f"{OUT}/Sample_distance", method="EMD",
+                cell_adata=adata,               # cells: cell-type proportions and centroids
+                pseudobulk_adata=pseudo_adata,  # samples: group labels for the score
+                sample_column="sample", cell_type_column="cell_type",
+                grouping_columns=["sev.level"])
+```
+
+**Output** (under `Sample_distance/`): `cosine/distance_matrix_sample_DR.csv`, `cosine/sample_distance_sample_DR_heatmap.pdf` and the score in `cosine/distance_check_results_sample_DR_cosine.txt`; `EMD_distance/distance_matrix_EMD.csv` and its heatmap.
+
+On the embedding, healthy samples sit closer to each other than to severe ones (cosine score 1.41). On cell-type proportions alone the groups barely separate (EMD score 1.02). All 15 methods are listed in [the details](../downstream_details.md#sample-distance).
+
+![Cosine distances between the 8 samples](../../resource/downstream/ds_sample_distance_cosine.png)
+<div class="figure-caption"><code>Sample_distance/cosine/sample_distance_sample_DR_heatmap.pdf</code>: cosine distances (scaled to a maximum of 1) with hierarchical clustering.</div>
+
+## Dimension association {#dimension-association}
+
+`run_dimension_association_analysis` reports how much of each PC's variance every sample-level variable explains (R², with a permutation p-value and an FDR).
+
+```python
+from sampledisco.sample_association.association import run_dimension_association_analysis
+
+assoc = run_dimension_association_analysis(
+    pseudo_adata=pseudo_adata, output_dir=f"{OUT}/sample_association",
+    continuous_cols=[], categorical_cols=["sev.level", "batch"],  # the variables to test
+    n_permutations=999, sample_col="sample", random_state=42,
 )
-print(res["status_flags"]["rna"])
+table = assoc["results"]["X_DR_sample"]
+print(table.sort_values("perm_p")[["variable", "component", "r2", "perm_p", "fdr"]].head(3))
 ```
 
 ```text
-{'sample_distance_calculation': True, 'trajectory_analysis': True, 'trajectory_dge': True, 'sample_cluster': True, 'proportion_test': True, 'visualization': True, 'dimension_association_analysis': True}
+...
+     variable component        r2  perm_p    fdr
+13      batch       PC7  0.569886   0.022  0.308
+2   sev.level       PC3  0.398277   0.119  0.574
+0   sev.level       PC1  0.399612   0.123  0.574
 ```
 
-It writes the folders of the table under `sampledisco_demo_output/rna_downstream/` and returns `{"pseudo_adata", "status_flags"}`. RAISIN (`cluster_DGE=True`) and the CCA p-value (`cca_pvalue=True`) are off by default. On 8 CPUs this call took 1 to 2.5 minutes depending on the node, most of it the trajectory DGE, and the session peaked at 3.7 GB including the DGE worker processes.
+**Output** (under `sample_association/`): `variance_explained_sample.csv` (one row per variable × PC), `figures/sample_variance_heatmap.pdf` and `figures/sample_top_associations.pdf`. On the demo, severity explains a large share of the leading PCs, but with 8 samples nothing survives the FDR.
 
-## Pages
+## Trajectory: CCA, then TSCAN {#trajectory}
 
-| Page | Function | What it does |
-| --- | --- | --- |
-| [Autotune](autotune.md) | `run_autotune` | Chooses the RMD weight α of the embedding |
-| [Sample distance](sample_distance.md) | `sample_distance` | Sample × sample distances: 12 vector metrics on the embedding, 3 on cell-type proportions |
-| [Dimension association](sample_association.md) | `run_dimension_association_analysis` | Variance of each PC explained by each sample-level variable |
-| [Trajectory: CCA](trajectory_cca.md) | `CCA_Call`, `cca_pvalue_test` | Pseudotime along a phenotype, with a permutation p-value |
-| [Trajectory: TSCAN](trajectory_tscan.md) | `TSCAN` | Pseudotime from a cluster tree, without a phenotype |
-| [Trajectory DGE](trajectory_dge.md) | `run_trajectory_gam_differential_gene_analysis` | Genes that change along a pseudotime (per cell type, GAM) |
-| [Sample clustering](cluster.md) | `cluster` | K-means on the embedding |
-| [Proportion test](proportion_test.md) | `proportion_test` | Cell-type proportions between groups (CLR + moderated t-test) |
-| [RAISIN](raisin_dge.md) | `raisinfit`, `run_pairwise_tests` | Differential expression between groups of samples |
-| [Prediction and label transfer](prediction.md) | `predict_phenotype`, `transfer_labels` | Cross-validated phenotype prediction; kNN label transfer |
-| [Visualization](visualization.md) | `visualization` | Cell-type dendrogram and scatters of the embedding |
+CCA (supervised) finds the direction in the first `K` PCs that correlates best with a numeric phenotype and gives every sample a pseudotime along it. `cca_pvalue_test` compares the score with label permutations; pass the same `K` as `n_pcs`.
 
-The pages write into the same folders as the config run (`sampledisco_demo_output/rna/...`) and overwrite them, so you can compare their outputs with the table above. The trajectory DGE page uses the pseudotime from the CCA page, and the proportion test and RAISIN pages use the clusters from the clustering page; every other page needs only the block above.
+```python
+from sampledisco.sample_trajectory.CCA import CCA_Call
+from sampledisco.sample_trajectory.CCA_test import cca_pvalue_test
+
+K = 3                                     # PCs used by CCA; keep well below n_samples - 1
+score, _, ptime, _ = CCA_Call(adata=pseudo_adata, output_dir=OUT,
+                              trajectory_col="sev.level", n_components=K)
+p = cca_pvalue_test(pseudo_adata=pseudo_adata, column="X_DR_sample", input_correlation=score,
+                    output_directory=OUT, num_simulations=1000, trajectory_col="sev.level",
+                    n_pcs=K)              # must equal n_components
+print(f"CCA score on PC1-PC{K}: {score:.3f}, permutation p = {p:.3f}")
+```
+
+The output has the form:
+
+```text
+[CCA] Flipped pseudotime so it increases with 'sev.level' (Spearman rho before flip: ...)
+P-value for observed correlation ...: ... [(1 + k) / (1000 + 1)]
+CCA score on PC1-PC3: ..., permutation p = ...
+```
+
+The pseudotime `ptime` (`{sample: value}` in [0, 1]) is oriented to increase with `sev.level`. Expect a high CCA score and a small but not tiny p-value: with a 4 + 4 design an exact test cannot go below 1/35 ≈ 0.029, so the demo cannot show a strong effect. The exact numbers depend on the machine (see [run-to-run variation](../own_data.md#run-to-run-variation)).
+
+TSCAN (unsupervised) orders the samples without a phenotype: it clusters them, joins the clusters with a minimum spanning tree and follows its longest path.
+
+```python
+from sampledisco.sample_trajectory.TSCAN import TSCAN
+
+tscan = TSCAN(AnnData_sample=pseudo_adata, column="X_DR_sample", n_clusters=3, output_dir=OUT,
+              grouping_columns=["sev.level"],  # colors a plot and orients the path
+              origin=None, pseudotime_mode="rank")
+print("cluster path:", tscan["main_path"], "origin:", tscan["origin"])  # [2, 0, 1], origin 2
+```
+
+**Output**: `CCA/pca_3d_cca_sample.pdf` (the samples on the PC pair best aligned with `sev.level`), `CCA/pseudotime_sample.csv`, `CCA_test/cca_pvalue_result_X_DR_sample.txt`, and `TSCAN/clusters_by_cluster_X_DR_sample.png`, `clusters_by_grouping_X_DR_sample.png` and `X_DR_sample_pseudotime.csv`. TSCAN's main path runs through clusters `[2, 0, 1]` (0-based), starting at the end with the lower mean `sev.level`; its pseudotime is in `tscan["pseudotime"]["main_path"]`.
+
+![Samples on the chosen PC pair with the CCA direction](../../resource/downstream/ds_cca_sample.png)
+<div class="figure-caption"><code>CCA/pca_3d_cca_sample.pdf</code>: the 8 samples on PC1 and PC3, colored by severity, with the CCA direction.</div>
+
+## Trajectory DGE {#trajectory-dge}
+
+`run_trajectory_gam_differential_gene_analysis` fits a GAM along a pseudotime to each cell type's pseudobulk expression and reports the genes that change.
+
+```python
+from sampledisco.sample_trajectory.trajectory_diff_gene import run_trajectory_gam_differential_gene_analysis
+
+dge = run_trajectory_gam_differential_gene_analysis(
+    adata,                          # cell level; the pseudobulk is built inside
+    pseudotime_source=ptime,        # from CCA_Call; or tscan["pseudotime"]["main_path"]
+    sample_col="sample", celltype_col="cell_type", batch_col="batch",
+    num_splines=5, spline_order=2,  # the default spline_order=3 fits no gene on 8 samples
+    fdr_threshold=0.05, effect_size_threshold=1.0, top_n_genes=100,
+    anchor_col="sev.level",         # UP = rises with severity
+    output_dir=f"{OUT}/trajectoryDEG", verbose=False,
+)
+print(f"{len(dge)} features fitted, {(dge['fdr'] < 0.05).sum()} with FDR < 0.05")  # 9882, 0
+```
+
+**Output** (under `trajectoryDEG/`, `<ts>` a timestamp): `gam_all_genes_<ts>.tsv` (one row per feature, named `<cell type> - <gene>`), `gam_pseudoDEGs_<ts>.tsv`, `gam_summary_<ts>.txt` and plots in `visualizations/`. The call warns that nothing is significant with 8 samples, as expected.
+
+## Clustering, proportion test and RAISIN {#clustering}
+
+`cluster` runs k-means on the embedding. The proportion test (CLR-transformed cell-type proportions, moderated t-test) and RAISIN (differential expression between groups of samples) then compare the clusters.
+
+```python
+import pandas as pd
+from sampledisco.sample_clustering.cluster import cluster
+from sampledisco.sample_clustering.proportion_test import proportion_test
+from sampledisco.sample_clustering.RAISIN import raisinfit
+from sampledisco.sample_clustering.RAISIN_TEST import run_pairwise_tests
+
+sample_clusters, _ = cluster(pseudobulk_adata=pseudo_adata, output_dir=OUT,
+                             number_of_clusters=2, random_state=0)  # keep every cluster >= 2 samples
+print(pd.Series(sample_clusters).value_counts().to_dict())
+
+props = proportion_test(adata=adata, sample_col="sample", sample_to_clade=sample_clusters,
+                        celltype_col="cell_type",   # the default is "celltype"
+                        output_dir=f"{OUT}/sample_cluster/proportion_test")
+
+fit = raisinfit(adata=adata, sample_col="sample", sample_to_clade=sample_clusters,
+                testtype="unpaired", n_jobs=8, verbose=False)
+n_sig, tables = run_pairwise_tests(fit=fit, output_dir=f"{OUT}/raisin_results", verbose=False)
+print(tables["0_vs_1"].sort_values("pvalue").head(3))
+```
+
+```text
+...
+{0: 6, 1: 2}
+...
+        Foldchange      stat    pvalue       FDR
+RPS14     1.205664  4.077699  0.000045  0.559493
+PNISR     0.608640  3.790880  0.000150  0.763767
+S100A8   -1.885200 -3.736945  0.000186  0.763767
+```
+
+**Output**: `sample_cluster/kmeans_clusters_sample.csv` and `kmeans_sample_embedding.png`; `sample_cluster/proportion_test/proportion_test_0_vs_1.csv` (`logFC`, `p_value`, `FDR` per cell type) and proportion heatmaps; `raisin_results/0_vs_1/raisin_results.csv` (per gene), volcano plots and `summary_plots/`.
+
+K-means splits off two severe samples, and with 8 samples neither test finds anything at FDR < 0.05. To compare phenotype groups instead of clusters, pass `group_col="sev.level"`, as the demo config does ([details](../downstream_details.md#group-col)). RAISIN is the heaviest step: 1 to 3 minutes and up to about 5 GB of RAM on 8 CPUs.
+
+## Prediction and label transfer {#prediction}
+
+`predict_phenotype` predicts a sample label from the embedding with cross-validation; `transfer_labels` labels new samples from their nearest labelled neighbours. Both return tables and write no files.
+
+```python
+from sampledisco.sample_prediction import predict_phenotype, transfer_labels
+
+pred, metrics = predict_phenotype(pseudo_adata, label_col="sev.level",
+                                  n_splits=4,       # at most the size of the smallest class
+                                  random_state=0)
+print({k: metrics[k] for k in ("n_samples", "n_pcs", "auc", "balanced_accuracy")})
+
+query = pseudo_adata.obs_names.isin(["CoV-3-Wilk", "HD-4-Wilk"])  # pretend these are unlabelled
+table, tmetrics = transfer_labels(pseudo_adata, label_col="sev.level", query=query, n_neighbors=3)
+print(table[table["query"]])
+```
+
+```text
+{'n_samples': 8, 'n_pcs': 7, 'auc': 0.6875, 'balanced_accuracy': 0.375}
+            label  query  predicted  confidence
+sample
+CoV-3-Wilk      4   True          1    0.666667
+HD-4-Wilk       1   True          1    1.000000
+```
+
+`pred` holds the out-of-fold prediction of every sample, and `table` the transferred labels with their confidence. With 4 samples per class, these scores are noise. For donors with several samples, see [`group_col` and `score_by`](../downstream_details.md#prediction).
+
+## Visualization {#visualization}
+
+`visualization` draws a cell-type dendrogram and the samples on PC1 and PC2, colored by each grouping column.
+
+```python
+from sampledisco.visualization.visualization_other import visualization
+
+visualization(AnnData_cell=adata, pseudobulk_anndata=pseudo_adata,
+              output_dir=OUT,            # the figures go to OUT/visualization/
+              grouping_columns=["sev.level"], plot_dendrogram_flag=True,
+              plot_cell_type_proportions_pca_flag=True, plot_cell_type_expression_umap_flag=True)
+```
+
+**Output** (under `visualization/`): `cell_type_dendrogram.png`, `expression_embedding_sev.level.png` and `proportion_embedding_sev.level.png` (the same PC1–PC2 scatter in two colormaps).
+
+## Autotune {#autotune}
+
+Optional. `run_autotune` chooses α, the weight of the RMD block in the embedding (default `"equal"`), by scoring how well each candidate separates `grouping_col` and mixes `batch_col`.
+
+```python
+from sampledisco.parameter_selection.autotune import run_autotune
+
+tuned = run_autotune(
+    adata.copy(),                        # the copy keeps adata's embedding unchanged
+    output_dir="sampledisco_demo_output/rna_autotune",
+    sample_col="sample", celltype_col="cell_type",
+    batch_col="batch", grouping_col="sev.level", seed=42,
+)
+print(tuned["best_params"], round(tuned["best_score"], 3))  # {'rmd_weight': 100.0} 0.438
+```
+
+**Output**: `rna_autotune/sample_embedding/sample_embedding.csv` and `autotune_record.txt`. Here α lands on the upper bound of the search, and the score barely moves above α ≈ 40 (0.437 to 0.438): on 8 samples, read it as a mild preference for a heavier RMD block, not an exact value. To use a tuned embedding, pass `tuned["adata"]` to `build_sample_adata`. Search strategies, scorers and the config keys are in [the details](../downstream_details.md#autotune).

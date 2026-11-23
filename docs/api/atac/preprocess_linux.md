@@ -9,7 +9,7 @@ Raw counts are kept in `.layers['counts']`. The result is written to `{output_di
 
 **Import:** `from sampledisco.preparation.atac_preprocess_cpu import preprocess`
 
-**Source:** `preparation/atac_preprocess_cpu.py:180`. GPU variant: `preprocess_gpu` in `preparation/atac_preprocess_gpu.py:167`.
+**Source:** `preparation/atac_preprocess_cpu.py:184`. GPU variant: `preprocess_gpu` in `preparation/atac_preprocess_gpu.py:167`.
 
 ## Signature
 
@@ -110,7 +110,7 @@ AnnData object with n_obs × n_vars = 25193 × 228586
 Next step: [`cell_types`](../rna/cell_types_linux.md) (the ATAC example there), then [`compute_sample_embedding`](../shared/calculate_sample_embedding.md).
 
 !!! note "GPU"
-    `preprocess_gpu` runs only when called directly or when the wrapper config sets `use_gpu: true` (with a CPU fallback if RAPIDS does not import). Its `sample_level_batch_key` defaults to `"batch"`, so on data without a `batch` column pass `sample_level_batch_key=None`; positionally, `cell_meta_path` comes before `sample_column`. See [GPU acceleration](../../tutorials/gpu.md).
+    `preprocess_gpu` runs only when called directly or when the wrapper config sets `use_gpu: true` (with a CPU fallback if RAPIDS does not import). It takes the same arguments and defaults, but `cell_meta_path` comes before `sample_column` positionally. See [GPU acceleration](../../tutorials/gpu.md).
 
 !!! note "Prefer the config-driven wrapper"
     `sampledisco -m complex --config <config.yaml>` with `run_atac_pipeline: true` runs ATAC preprocessing → [`cell_types`](../rna/cell_types_linux.md) → sample embedding → downstream analysis.

@@ -79,38 +79,23 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - Tutorials:
-      - Get started:
-          - "Demo data (download)": tutorials/demo_data.md
-          - Quick start: tutorials/quickstart.md
-          - Understanding the outputs: tutorials/outputs.md
-      - Run from a config:
-          - Configuration guide: tutorials/configuration.md
-          - Config key reference: tutorials/config_reference.md
-          - Multi-omics from a config: tutorials/multiomics_config.md
-          - GPU acceleration: tutorials/gpu.md
-          - Using your own data: tutorials/own_data.md
-      - "Step by step (Python)":
-          - RNA: tutorials/rna.md
-          - ATAC: tutorials/atac.md
-          - "Multi-omics (scGLUE)": tutorials/multiomics.md
-          - "RNA + flow cytometry (MaxFuse)": tutorials/multiomics_maxfuse.md
-          - Sample embedding in depth: tutorials/sample_embedding.md
-          - "32-donor cohort (Sound Life RNA)": tutorials/soundlife_rna.md
-      - "Downstream analysis":
-          - Overview: tutorials/downstream/index.md
-          - "Autotune (α selection)": tutorials/downstream/autotune.md
-          - Sample distance: tutorials/downstream/sample_distance.md
-          - Dimension association: tutorials/downstream/sample_association.md
-          - "Trajectory — CCA": tutorials/downstream/trajectory_cca.md
-          - "Trajectory — TSCAN": tutorials/downstream/trajectory_tscan.md
-          - Trajectory DGE: tutorials/downstream/trajectory_dge.md
-          - Sample clustering: tutorials/downstream/cluster.md
-          - Proportion test: tutorials/downstream/proportion_test.md
-          - RAISIN cluster DGE: tutorials/downstream/raisin_dge.md
-          - Prediction and label transfer: tutorials/downstream/prediction.md
-          - Visualization: tutorials/downstream/visualization.md
-      - "Legacy embedding key names": legacy_keys.md
-      - "Changelog": changelog.md
+      - "1. Download the demo data": tutorials/demo_data.md
+      - "2. Quick start": tutorials/quickstart.md
+      - "3. RNA": tutorials/rna.md
+      - "4. ATAC": tutorials/atac.md
+      - "5. RNA + ATAC (scGLUE)": tutorials/multiomics.md
+      - "6. RNA + flow cytometry (MaxFuse)": tutorials/multiomics_maxfuse.md
+      - "7. Downstream analysis": tutorials/downstream/index.md
+  - Advanced:
+      - Configuration guide: tutorials/configuration.md
+      - Config key reference: tutorials/config_reference.md
+      - Outputs and resuming runs: tutorials/outputs.md
+      - Sample embedding in depth: tutorials/sample_embedding.md
+      - Downstream options and caveats: tutorials/downstream_details.md
+      - Using your own data: tutorials/own_data.md
+      - GPU acceleration: tutorials/gpu.md
+      - Legacy embedding key names: legacy_keys.md
+      - Changelog: changelog.md
   - API reference:
       - Overview: api/index.md
       - Pipeline:

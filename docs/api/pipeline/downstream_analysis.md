@@ -11,14 +11,14 @@ Phase 2 of the [`wrapper`](wrapper.md): runs the downstream steps on a finished 
 | `proportion_test` | [`proportion_test`](../downstream/proportion_test.md) on `adata_sample`, grouped by `cluster_differential_gene_group_col` if set, else by the k-means clusters | `sample_cluster/proportion_test/` |
 | `cluster_DGE` | [`raisinfit`](../downstream/raisinfit.md) (unpaired, first `batch_col`, same grouping) + [`run_pairwise_tests`](../downstream/run_pairwise_tests.md) | `raisin_results/` |
 | `visualize_data` | [`visualization`](../downstream/visualization.md) | `visualization/` |
-| `visualize_embedding` (`modality="multiomics"` only) | [`visualize_multimodal_embedding`](../downstream/visualize_multimodal_embedding.md) in its default mode | `visualization/` |
+| `visualize_embedding` (`modality="multiomics"` only) | [`visualize_multimodal_embedding`](../downstream/visualize_multimodal_embedding.md) in its default mode, then (when `multiomics_target_modality` is set) in modality mode, coloured by `multiomics_color_col` or the first grouping column | `visualization/` |
 | `dimension_association_analysis` | [`run_dimension_association_analysis`](../downstream/sample_association.md) | `sample_association/` |
 
 Errors in `proportion_test`, `cluster_DGE`, `visualize_embedding` and `dimension_association_analysis` are printed and skipped; errors in the other steps are raised.
 
 **Import:** `from sampledisco.wrapper.wrapper import downstream_analysis`
 
-**Source:** `wrapper/wrapper.py:100`
+**Source:** `wrapper/wrapper.py:111`
 
 ## Signature
 

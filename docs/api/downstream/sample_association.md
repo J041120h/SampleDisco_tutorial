@@ -36,7 +36,7 @@ def run_dimension_association_analysis(
 | `random_state` | int | `42` | Seed for the permutations. |
 | `verbose` | bool | `True` | Print progress and the variable lists. |
 
-Columns that vary within a sample are dropped. On an object from [`build_sample_adata`](../shared/build_sample_adata.md) every row is one sample, so per-cell columns (`n_genes`, `celltype`, …) are not caught by that rule and would be tested; pass both lists explicitly, as below.
+Columns that vary within a sample are dropped. [`build_sample_adata`](../shared/build_sample_adata.md) already keeps only sample-level columns, so the automatic detection tests covariates such as `batch` and `sev.level`; pass explicit lists to choose which ones, and as continuous or categorical.
 
 ## Returns
 

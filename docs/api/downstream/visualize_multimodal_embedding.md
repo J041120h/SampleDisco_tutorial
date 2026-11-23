@@ -106,4 +106,7 @@ visualize_multimodal_embedding(
 `sev.level` is detected as numeric (2 values) and `modality` as categorical. Both calls return `(None, None)` because `output_dir` is set.
 
 !!! note "Wrapper behaviour"
-    `downstream_analysis` (and so the wrapper, with `multiomics_visualize_embedding: true`) calls this function without `show_default`, i.e. in default mode, with `output_dir=<multiomics output dir>` and `visualization_grouping_column=multiomics_visualization_grouping_column`. The keys `multiomics_color_col` and `multiomics_target_modality` are passed but have no effect there.
+    With `multiomics_visualize_embedding: true`, `downstream_analysis` calls this function twice, both times with `output_dir=<multiomics output dir>`:
+    
+    - in default mode, with `visualization_grouping_column=multiomics_visualization_grouping_column`;
+    - when `multiomics_target_modality` is set (default `"ATAC"`), again in modality mode. The colour column is `multiomics_color_col`, or, if that is unset, the first of `multiomics_visualization_grouping_column` / `multiomics_grouping_columns` present in `.obs`.

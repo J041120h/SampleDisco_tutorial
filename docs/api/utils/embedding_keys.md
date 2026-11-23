@@ -32,7 +32,7 @@ def resolve_embedding_keys(adata, comp_override=None, rmd_override=None, *,
 
 | Argument | Meaning |
 | --- | --- |
-| `override` / `comp_override` / `rmd_override` | An explicit key. If it is in `.obsm` it is returned as is. If not: in 0.6.0, the canonical name `Z_comp` / `Z_rmd` falls back to the first legacy alias present, with a `FutureWarning`; any other missing key raises `KeyError`. |
+| `override` / `comp_override` / `rmd_override` | An explicit key. If it is in `.obsm` it is returned as is. If not, the canonical name `Z_comp` / `Z_rmd` falls back to the first legacy alias present, with a `FutureWarning`; any other missing key raises `KeyError`. |
 | `fallbacks` / `comp_fallbacks` / `rmd_fallbacks` | Extra keys tried after the alias table (e.g. `("X_glue",)`). |
 | `required` / `rmd_required` | `False` returns `None` instead of raising when nothing is found. |
 | `comp_key` | RMD resolver only: when no sample-preserved key exists and `required=True`, return this key with a `RuntimeWarning` (the RMD block is then near-degenerate). |
@@ -43,7 +43,7 @@ With no override, each resolver scans its alias table top to bottom (canonical n
 These are the rules behind every `None` default for `comp_emb_key`, `rmd_emb_key`, `cell_embedding_column`, `use_rep` and `embedding_key` in the API.
 
 !!! warning "Explicit key names on old files"
-    In 0.6.0, passing `comp_emb_key="Z_comp"` (or `use_rep="Z_comp"`, `rmd_emb_key="Z_rmd"`) to a file that only has the legacy names uses the legacy alias (e.g. `Z_clust`, `Z_cmd`) with a `FutureWarning`. On 0.5.0 the same call raises `KeyError`. Code meant for both versions should leave the keys at `None`, or call `migrate_obsm_keys(adata)` right after loading.
+    Passing `comp_emb_key="Z_comp"` (or `use_rep="Z_comp"`, `rmd_emb_key="Z_rmd"`) to a file that only has the legacy names uses the legacy alias (e.g. `Z_clust`, `Z_cmd`) with a `FutureWarning` (0.5.0 raised `KeyError`). Leaving the keys at `None`, or calling `migrate_obsm_keys(adata)` right after loading, avoids the warning.
 
 ## Usage
 

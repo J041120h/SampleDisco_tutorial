@@ -7,39 +7,34 @@ SampleDisco writes two cell-level embeddings into `.obsm`, matching the two view
 | `Z_comp` | $z_i^{\mathrm{comp}}$ | **removed** | cell typing, the A1/A2/A3 composition blocks, the latent anchors |
 | `Z_rmd` | $z_i^{\mathrm{RMD}}$ | **preserved** | the RMD displacement block |
 
-Those are the canonical names as of **0.3.0**. Earlier releases used different names, and objects preprocessed by them are still on disk. **You do not need to rewrite them** — every read site in the package resolves the old names automatically.
+Objects written by older releases use other names. **You do not need to rewrite them**: every step that reads an embedding resolves the old names automatically.
 
 ## Alias table
 
-Resolution goes top to bottom; the first key present in `.obsm` wins.
+Resolution goes top to bottom; the first key present in `.obsm` wins. A legacy name works with a `FutureWarning`. All legacy names will be removed in 1.0.
 
-**Composition (sample-removed) view**
-
-| Key | Written by | On read |
+| View | Canonical key | Legacy names, in order |
 |---|---|---|
-| `Z_comp` | 0.3.0+ | canonical, silent |
-| `Z_clust` | 0.2.0 | works, `FutureWarning` |
-| `X_pca_harmony` | pre-0.2 (RNA) | works, `FutureWarning` |
-| `X_lsi_harmony` | pre-0.2 (ATAC) | works, `FutureWarning` |
-| `X_glue_harmony` | pre-0.2 (multi-omics) | works, `FutureWarning` |
+| Composition (sample removed) | `Z_comp` | `Z_clust`, `X_pca_harmony` (RNA), `X_lsi_harmony` (ATAC), `X_glue_harmony` (multi-omics) |
+| RMD (sample preserved) | `Z_rmd` | `Z_cmd`, `X_pca_harmony_nosamp` (RNA), `X_lsi_harmony_nosamp` (ATAC) |
 
-**RMD (sample-preserved) view**
+Current releases also write a copy of `Z_comp` under `Z_clust`, so their files stay readable by older installs. The copy will be removed in 1.0.
 
-| Key | Written by | On read |
-|---|---|---|
-| `Z_rmd` | 0.2.0+ | canonical, silent |
-| `Z_cmd` | pre-0.2 | works, `FutureWarning` |
-| `X_pca_harmony_nosamp` | pre-0.2 (RNA) | works, `FutureWarning` |
-| `X_lsi_harmony_nosamp` | pre-0.2 (ATAC) | works, `FutureWarning` |
+## Explicit keys
 
-All legacy names are scheduled for removal in **1.0**.
+`comp_emb_key` and `rmd_emb_key` default to `None`, which resolves through the table above; that is the recommended setting. With an explicit key:
 
-!!! warning "0.2.0 silently mis-computed the RMD block on `Z_cmd` objects"
-    Through 0.2.0 the RMD resolver checked only `Z_rmd`. On an object carrying `Z_clust` + `Z_cmd`, it fell through to the **composition** key, so the displacement block was computed on the sample-*removed* embedding — no error, no warning, near-degenerate block. 0.3.0 recognises `Z_cmd` and resolves it correctly, so **sample embeddings recomputed from those objects will differ from ones generated under 0.2.0.** If you have saved metrics derived from such an object, regenerate them.
+- **The canonical name** (`"Z_comp"` or `"Z_rmd"`) falls back to its legacy alias, with a `FutureWarning`, when only the alias is present.
+- **Any other key** that is not in `.obsm` raises `KeyError`.
 
-## Forward compatibility
+Two keyword arguments were renamed; the old names still work with a `FutureWarning` until 1.0:
 
-0.3.0 writes `Z_comp` **and** a duplicate under the old name `Z_clust`, so an h5ad produced by 0.3.0 is still readable by an already-installed 0.2.0. The duplicate is removed in 1.0.
+| Old | New |
+|---|---|
+| `cluster_emb_key=` | `comp_emb_key=` |
+| `z_clust_key=` | `z_comp_key=` |
+
+No config key changed: existing config files run unmodified.
 
 ## Migrating an object in memory
 
@@ -52,18 +47,7 @@ applied = migrate_obsm_keys(adata)
 print(applied)   # e.g. [('Z_clust', 'Z_comp'), ('Z_cmd', 'Z_rmd')]
 ```
 
-This copies each legacy embedding onto its canonical name. It is **non-destructive** — the old keys stay in place, an existing canonical key is never overwritten, and **no file is written**. Save the object yourself if you want the change to persist.
+This copies each legacy embedding onto its canonical name. The old keys stay, an existing canonical key is never overwritten, and no file is written: save the object yourself to keep the change. The demo file `test_multiomics_integrated.h5ad`, for example, has `Z_clust` and `Z_cmd`.
 
-## Renamed keyword arguments
-
-| Old | New | Status |
-|---|---|---|
-| `cluster_emb_key=` | `comp_emb_key=` | accepted with a `FutureWarning`; removed in 1.0 |
-| `z_clust_key=` | `z_comp_key=` | accepted with a `FutureWarning`; removed in 1.0 |
-
-Both default to `None`, which means *auto-resolve through the table above* — the recommended setting. An explicit key behaves as follows:
-- **The canonical name** (`"Z_comp"` or `"Z_rmd"`), when that key is missing but one of its legacy aliases above is present: since 0.6.0 the alias is used, with a `FutureWarning`. In 0.5.x this raised `KeyError`.
-- **Any other explicit key** that is not in `.obsm` still raises `KeyError`.
-- **Neither the canonical name nor an alias is present:** `KeyError`.
-
-No YAML configuration key changed; existing config files run unmodified.
+!!! warning "RMD blocks computed before 0.3.0 on `Z_cmd` objects"
+    Through 0.2.0, an object with `Z_clust` + `Z_cmd` got its RMD block computed on the composition embedding, without a warning. Sample embeddings recomputed from such objects now differ; regenerate any metrics derived from them.

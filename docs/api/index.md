@@ -15,11 +15,8 @@ The import root is `sampledisco`. Only a few names are re-exported; everything e
 | `from sampledisco.sample_prediction import predict_phenotype, transfer_labels` | Re-exported by the `sample_prediction` subpackage. |
 | `import sampledisco` → `sampledisco.compute_sample_embedding`, `sampledisco.predict_phenotype`, `sampledisco.transfer_labels` | Lazy top-level exports; `from sampledisco import predict_phenotype` works. |
 | `from sampledisco.wrapper.wrapper import wrapper` | The pipeline function. **Use this spelling**: it works on every release. |
-| `from sampledisco import wrapper` (0.6.0) | A callable package: `wrapper(**cfg)` / `sampledisco.wrapper(**cfg)` runs the pipeline, and `sampledisco.wrapper.wrapper.wrapper` is still the function. Not callable on 0.5.0 (see below). |
+| `from sampledisco import wrapper` | A callable package: `wrapper(**cfg)` / `sampledisco.wrapper(**cfg)` runs the pipeline, and `sampledisco.wrapper.wrapper.wrapper` is still the function. (On 0.5.0 this returned a non-callable module.) |
 | Everything else | The defining module, as shown on each page, e.g. `from sampledisco.preparation.rna_preprocess_cpu import preprocess`. The `__init__.py` files of `preparation`, `parameter_selection`, `sample_distance`, `sample_association`, `sample_trajectory`, `sample_clustering`, `visualization` and `utils` are empty. |
-
-!!! warning "`from sampledisco import wrapper` on 0.5.0"
-    In 0.5.0, `from sampledisco import wrapper` returns the `sampledisco.wrapper` **subpackage**, and calling it raises `TypeError: 'module' object is not callable`. 0.6.0 makes that subpackage callable. `from sampledisco.wrapper.wrapper import wrapper` works on both versions, so the pages use it.
 
 ## Sections
 
@@ -35,7 +32,7 @@ The import root is `sampledisco`. Only a few names are re-exported; everything e
 
 ## Running the examples
 
-Every **Usage** block on these pages was run as written on the COVID-19 demo (8 samples: 4 healthy, 4 severe; see [Demo data](../tutorials/demo_data.md)) with sampledisco 0.6.0 on 8 CPU cores. Put the demo files in `./data/`:
+Every **Usage** block on these pages was run as written on the COVID-19 demo (8 samples: 4 healthy, 4 severe; see [Demo data](../tutorials/demo_data.md)) with sampledisco 0.6.1 on 8 CPU cores. Put the demo files in `./data/`:
 
 ```bash
 mkdir -p data
@@ -59,12 +56,12 @@ The examples write under `api_demo/` and form three chains. Run each chain in th
 2. **ATAC:** [`preprocess` (ATAC)](atac/preprocess_linux.md) → the ATAC example on [`cell_types`](rna/cell_types_linux.md).
 3. **Multi-omics** (starts from the pre-integrated file, so no scGLUE is needed): [`harmonize_xglue`](multiomics/harmonize_xglue.md) → [`cell_types_multiomics`](multiomics/cell_types_multiomics_linux.md) → [`compute_sample_embedding` (multi-omics)](multiomics/calculate_multiomics_sample_embedding.md) → [`save_embedding_to_h5ad`](shared/save_embedding_to_h5ad.md) → [`visualize_multimodal_embedding`](downstream/visualize_multimodal_embedding.md). The [key-name example](utils/embedding_keys.md) also reads the pre-integrated file.
 
-Each example lists what it writes, what it printed, and its runtime and peak RAM. On 8 CPU cores, running every RNA-based example in order took about 7 minutes (peak 4.6 GB, during RAISIN), the two ATAC examples about 6.5 minutes (8.7 GB), and the multi-omics chain about 3.5 minutes (3 GB).
+Each example lists what it writes, what it printed, and its runtime and peak RAM. Examples that call `build_sample_adata` first print its `[build_sample_adata] dropped … obs column(s) …` line; the pages leave it out. On 8 CPU cores, running every RNA-based example in order took about 7 minutes (peak 4.6 GB, during RAISIN), the two ATAC examples about 6.5 minutes (8.7 GB), and the multi-omics chain about 3.5 minutes (3 GB).
 
 !!! note "Your numbers will differ"
-    File names, shapes and the steps that run are stable, but the numbers are not bit-reproducible across machines: Harmony, the neighbor graph and Leiden give slightly different results on different CPUs. Two runs of the RNA chain on two cluster nodes found 19 and 18 Leiden clusters before the merge to 8, with different cell-type sizes, and every number downstream moved with them (for example the CCA correlation was 0.762 and 0.774). The printed outputs on these pages come from one complete run.
+    Rerunning on the same kind of machine gives identical results, but different CPU types (e.g. AVX2 vs AVX-512) give slightly different floating-point results, and Leiden can then split the cells differently. Two runs of the RNA chain on two cluster nodes found 19 and 18 Leiden clusters before the merge to 8, and every number downstream moved with them (the CCA correlation was 0.762 and 0.774). The Harmony backend matters too: these runs used harmonypy, while a default install uses harmony-pytorch. File names, shapes and the steps that run do not change. The printed outputs on these pages come from one complete run.
 
 !!! warning "Eight samples are a smoke test, not an analysis"
-    The demo has 8 samples (16 units in multi-omics). The sample embedding is capped at 7 PCs (units − 1); a CCA on all 7 PCs has a correlation of 1.0 by construction and a meaningless permutation p-value (the examples use 2 PCs); p-values and prediction scores are noisy; and trajectory DGE has very little power. Use the examples to learn the calls and the outputs. For numbers that mean something, see the 32-sample [Sound Life walkthrough](../tutorials/soundlife_rna.md).
+    The demo has 8 samples (16 units in multi-omics). The sample embedding is capped at 7 PCs (units − 1); a CCA on all 7 PCs has a correlation of 1.0 by construction and a meaningless permutation p-value (the examples use 2 PCs); p-values and prediction scores are noisy; and trajectory DGE has very little power. Use the examples to learn the calls and the outputs; see [Small cohorts](../tutorials/downstream_details.md#small-cohorts) for the limits.
 
 If you are unsure which function to call next, the tutorials walk through the end-to-end order: [RNA](../tutorials/rna.md), [ATAC](../tutorials/atac.md), [Multi-omics](../tutorials/multiomics.md), [Downstream](../tutorials/downstream/index.md).

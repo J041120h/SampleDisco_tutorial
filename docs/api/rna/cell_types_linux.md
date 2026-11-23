@@ -5,7 +5,7 @@ Cell-type assignment by Leiden clustering on the sample-removed cell embedding (
 - **Neighbor graph.** RNA: `sc.pp.neighbors` on the first `cell_embedding_num_PCs` columns of the embedding. ATAC (detected by `obsm['X_lsi']`): cosine metric on all columns of the embedding.
 - **Clustering.** Leiden (igraph flavor, seed 42). Labels are written to `obs['cell_type']` as strings `"1"`, `"2"`, … .
 - **Target count.** With `n_target_clusters`, the resolution is raised in steps of 0.5 (up to 5.0) until Leiden finds at least that many clusters; if it overshoots, cluster centroids are merged by average-linkage hierarchical clustering down to the target. The original labels are kept in `obs['cell_type_original']` and the merge map in `uns['cluster_mapping']`.
-- **Existing labels.** With `existing_cell_types=True` and `cell_type_column` present in `.obs`, the labels are copied to `obs['cell_type']` (and merged down if above `n_target_clusters`) instead of re-clustering.
+- **Existing labels.** With `existing_cell_types=True` and `cell_type_column` present in `.obs`, the labels are copied to `obs['cell_type']` instead of re-clustering. If there are more of them than `n_target_clusters`, they are merged down, with a `UserWarning` (the originals stay in `cell_type_column`; leave `n_target_clusters` at `None` to keep them all).
 
 **Import:** `from sampledisco.preparation.cell_type_cpu import cell_types`
 
@@ -61,7 +61,7 @@ With `output_dir` set:
 
 - `{output_dir}/preprocess/cell_type.csv`: columns `cell_id`, `cell_type`.
 - `{output_dir}/preprocess/umap_cell_type.png`: when `umap=True` and `umap_plots=True`.
-- With `save=True`: the AnnData, at `defined_output_path` if given, otherwise `{output_dir}/preprocess/adata_preprocessed.h5ad` (overwriting the preprocess output, which is what the wrappers do).
+- With `save=True`: the AnnData, gzip-compressed, at `defined_output_path` if given, otherwise `{output_dir}/preprocess/adata_preprocessed.h5ad` (overwriting the preprocess output, which is what the wrappers do).
 
 ## Usage
 
@@ -134,7 +134,7 @@ cell_type
 ```
 
 !!! warning "`cell_types_atac` is not used by the pipeline"
-    `sampledisco.preparation.ATAC_cell_type.cell_types_atac` (GPU: `cell_types_atac_gpu`) is an older ATAC-only routine with a different signature (`Save=`, `use_rep=`, `cluster_resolution=`). The ATAC wrapper calls the `cell_types` documented here. `cell_types_atac`'s `n_target_clusters` merge path calls an undefined function (`cell_type_dendrogram_atac`) in 0.5.0 and 0.6.0.
+    `sampledisco.preparation.ATAC_cell_type.cell_types_atac` (GPU: `cell_types_atac_gpu`) is an older ATAC-only routine with a different signature (`Save=`, `use_rep=`, `cluster_resolution=`). The ATAC wrapper calls the `cell_types` documented here. Two quirks of `cell_types_atac`: with `Save=True` it writes `adata_sample.h5ad` to `{output_dir}/preprocess/` when it also draws its UMAP plots (`generate_plots=True` and a UMAP exists), and to `{output_dir}/` otherwise; and it uses a cosine neighbor graph only for existing labels, not for fresh clustering.
 
 !!! note "Wrapper behaviour"
-    The wrappers call `cell_types(..., cell_type_column=<*_celltype_col>, save=True, output_dir=<modality output dir>)`. In 0.6.0 they then switch to `obs['cell_type']` for the sample embedding and the downstream steps (and return the column used as `results['rna_results']['celltype_col']`), so the new or merged labels are used whatever `rna_celltype_col` / `atac_celltype_col` is. In 0.5.0 the embedding read `<*_celltype_col>` itself, so with a column other than `cell_type` it used that column's original labels. GPU (`cell_types_gpu`) is used only when the config sets `use_gpu: true` and RAPIDS imports.
+    The wrappers call `cell_types(..., cell_type_column=<*_celltype_col>, save=True, output_dir=<modality output dir>)`. They then switch to `obs['cell_type']` for the sample embedding and the downstream steps (and return the column used as `results['rna_results']['celltype_col']`), so the new or merged labels are used whatever `rna_celltype_col` / `atac_celltype_col` is. GPU (`cell_types_gpu`) is used only when the config sets `use_gpu: true` and RAPIDS imports.

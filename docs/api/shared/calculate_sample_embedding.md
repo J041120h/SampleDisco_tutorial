@@ -14,7 +14,7 @@ The same function serves RNA, ATAC and multi-omics; pass `modality_col="modality
 
 **Import:** `from sampledisco.sample_embedding import compute_sample_embedding` (also `sampledisco.compute_sample_embedding`).
 
-**Source:** `sample_embedding/__init__.py:23` (CPU/GPU dispatcher) → `sample_embedding/sample_embedding.py:143` (CPU) or `sample_embedding/sample_embedding_gpu.py:162` (GPU).
+**Source:** `sample_embedding/__init__.py:23` (CPU/GPU dispatcher) → `sample_embedding/sample_embedding.py:162` (CPU) or `sample_embedding/sample_embedding_gpu.py:164` (GPU).
 
 !!! note "Renamed and unified"
     This replaces the old `calculate_sample_embedding` / `calculate_multiomics_sample_embedding` pair, which built two keys (`X_DR_expression`, `X_DR_proportion`) and returned `(pseudo_dict, pseudo_adata)`. The current function writes one key and returns the cell-level AnnData.
@@ -59,7 +59,7 @@ def compute_sample_embedding(
 | `use_gpu` | bool | `False` | Use the RAPIDS implementation: the soft assignments and the final PCA run on the GPU (`cupy`/`cuml`). The k-means centres are fitted on the CPU with scikit-learn's `MiniBatchKMeans` (cuML's if the build has one), and the sample-level Harmony runs on the CPU with harmonypy, as on the CPU path. Falls back to CPU with a message when `cupy`/`cuml` are missing or the GPU call fails. |
 | `sample_col` | str | `"sample"` | Sample column. |
 | `celltype_col` | str | `"cell_type"` | Cell-type column for A1 and the RMD block. At least 2 cell types and 2 units are required. |
-| `comp_emb_key` | str or None | `None` | `.obsm` key of the sample-removed view. `None` resolves `Z_comp`, then `Z_clust`, `X_pca_harmony`, `X_lsi_harmony`, `X_glue_harmony` (legacy names give a `FutureWarning`). An explicit `"Z_comp"` on an old file falls back the same way in 0.6.0 (with a `FutureWarning`); 0.5.0 raised `KeyError`. See [key resolvers](../utils/embedding_keys.md). |
+| `comp_emb_key` | str or None | `None` | `.obsm` key of the sample-removed view. `None` resolves `Z_comp`, then `Z_clust`, `X_pca_harmony`, `X_lsi_harmony`, `X_glue_harmony` (legacy names give a `FutureWarning`). An explicit `"Z_comp"` on an old file falls back the same way, with a `FutureWarning`. See [key resolvers](../utils/embedding_keys.md). |
 | `rmd_emb_key` | str or None | `None` | `.obsm` key of the sample-preserved view. `None` resolves `Z_rmd`, then `Z_cmd`, `X_pca_harmony_nosamp`, `X_lsi_harmony_nosamp`. If none exists, it falls back to the composition key with a `RuntimeWarning`; the RMD block is then near-degenerate and the result is not the published method. There is no `X_glue` fallback here (the multi-omics wrapper adds one). |
 | `modality_col` | str or None | `None` | Set (e.g. `"modality"`) for multi-omics: units become `<sample>_<modality>` and the RMD reference group is the modality. |
 | `batch_col` | str, list or None | `None` | Sample-level batch column(s). The first one sets the single-omics RMD group (majority label per unit) and the Harmony labels; with two or more columns, Harmony gets one covariate per column (majority label per unit). |
@@ -71,7 +71,7 @@ def compute_sample_embedding(
 | `block_weights` | list or None | `None` | Explicit weights, one per block (4 with RMD, 3 without). `None` uses w_A1 = √(K_fine / K_c), w_A2 = √(K_fine / K_med), w_A3 = 1, w_RMD = α, where K_c is the number of cell types. |
 | `rmd_weight` | float or `"equal"` | `"equal"` | α. `"equal"` gives the RMD block the same energy as the three composition blocks together: α² = w_A1² + w_A2² + w_A3², rounded to 2 decimals. A finite positive number fixes α (0.60 was the default before 0.5.0). Anything else raises `ValueError`. [`run_autotune`](run_autotune.md) searches α instead. |
 | `pca_components` | int | `10` | PCs kept; capped at `n_units − 1`. |
-| `batch_method` | str | `"harmony"` | Sample-level correction: `"harmony"` (harmonypy; falls back to linear regression, then to no correction, if it fails), `"linear"` (regress out the batch labels per PC) or `"none"`. Any correction runs only when there are **at least 8 units and at least 2 batch labels**; otherwise the PCA scores are used as is. Without `batch_col`, single-omics units all share one label, so no correction runs; multi-omics units are labelled by modality (or modality × batch). |
+| `batch_method` | str | `"harmony"` | Sample-level correction: `"harmony"` (harmonypy; falls back to linear regression, then to no correction, if it fails), `"linear"` (regress out the batch labels per PC) or `"none"`; any other value raises `ValueError`. Harmony here is single-threaded, so reruns are reproducible. Any correction runs only when there are **at least 8 units and at least 2 batch labels**; otherwise the PCA scores are used as is. Without `batch_col`, single-omics units all share one label, so no correction runs; multi-omics units are labelled by modality (or modality × batch). |
 | `save` | bool | `True` | Write the CSV and block files (and update the h5ad, see `save_cell_adata`). |
 | `verbose` | bool | `True` | Print progress. |
 | `seed` | int | `42` | Seed for k-means, RMD, PCA and Harmony. |
@@ -83,7 +83,7 @@ def compute_sample_embedding(
 The **same cell-level `AnnData`**, modified in place, with:
 
 - `.uns['X_DR_sample']`: `pandas.DataFrame`, units × PCs (`PC1`, `PC2`, …), index named `sample`.
-- `.uns['sample_embedding_params']`: dict with `medium_K`, `fine_K` (the K values actually used), `K_c`, `use_clr`, `use_rmd`, `rmd_weight` (the resolved α), `block_weights`, `pca_components`, `batch_method`, `comp_emb_key`, `rmd_emb_key`, `modality_col`, `batch_col`, `batch_cols_multi`, `seed` and `backend` (`"cpu"` or `"gpu"`).
+- `.uns['sample_embedding_params']`: dict with `medium_K`, `fine_K` (the K values actually used), `K_c`, `use_clr`, `use_rmd`, `rmd_weight` (the resolved α), `block_weights`, `pca_components` (the number of PCs actually used, at most units − 1), `pca_components_requested`, `batch_method`, `comp_emb_key`, `rmd_emb_key`, `modality_col`, `batch_col`, `batch_cols_multi`, `seed` and `backend` (`"cpu"` or `"gpu"`).
 
 There is no `.obsm['X_DR_sample']` on the cell-level object. [`build_sample_adata`](build_sample_adata.md) turns the result into one row per unit for the downstream functions.
 

@@ -8,7 +8,7 @@ The ATAC branch replaces RNA-style log-normalization with TF-IDF + LSI. Only pre
 | [`cell_types`](rna/cell_types_linux.md) *(shared)* | `sampledisco.preparation.cell_type_cpu` (GPU: `cell_type_gpu.cell_types_gpu`) | Leiden on `Z_comp`, cosine neighbors for ATAC. This is what the wrapper calls for ATAC. |
 
 !!! warning "`cell_types_atac` is not the pipeline's ATAC typer"
-    `sampledisco.preparation.ATAC_cell_type.cell_types_atac` is an older ATAC-only routine. The ATAC wrapper does not call it, and in 0.5.0 and 0.6.0 its `n_target_clusters` merge path calls a function that does not exist (`cell_type_dendrogram_atac`, a `NameError`). Use [`cell_types`](rna/cell_types_linux.md).
+    `sampledisco.preparation.ATAC_cell_type.cell_types_atac` is an older ATAC-only routine. The ATAC wrapper does not call it, and its save location and neighbor metric differ from `cell_types` (see the note on that page). Use [`cell_types`](rna/cell_types_linux.md).
 
 ## Shared steps
 

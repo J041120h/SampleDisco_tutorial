@@ -1,10 +1,10 @@
 # `cca_pvalue_test`
 
-Permutation test for a CCA correlation. It shuffles the phenotype `num_simulations` times, fits a one-component CCA between the **first `n_pcs` columns** of the embedding and the shuffled phenotype, and records `|corr|` each time. With k the number of permuted correlations at least as large as `input_correlation` and N = `num_simulations`, the p-value is (1 + k) / (N + 1): it is never 0, and its smallest possible value is 1 / (N + 1). (0.5.0 returned k / N, which could be 0.) The phenotype is converted to numbers and samples with a missing value are dropped, as in [`CCA_Call`](trajectory_cca_call.md). A histogram of the null and a text summary are written.
+Permutation test for a CCA correlation. It shuffles the phenotype `num_simulations` times, fits a one-component CCA between the **first `n_pcs` columns** of the embedding and the shuffled phenotype, and records `|corr|` each time. With k the number of permuted correlations at least as large as `input_correlation` and N = `num_simulations`, the p-value is (1 + k) / (N + 1): it is never 0, and its smallest possible value is 1 / (N + 1). The phenotype is converted to numbers and samples with a missing value are dropped, as in [`CCA_Call`](trajectory_cca_call.md). A histogram of the null and a text summary are written.
 
 **Import:** `from sampledisco.sample_trajectory.CCA_test import cca_pvalue_test`
 
-**Source:** `sample_trajectory/CCA_test.py:557`
+**Source:** `sample_trajectory/CCA_test.py:567`
 
 ## Signature
 
@@ -43,8 +43,8 @@ def cca_pvalue_test(
 
 `float`: the permutation p-value (1 + k) / (N + 1). With N = 1000 the smallest possible value is 1/1001 ≈ 0.001.
 
-!!! note "Degenerate null (0.6.0)"
-    When the PCs used reach the number of samples − 1 (for example 7 PCs on 8 samples), CCA fits any labelling perfectly: the observed score is 1.0 by construction, every permuted correlation is 1.0 too, and the p-value is meaningless. 0.5.0 then crashed while drawing the histogram (`ValueError: Too many bins for data range`). 0.6.0 returns the p-value, warns (`RuntimeWarning: ... permutation null is degenerate ...; the p-value carries little information`) and draws a single-bin histogram. Keep `n_pcs` (and `CCA_Call`'s `n_components`) well below the number of samples.
+!!! note "Degenerate null"
+    When the PCs used reach the number of samples − 1 (for example 7 PCs on 8 samples), CCA fits any labelling perfectly: the observed score is 1.0 by construction, every permuted correlation is 1.0 too, and the p-value is meaningless. The function still returns the p-value, warns (`RuntimeWarning: ... permutation null is degenerate ...; the p-value carries little information`) and draws a single-bin histogram. Keep `n_pcs` (and `CCA_Call`'s `n_components`) well below the number of samples.
 
 ## Output files
 
@@ -76,8 +76,8 @@ print(round(score, 3), p)
 
 ```text
 [CCA] Flipped pseudotime so it increases with 'sev.level' (Spearman rho before flip: -0.873)
-P-value for observed correlation 0.7738352008760679: 0.04195804195804196 [(1 + 41) / (1000 + 1)]
+P-value for observed correlation 0.7738352008760678: 0.04195804195804196 [(1 + 41) / (1000 + 1)]
 0.774 0.04195804195804196
 ```
 
-`cca_pvalue_result_X_DR_sample.txt` holds the same numbers plus `P-value definition: (1 + k) / (N + 1) with k = 41 of N = 1000 permuted |r| >= observed` and `N samples used: 8`. 0.5.0 reported k / N = 0.041 for this run. With 8 samples and two severity levels, this p-value is fragile; see the [Sound Life walkthrough](../../tutorials/soundlife_rna.md) for a 32-sample test.
+`cca_pvalue_result_X_DR_sample.txt` holds the same numbers plus `P-value definition: (1 + k) / (N + 1) with k = 41 of N = 1000 permuted |r| >= observed` and `N samples used: 8`. With 8 samples and two severity levels, this p-value is fragile; see [Small cohorts](../../tutorials/downstream_details.md#small-cohorts).

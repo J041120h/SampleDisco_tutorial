@@ -31,10 +31,7 @@ A new `AnnData` with one row per embedding unit, in the embedding's order:
 - `.X`: the embedding values (float32, units × PCs).
 - `.obsm['X_DR_sample']`: the same matrix; `.uns['X_DR_sample']`: a copy of the `DataFrame`.
 - `.uns['sample_embedding_params']`: copied when present.
-- `.obs`: indexed by unit id (index name `sample`), one column per `adata.obs` column, holding the **first non-missing value** among that unit's cells.
-
-!!! warning "Per-cell columns become per-sample columns"
-    Every `.obs` column is carried over, including per-cell ones (`n_genes`, `total_counts`, `celltype`, `cell_type`, …), which then hold one arbitrary cell's value. Downstream functions that scan all `.obs` columns, such as [`run_dimension_association_analysis`](../downstream/sample_association.md) with automatic column detection, will test them as if they were sample-level. Pass explicit column lists there, or drop such columns from `pseudo.obs`.
+- `.obs`: indexed by unit id (index name `sample`), with the `adata.obs` columns that are **constant within every unit** (missing values ignored), holding that value. Columns that vary within a unit (per-cell values such as `n_genes`, `total_counts` or the cell types) are dropped and listed in one printed line, `[build_sample_adata] dropped N obs column(s) that vary within a sample (per-cell values): [...]`.
 
 ## Output files
 
@@ -57,8 +54,9 @@ print(pseudo.obs[["sev.level", "batch"]])
 Output (under a second):
 
 ```text
+[build_sample_adata] dropped 10 obs column(s) that vary within a sample (per-cell values): ['celltype', 'old', 'large', 'n_genes', 'n_genes_by_counts', 'total_counts', 'total_counts_mt', 'pct_counts_mt', 'cell_type', 'cell_type_original']
 AnnData object with n_obs × n_vars = 8 × 7
-    obs: 'celltype', 'sample', 'old', 'large', 'batch', 'sev.level', 'n_genes', 'n_genes_by_counts', 'total_counts', 'total_counts_mt', 'pct_counts_mt', 'cell_type', 'cell_type_original'
+    obs: 'sample', 'batch', 'sev.level'
     uns: 'X_DR_sample', 'sample_embedding_params'
     obsm: 'X_DR_sample'
              sev.level  batch
@@ -72,7 +70,5 @@ HD-20-Aruna          1  Aruna
 HD-21-Aruna          1  Aruna
 HD-4-Wilk            1   Wilk
 ```
-
-Note the per-cell columns (`celltype`, `n_genes`, `total_counts`, `cell_type`, …) in `.obs`; see the warning above.
 
 For multi-omics, see the example on [`compute_sample_embedding` (multi-omics)](../multiomics/calculate_multiomics_sample_embedding.md), which passes `modality_col="modality"`.
