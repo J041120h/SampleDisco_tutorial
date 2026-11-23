@@ -78,4 +78,4 @@ HD-4-Wilk        1  False         1    1.000000
 
 `label` keeps the true value of the two held-out queries, so you can see that one of them (`CoV-3-Wilk`) is mislabelled. With only 2 severe references left, 3 neighbors mostly vote "1"; on 8 samples this is a demonstration of the call, not a test of the method.
 
-See [Prediction and label transfer](../../tutorials/downstream/index.md#prediction) and [its options](../../tutorials/downstream_details.md#prediction).
+See [Prediction and label transfer](../../tutorials/downstream/index.md#prediction) and its options there.

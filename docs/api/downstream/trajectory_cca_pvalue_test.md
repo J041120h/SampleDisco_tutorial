@@ -80,4 +80,4 @@ P-value for observed correlation 0.7738352008760678: 0.04195804195804196 [(1 + 4
 0.774 0.04195804195804196
 ```
 
-`cca_pvalue_result_X_DR_sample.txt` holds the same numbers plus `P-value definition: (1 + k) / (N + 1) with k = 41 of N = 1000 permuted |r| >= observed` and `N samples used: 8`. With 8 samples and two severity levels, this p-value is fragile; see [Small cohorts](../../tutorials/downstream_details.md#small-cohorts).
+`cca_pvalue_result_X_DR_sample.txt` holds the same numbers plus `P-value definition: (1 + k) / (N + 1) with k = 41 of N = 1000 permuted |r| >= observed` and `N samples used: 8`. With 8 samples and two severity levels, this p-value is fragile; see [Small cohorts](../../tutorials/downstream/index.md#small-cohorts).

@@ -91,4 +91,4 @@ ZYG11B   -0.038858 -0.405257  0.685288  0.999956
 ZXDC      0.024459  0.254218  0.799327  0.999956
 ```
 
-About 80 s (both calls) and 4.6 GB including workers. Four samples per group leave RAISIN little power; see [RAISIN in the downstream tutorial](../../tutorials/downstream/index.md#clustering) and its [`group_col` and design options](../../tutorials/downstream_details.md#group-col).
+About 80 s (both calls) and 4.6 GB including workers. Four samples per group leave RAISIN little power; see [RAISIN in the downstream tutorial](../../tutorials/downstream/index.md#clustering) and its [`group_col` and design options](../../tutorials/downstream/index.md#group-col).

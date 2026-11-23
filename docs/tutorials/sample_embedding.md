@@ -73,7 +73,7 @@ Each block is centred and scaled to a Frobenius norm of `√n_units × w`, so it
 
 - The coarse cell-type fractions weigh most: a composition block's variance is inversely proportional to its number of columns.
 - **`rmd_weight="equal"`** (default) sets `α² = w_A1² + w_A2² + w_A3²`, so the RMD block carries as much variance as the three composition blocks together.
-- **A number** fixes α (it must be positive). Lower values favour composition, higher values favour cell states. [Autotune](downstream_details.md) chooses α from the data.
+- **A number** fixes α (it must be positive). Lower values favour composition, higher values favour cell states. [Autotune](downstream/index.md#autotune) chooses α from the data.
 - **`block_weights=[w_A1, w_A2, w_A3, w_RMD]`** overrides everything, including `rmd_weight`. It needs one weight per block (3 with `use_rmd=False`).
 
 ## PCA and sample-level batch correction
@@ -104,7 +104,7 @@ Any other value raises `ValueError`. Below about 20 units, Harmony has little or
 | `rmd_emb_key` | `Z_rmd`, then the legacy names `Z_cmd`, `X_pca_harmony_nosamp`, `X_lsi_harmony_nosamp` |
 
 - The RNA and ATAC `preprocess` functions write both keys. In multi-omics, `harmonize_xglue` writes `Z_comp`, and `Z_rmd` is the scGLUE embedding `X_glue`.
-- A legacy name works with a `FutureWarning` ([Legacy embedding key names](../legacy_keys.md)).
+- A legacy name works with a `FutureWarning` ([Legacy embedding key names](../api/utils/embedding_keys.md)).
 - If no RMD embedding is found, the function falls back to the composition key with a `RuntimeWarning`. The RMD block is then near-degenerate, and the result is not the published method.
 
 ## Outputs
@@ -178,7 +178,7 @@ harmonypy's own `INFO` lines are left out. What the log shows:
 
 | Option | Default | Effect | When to change it |
 |---|---|---|---|
-| `rmd_weight` | `"equal"` | Weight α of the RMD block. | Lower it when the phenotype is mainly a change in composition, raise it when it is a change in cell state. [Autotune](downstream_details.md) chooses it from the data. |
+| `rmd_weight` | `"equal"` | Weight α of the RMD block. | Lower it when the phenotype is mainly a change in composition, raise it when it is a change in cell state. [Autotune](downstream/index.md#autotune) chooses it from the data. |
 | `use_rmd` | `True` | `False` drops the RMD block: composition only. | To test whether a signal is pure composition. |
 | `use_clr` | `False` | Centred log-ratio of A1–A3: changes in rare cell types weigh more. | To compare compositions on a log-ratio scale. |
 | `medium_K`, `fine_K` | `120`, `300` | Number of anchors in A2 and A3, capped by the cell count. | Rarely; the A weights rescale automatically. |

@@ -71,7 +71,7 @@ AnnData object with n_obs × n_vars = 8 × 7
 |---|---|
 | `X`, `layers['counts']` | log-normalized expression of the genes that passed QC, and the raw counts |
 | `obs['cell_type']` | the labels from cell typing (`cell_type_original`: the Leiden clusters before merging) |
-| `obsm['Z_comp']`, `obsm['Z_rmd']` | the cell embeddings with sample differences removed and kept ([legacy names](../legacy_keys.md)) |
+| `obsm['Z_comp']`, `obsm['Z_rmd']` | the cell embeddings with sample differences removed and kept ([legacy names](../api/utils/embedding_keys.md)) |
 | `uns['X_DR_sample']` | the sample embedding, a DataFrame of samples × PCs |
 | `uns['sample_embedding_params']` | the settings it was computed with ([details](sample_embedding.md#outputs)) |
 

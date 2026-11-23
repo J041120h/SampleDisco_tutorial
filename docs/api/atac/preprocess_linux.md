@@ -73,7 +73,7 @@ After these filters, peaks detected in fewer than 0.1% of the remaining cells ar
 - `X_lsi_rmd`: LSI on the sample-naive HVFs.
 - `Z_rmd`: Harmony pass 2, sample preserved (or `X_lsi_rmd` itself without `cell_level_batch_key`).
 
-Older files use earlier names for these views; see [Legacy embedding key names](../../legacy_keys.md).
+Older files use earlier names for these views; see [Legacy embedding key names](../utils/embedding_keys.md).
 
 ## Output files
 

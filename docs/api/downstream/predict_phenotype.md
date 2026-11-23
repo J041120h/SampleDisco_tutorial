@@ -78,4 +78,4 @@ HD-4-Wilk        1         4    0.25    0.75     2
 With `sev.level` values 1 and 4, class `4` is the positive class for the AUC. Below chance here; an earlier run on another node gave AUC 0.5. Six training samples per fold are not enough to learn anything stable.
 
 !!! warning "Eight samples"
-    With 8 samples each test fold holds 2, so AUC and accuracy jump in steps and change with `random_state`. See [Prediction and label transfer](../../tutorials/downstream/index.md#prediction) and [`group_col` and `score_by`](../../tutorials/downstream_details.md#prediction).
+    With 8 samples each test fold holds 2, so AUC and accuracy jump in steps and change with `random_state`. See [Prediction and label transfer](../../tutorials/downstream/index.md#prediction); its options cover `group_col` and `score_by`.

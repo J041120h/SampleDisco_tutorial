@@ -1,6 +1,6 @@
 # RNA
 
-This page runs the scRNA-seq branch on the COVID demo, one function at a time: load the data, preprocess it, call cell types and build the sample embedding. The arguments are the demo-config values, so you get the RNA part of the [quick start](quickstart.md) run. It runs in about 3 minutes on 8 CPU cores and needs about 3 GB of RAM.
+This page runs the scRNA-seq branch on the COVID demo, one function at a time: load the data, preprocess it, call cell types, build the sample embedding and plot it. The arguments are the demo-config values, so you get the RNA part of the [quick start](quickstart.md) run. It runs in about 2 minutes on 8 CPU cores and needs about 3 GB of RAM.
 
 ## 1. Load the data
 
@@ -119,6 +119,34 @@ print(emb.shape)
 
 !!! note "Your numbers will differ a little"
     Reruns on the same kind of machine give identical results; on a different CPU type the cluster count and the embedding can move slightly. See [Run-to-run variation](own_data.md#run-to-run-variation).
+
+## 5. Plot the sample embedding
+
+`build_sample_adata` turns `uns['X_DR_sample']` into a one-row-per-sample AnnData that keeps only the sample-level `obs` columns, such as `sev.level`, so the samples can be drawn on PC1 and PC2.
+
+```python
+import matplotlib.pyplot as plt
+from sampledisco.sample_embedding.sample_embedding import build_sample_adata
+
+sample_adata = build_sample_adata(adata, sample_col="sample")  # one row per sample
+pcs, sev = sample_adata.obsm["X_DR_sample"], sample_adata.obs["sev.level"]
+fig, ax = plt.subplots(figsize=(5, 4))
+for level, color in zip(sorted(sev.unique()), ["#2a78d6", "#eb6834"]):
+    ax.scatter(*pcs[sev == level, :2].T, s=60, color=color, edgecolor="white", label=level)
+ax.set(xlabel="PC1", ylabel="PC2", title="Sample embedding")
+ax.legend(title="sev.level")
+fig.savefig(f"{OUT}/sample_embedding/sample_embedding_pc12.png", dpi=150, bbox_inches="tight")
+```
+
+**Output**
+
+- `sample_adata`: 8 samples × 7 PCs in `obsm['X_DR_sample']`, with the sample-level `obs` columns; `build_sample_adata` prints the 10 per-cell columns it drops.
+- `sampledisco_demo_output/rna/sample_embedding/sample_embedding_pc12.png` (below): the 8 samples on PC1 and PC2, colored by `sev.level`.
+
+![The 8 demo RNA samples on PC1 and PC2 of the sample embedding, colored by severity](../resource/rna/sample_embedding_pc12.png)
+<div class="figure-caption">The 8 samples on PC1 and PC2 of this run's sample embedding, blue for healthy (1) and orange for severe (4). Three of the four healthy samples sit together; the severe samples spread across the plot.</div>
+
+For the package's built-in plots (a cell-type dendrogram and the PC1–PC2 scatter for each grouping column), see [Visualization](downstream/index.md#visualization) on the Downstream page.
 
 Each argument above is an `rna_*` key of the demo config ([Configuration guide](configuration.md)); GPU versions of these calls are in [GPU acceleration](gpu.md).
 

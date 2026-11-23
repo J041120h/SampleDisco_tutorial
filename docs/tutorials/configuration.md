@@ -212,6 +212,6 @@ This takes about 2 minutes. `covid_rna_tscan/rna/` then has `TSCAN/` in place of
 
 - **Resuming a run** works by switching finished stages off. The rules and the keys that look like resume switches but are never read are in [Outputs and resuming runs](outputs.md#resuming-a-run).
 - **`*_summary_sample_csv_path`** names a working file of the distance step that is deleted at the end of the run. The scores stay in `Sample_distance/<method>/`.
-- **Autotune** (`*_autotune_enable: true`) replaces `compute_sample_embedding` and ignores `*_sample_embedding_use_clr`, `*_use_rmd`, `*_block_weights` and `*_rmd_weight`; see [Downstream options and caveats](downstream_details.md).
+- **Autotune** (`*_autotune_enable: true`) replaces `compute_sample_embedding` and ignores `*_sample_embedding_use_clr`, `*_use_rmd`, `*_block_weights` and `*_rmd_weight`; see [Autotune](downstream/index.md#autotune).
 - **GPU and CPU runs give different numbers**; pick one backend per study ([GPU acceleration](gpu.md)).
 - **Small cohorts** hit hard limits in several steps; see [Using your own data](own_data.md#small-cohorts).

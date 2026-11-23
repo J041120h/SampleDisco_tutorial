@@ -142,7 +142,7 @@ SampleDisco runs on any number of samples, but several steps have hard limits th
 | `KeyError: The following variables are missing from adata.obs: [...]` | A column in `*_cell_level_batch_key` or `*_sample_level_batch_col` does not exist. |
 | `ValueError: Cell type column 'cell_type' not found in adata.obs.` | Cell typing is off and the file has no labels in `*_celltype_col`. |
 | `ValueError: Preprocessed data not found at …/preprocess/adata_preprocessed.h5ad.` | A resumed run (`*_preprocessing: false`) without a finished preprocessing; see [Resuming a run](outputs.md#resuming-a-run). |
-| `KeyError: … not in adata.obsm` with `Z_clust` or `X_pca_harmony` listed | A file from an older release with a non-standard key passed explicitly. Leave the key `null`, or see [Legacy embedding key names](../legacy_keys.md). |
+| `KeyError: … not in adata.obsm` with `Z_clust` or `X_pca_harmony` listed | A file from an older release with a non-standard key passed explicitly. Leave the key `null`, or see [Legacy embedding key names](../api/utils/embedding_keys.md). |
 | `OSError: Unable to synchronously open file (file signature not found)` | The `.h5ad` is not an HDF5 file, typically an error page saved by `curl` without `-f`. Download it again. |
 
 The first two come from the CLI's check, which runs before any data is read.

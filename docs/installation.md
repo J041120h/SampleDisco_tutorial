@@ -49,7 +49,7 @@ pip install "sampledisco[all]"
 - `pip install sampledisco` alone gives the core pipeline: RNA, ATAC, multi-omics from a pre-integrated file, and every downstream analysis. The `[glue]` extra adds scGLUE, `[maxfuse]` adds MaxFuse, and `[all]` adds both.
 - This route does not pin numpy, scanpy or torch to the validated versions. Use an environment file when you want the exact validated stack.
 
-**Upgrading:** in an environment built from an env file, run `pip install --no-deps -U sampledisco`; in a pip-only environment, run `pip install -U "sampledisco[all]"`. The [changelog](changelog.md) lists what changed.
+**Upgrading:** in an environment built from an env file, run `pip install --no-deps -U sampledisco`; in a pip-only environment, run `pip install -U "sampledisco[all]"`. The [changelog](https://github.com/J041120h/SampleDisco/blob/main/CHANGELOG.md) lists what changed.
 
 ??? note "What the environments contain, and why the pins"
     | Feature | Packages |

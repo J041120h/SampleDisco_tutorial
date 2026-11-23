@@ -35,7 +35,7 @@ Pick a route for step 1. Steps 2–4 are the same for both. Run everything from 
         adata.uns.pop(key, None)
     ```
 
-    The file stores the embedding under older key names. `migrate_obsm_keys` copies them onto `Z_comp` and `Z_rmd` (see [legacy key names](../legacy_keys.md)). The file has no expression data: its `.X` is empty.
+    The file stores the embedding under older key names. `migrate_obsm_keys` copies them onto `Z_comp` and `Z_rmd` (see [legacy key names](../api/utils/embedding_keys.md)). The file has no expression data: its `.X` is empty.
 
 === "Full route: train scGLUE"
 

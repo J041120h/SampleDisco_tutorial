@@ -1,6 +1,6 @@
 # `migrate_obsm_keys` and the key resolvers
 
-SampleDisco stores two cell-level embeddings in `.obsm`: `Z_comp` (sample removed) and `Z_rmd` (sample preserved). Older releases used other names (`Z_clust`, `Z_cmd`, `X_pca_harmony`, …; full table on [Legacy embedding key names](../../legacy_keys.md)). The module `sampledisco.utils.embedding_keys` holds the alias tables and the functions every step uses to find the right key.
+SampleDisco stores two cell-level embeddings in `.obsm`: `Z_comp` (sample removed) and `Z_rmd` (sample preserved). Older releases used other names (`Z_clust`, `Z_cmd`, `X_pca_harmony`, …; full table on [Legacy embedding key names](../utils/embedding_keys.md)). The module `sampledisco.utils.embedding_keys` holds the alias tables and the functions every step uses to find the right key.
 
 **Import:** `from sampledisco.utils.embedding_keys import migrate_obsm_keys, resolve_comp_key, resolve_rmd_key, resolve_embedding_keys`
 

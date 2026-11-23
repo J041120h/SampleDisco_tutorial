@@ -67,7 +67,7 @@ After the filters above, genes detected in fewer than 0.1% of the remaining cell
 - `.obsm['X_pca_rmd']`: PCA on the sample-naive HVGs.
 - `.obsm['Z_rmd']`: Harmony pass 2 on `X_pca_rmd`, sample preserved (or `X_pca_rmd` itself without `cell_level_batch_key`).
 
-Older files use earlier names for the two views; they are still read automatically. See [Legacy embedding key names](../../legacy_keys.md) and [`migrate_obsm_keys`](../utils/embedding_keys.md).
+Older files use earlier names for the two views; they are still read automatically. See [Legacy embedding key names](../utils/embedding_keys.md) and [`migrate_obsm_keys`](../utils/embedding_keys.md).
 
 ## Output files
 
