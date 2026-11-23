@@ -91,6 +91,8 @@ clusters = pd.read_csv(f"{OUT}/sample_cluster/kmeans_clusters_sample.csv", index
 print(emb[["PC1", "PC2"]].join(ptime).join(clusters).round(2))
 ```
 
+Example output from one run:
+
 ```text
                 PC1   PC2  pseudotime  cluster_sample_kmeans
 sample                                                      
@@ -104,7 +106,7 @@ HD-21-Aruna    3.60  0.80        0.11                      0
 HD-4-Wilk      9.75 -1.38        0.00                      0
 ```
 
-Leiden clustering and floating-point results vary between machines, so your numbers can differ a little. The pseudotime runs from 0 to 1 and is oriented to increase with `sev.level`. To get the cell-level AnnData back, with the embedding in `uns['X_DR_sample']`, read `preprocess/adata_preprocessed.h5ad`; see [Outputs and resuming runs](outputs.md).
+Your numbers will differ: reruns on the same kind of machine are identical, but values change between CPU types and installs, and the sign of each PC is arbitrary. What holds is the structure: the healthy (`HD`) and COVID (`CoV`) samples separate, and the pseudotime runs from 0 to 1, increasing with `sev.level`. To get the cell-level AnnData back, with the embedding in `uns['X_DR_sample']`, read `preprocess/adata_preprocessed.h5ad`; see [Outputs and resuming runs](outputs.md).
 
 ![Sample embedding of the RNA run, coloured by sev.level](../resource/quickstart/rna_embedding_sev_level.png){ width="520" }
 
