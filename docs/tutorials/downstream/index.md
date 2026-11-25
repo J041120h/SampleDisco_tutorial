@@ -290,20 +290,20 @@ print(table[table["query"]])
 ```
 
 ```text
-{'n_samples': 8, 'n_pcs': 7, 'auc': 0.5, 'balanced_accuracy': 0.5}
+{'n_samples': 8, 'n_pcs': 7, 'auc': 0.625, 'balanced_accuracy': 0.5}
             label  query  predicted  confidence
 sample
-CoV-3-Wilk      4   True          1    0.666667
-HD-4-Wilk       1   True          1    1.000000
+CoV-3-Wilk      4   True          1         1.0
+HD-4-Wilk       1   True          1         1.0
 ```
 
 `pred` holds the out-of-fold prediction of every sample, and `table` the transferred labels with their confidence. With 4 samples per class, these scores are noise.
 
 ??? note "Options and caveats"
-    - **Model.** `predict_phenotype` standardizes the first `n_pcs` PCs and fits an L2 logistic regression (`task="classification"`) or a ridge regression (`task="regression"`). An inner 3-fold cross-validation inside each of the `n_splits` outer folds picks the penalty, and every sample is predicted once, by a model that did not see it.
-    - **`group_col`.** When a donor has several samples (repeat visits, or the RNA and ATAC units of one sample), pass the donor column: all samples of a group then stay in one fold, in the outer and the inner split. Without it, a model can recognise the donor rather than the phenotype, and the scores are inflated.
+    - **Model.** By default (`model="mlp"`) `predict_phenotype` standardizes the first `n_pcs` PCs and fits a multilayer perceptron (one hidden layer of 100 ReLU units, Adam, L2 weight penalty 10; nothing is tuned) in each of the `n_splits` folds, so every sample is predicted once, by a model that did not see it. `task="regression"` predicts a continuous label. For cohorts of tens of samples, `model="knn"` takes the majority label of the `n_neighbors` nearest training samples instead and fits no parameters; on the 8-sample demo the MLP's penalty keeps every probability near 0.5.
+    - **`group_col`.** When a donor has several samples (repeat visits, or the RNA and ATAC units of one sample), pass the donor column: all samples of a group then stay in one fold. Without it, a model can recognise the donor rather than the phenotype, and the scores are inflated.
     - **`score_by="group"`** averages the out-of-fold probabilities (or predictions) and the labels within each `group_col` group before scoring, so each donor counts once. `pred` stays per sample either way.
-    - **Metrics.** `auc` (binary; the second class in sorted order is positive), `accuracy` and `balanced_accuracy`, or `r2` for regression, plus the penalty chosen in each fold. With few samples the fold split alone moves an AUC by 0.1 or more; try several `random_state` values before comparing two embeddings.
+    - **Metrics.** `auc` (binary; the second class in sorted order is positive), `accuracy` and `balanced_accuracy`, or `r2` for regression, plus the `model` used. With few samples the fold split alone moves an AUC by 0.1 or more; try several `random_state` values before comparing two embeddings.
     - **`transfer_labels`** takes the majority label of the `n_neighbors` nearest labelled samples (Euclidean distance on the first `n_pcs` PCs; `weighted=True` weights votes by 1/distance). Every labelled sample is also labelled leave-one-out (`loo_accuracy`), leaving out the rest of its `group_col` group too. For multi-omics, pass `group_col="sample"`, since the RNA and ATAC units of one sample are each other's nearest neighbours.
 
 ## Visualization {#visualization}

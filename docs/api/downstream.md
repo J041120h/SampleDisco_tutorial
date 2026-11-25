@@ -38,7 +38,7 @@ The examples on these pages start from the RNA chain's output; see [Running the 
 
 | Function | Purpose | When to use |
 | --- | --- | --- |
-| [`predict_phenotype`](downstream/predict_phenotype.md) | Cross-validated logistic or ridge regression on the PCs, with donor-grouped folds. | How well does the embedding predict a phenotype? |
+| [`predict_phenotype`](downstream/predict_phenotype.md) | Cross-validated prediction on the PCs with a multilayer perceptron (default) or, for small cohorts, k nearest neighbours; donor-grouped folds. | How well does the embedding predict a phenotype? |
 | [`transfer_labels`](downstream/transfer_labels.md) | k-nearest-neighbor label transfer with a leave-one-out accuracy. | Label new samples from labelled ones. |
 
 ## Visualization
