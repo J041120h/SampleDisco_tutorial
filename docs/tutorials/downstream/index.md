@@ -26,7 +26,7 @@ print(pseudo_adata.obs["sev.level"].to_dict())
 {'CoV-3-Wilk': 4, 'CoV-34-Aruna': 4, 'CoV-36-Aruna': 4, 'CoV-4-Wilk': 4, 'HD-1-Wilk': 1, 'HD-20-Aruna': 1, 'HD-21-Aruna': 1, 'HD-4-Wilk': 1}
 ```
 
-`adata` (cells) feeds the steps that need expression or cell types: EMD, trajectory DGE, the proportion test, RAISIN and the dendrogram. `pseudo_adata` (one row per sample, sample-level `obs` columns only) feeds everything else. The embedding has 7 PCs: SampleDisco caps the PC count at n_samples − 1. The whole page runs in about 6 to 8 minutes (the trajectory DGE takes about 3) and needs about 5 GB of RAM on 8 CPUs.
+`adata` (cells) feeds the steps that need expression or cell types: EMD, trajectory DGE, the proportion test, RAISIN and the dendrogram. `pseudo_adata` (one row per sample, sample-level `obs` columns only) feeds everything else. The embedding has 7 PCs: SampleDisco caps the PC count at n_samples − 1. The whole page runs in about 4 to 6 minutes (the trajectory DGE takes about 1.5) and needs about 5 GB of RAM on 8 CPUs.
 
 ## What runs where
 
@@ -190,7 +190,7 @@ print(f"{len(dge)} features fitted, {(dge['fdr'] < 0.05).sum()} with FDR < 0.05"
 ??? note "Options and caveats"
     - **Pseudotime.** `pseudotime_source` takes a `{sample: pseudotime}` dict, a DataFrame, or the path of a CSV/TSV such as `CCA/pseudotime_sample.csv`.
     - **Direction.** `UP` and `DOWN` follow the pseudotime. `anchor_col` names a numeric column and reverses the pseudotime when it runs against it; keep it for TSCAN, whose direction depends on `origin`. The config run sets it for TSCAN only.
-    - **Model.** Per cell type, a sample with fewer than 10 cells of that type is left out (`min_cells_per_group`), and a gene is tested when its between-sample variance is at least twice the variance expected from sampling the cells (`min_variance_ratio`); with `batch_col` the batch is regressed out first. Each feature gets a GAM on all its samples, zeros included, with a BH FDR over all features; the `top_n_genes` largest effects among the features with FDR < `fdr_threshold` are the pseudoDEGs. `n_jobs=-1` fits on every core.
+    - **Model.** Per cell type, a sample with fewer than 10 cells of that type is left out (`min_cells_per_group`), and a gene is tested when its between-sample variance is at least twice the variance expected from sampling the cells (`min_variance_ratio`). Each feature gets a GAM on all its samples, zeros included, with `batch_col` as an unpenalized fixed effect (the pseudobulk itself is not batch-corrected). The p-value is a Wald test that the spline coefficients are equal, as in tradeSeq, with a BH FDR over all features; the `top_n_genes` largest effects among the features with FDR < `fdr_threshold` are the pseudoDEGs. `n_jobs=-1` fits on every core.
     - **Files.** Each run adds new timestamped tables (`gam_all_genes_`, `gam_significant_`, `gam_pseudoDEGs_`, `gam_summary_`) instead of replacing them. The heatmap and cluster-pattern plots appear only with significant features; `visualization_gene_list` adds one plot per listed gene.
     - **Config.** `rna_trajectory_dge` runs only inside the trajectory stage, with `rna_num_splines`, `rna_spline_order`, `rna_fdr_threshold`, `rna_effect_size_threshold`, `rna_top_n_genes`, `rna_trajectory_diff_gene_covariate` and `rna_visualization_gene_list`.
 

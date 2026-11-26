@@ -1,6 +1,6 @@
 # `run_trajectory_gam_differential_gene_analysis`
 
-Finds genes whose expression changes along a sample pseudotime. It takes a **cell-level** AnnData (normalized, log-transformed `.X`), builds a per-sample pseudobulk internally (per cell type when `celltype_col` is set: features are cell type × gene, with optional batch handling). A sample with fewer than `min_cells_per_group` cells of a cell type is left out for that cell type (missing, not zero), and within each cell type a gene is tested only when its between-sample variance is at least `min_variance_ratio` times the variance expected from sampling the cells alone, then fits one generalized additive model (GAM) per feature with pseudotime as a smooth term and `covariate_columns` as fixed effects. Effect sizes and deviance-based p-values are computed per feature, BH-FDR corrected, and **pseudoDEGs** are selected: the `top_n_genes` largest effects among FDR-significant features, or, with `top_n_genes=None`, all features passing `fdr_threshold` and `effect_size_threshold`. With `anchor_col`, the pseudotime is flipped when it correlates negatively with that numeric column, so `UP` / `DOWN` keep a fixed meaning. Lamian-style plots follow.
+Finds genes whose expression changes along a sample pseudotime. It takes a **cell-level** AnnData (normalized, log-transformed `.X`) and builds a per-sample pseudobulk internally (per cell type when `celltype_col` is set: features are cell type × gene). A sample with fewer than `min_cells_per_group` cells of a cell type is left out for that cell type (missing, not zero), and within each cell type a gene is tested only when its between-sample variance, after regressing out batch, is at least `min_variance_ratio` times the variance expected from sampling the cells alone. Each feature then gets one generalized additive model (GAM) with pseudotime as a smooth term, `batch_col` as an unpenalized fixed effect and `covariate_columns` as penalized factor terms; the pseudobulk itself is not batch-corrected. The p-value is a Wald test that all spline coefficients are equal (flat expression along pseudotime), as in tradeSeq's `associationTest`, with an F reference; pyGAM's own term p-values are too small and are not used. Effect sizes (from the pseudotime term only) and p-values are computed per feature, BH-FDR corrected, and **pseudoDEGs** are selected: the `top_n_genes` largest effects among FDR-significant features, or, with `top_n_genes=None`, all features passing `fdr_threshold` and `effect_size_threshold`. With `anchor_col`, the pseudotime is flipped when it correlates negatively with that numeric column, so `UP` / `DOWN` keep a fixed meaning. Lamian-style plots follow.
 
 The spline basis is shrunk automatically for small cohorts, and a feature is fitted only if it has a value in at least `spline_order + num_splines + 2` samples (after that adjustment); zeros count, samples left out for too few cells do not. With 8 samples and the default `spline_order=3` no feature qualifies; use `spline_order=2`, as in the example and the demo config.
 
@@ -48,12 +48,12 @@ def run_trajectory_gam_differential_gene_analysis(
 | `pseudotime_source` | str, DataFrame or dict | — | `{sample_id: pseudotime}` (e.g. from [`CCA_Call`](trajectory_cca_call.md) or [`TSCAN`](trajectory_tscan.md)), a DataFrame, or a CSV/TSV path. |
 | `sample_col` | str | `"sample"` | Sample column. |
 | `celltype_col` | str or None | `"cell_type"` | Split the pseudobulk by cell type; `None` averages all cells per sample. |
-| `batch_col` | str, list or None | `None` | Batch column(s) used when building the pseudobulk (several are combined into one). |
+| `batch_col` | str, list or None | `None` | Batch column(s), several combined into one. The batch enters every GAM as an unpenalized fixed effect, so the p-value, effect size and direction describe the pseudotime term only. Samples with a missing batch are left out, with a warning. |
 | `min_cells_per_group` | int | `10` | A sample × cell type with fewer cells is missing for that cell type (at least 2). |
-| `min_variance_ratio` | float | `2.0` | Test a gene in a cell type when its between-sample variance (after batch correction) is at least this many times the variance expected from cell sampling. Unit-free; does not use pseudotime. |
+| `min_variance_ratio` | float | `2.0` | Test a gene in a cell type when its between-sample variance (after regressing out batch) is at least this many times the variance expected from cell sampling. Unit-free; does not use pseudotime. |
 | `columns_to_preserve` | str, list or None | `None` | Extra `.obs` columns carried onto the pseudobulk samples. |
 | `pseudotime_col` | str | `"pseudotime"` | Pseudotime column when the source is a table. |
-| `covariate_columns` | list or None | `None` | Fixed-effect covariates (sample-level `.obs` columns). Wrapper key: `*_trajectory_diff_gene_covariate`. |
+| `covariate_columns` | list or None | `None` | Extra sample-level `.obs` covariates, each fitted as a penalized factor term (one level per distinct value). `batch_col` is added automatically and need not be listed. Wrapper key: `*_trajectory_diff_gene_covariate`. |
 | `fdr_threshold` | float | `0.05` | FDR cutoff. |
 | `effect_size_threshold` | float | `1.0` | Minimum effect size (used when `top_n_genes` is `None`). |
 | `top_n_genes` | int or None | `100` | Number of pseudoDEGs; `None` switches to the threshold rule. |
@@ -121,7 +121,7 @@ print(len(res), "features fitted;", int(res["significant"].sum()), "with FDR < 0
 50984 features fitted; 0 with FDR < 0.05
 ```
 
-The function also warns (`RuntimeWarning`) that a spline GAM is underpowered below about 12 samples: on 8 samples an empty result says little. About 200 s on 8 CPUs: with only 8 samples the variance filter keeps about half of the cell type × gene features.
+The function also warns (`RuntimeWarning`) that a spline GAM is underpowered below about 12 samples: on 8 samples an empty result says little. About 100 s on 8 CPUs: with only 8 samples the variance filter keeps about half of the cell type × gene features.
 
 !!! note "When nothing can be fitted"
     If no feature passes the identifiability check (for example `spline_order=3` on 8 samples), the function raises a `RuntimeWarning` that names the number of samples needed and the adjusted spline settings. It still returns an empty DataFrame and writes the tables.
