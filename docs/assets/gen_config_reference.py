@@ -132,7 +132,7 @@ GOTCHAS = [
     (r"^(rna|atac|multiomics)_tscan_origin$", "An integer: the index of the endpoint cluster to start from."),
     (r"^(rna|atac|multiomics)_tscan_pseudotime_mode$", "`\"rank\"` or `\"distance\"`; anything else raises."),
     (r"^(rna|atac|multiomics)_spline_order$",
-     "A gene is fitted only if it is non-zero in at least order + splines + 2 samples (after "
+     "A gene is fitted only if it has a value in at least order + splines + 2 samples (after "
      "automatic reduction). With 8 samples use 2; order 3 fits nothing."),
     (r"^(rna|atac|multiomics)_cluster_differential_gene_group_col$",
      "When set, the proportion test and RAISIN compare these groups **instead of** the k-means "

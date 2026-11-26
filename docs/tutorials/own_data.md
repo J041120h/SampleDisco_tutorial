@@ -126,7 +126,7 @@ SampleDisco runs on any number of samples, but several steps have hard limits th
 | Sample-level Harmony | Needs **≥ 8 units and > 1 batch value**. | Skipped silently: no batch correction. |
 | Preprocessing | `rna_min_cells` is also the minimum number of cells **per sample**. | Smaller samples are dropped (the log prints `Samples remaining`). |
 | CCA trajectory | Keep `*_n_cca_pcs` **well below n_samples − 1**. | CCA fits any labelling almost perfectly: the score is near 1 and the `*_cca_pvalue` permutation test is meaningless (it warns). |
-| Trajectory DGE (GAM) | A gene is fitted only if it is non-zero in at least order + splines + 2 samples, after automatic reduction. | Below 7 samples nothing can be fitted; with 7–8, only with `*_spline_order: 2`. |
+| Trajectory DGE (GAM) | A gene is fitted only if it has a value in at least order + splines + 2 samples, after automatic reduction. | Below 7 samples nothing can be fitted; with 7–8, only with `*_spline_order: 2`. |
 | TSCAN | `*_tscan_n_clusters` ≤ number of samples. | `ValueError: n_clusters=… cannot exceed n_samples=…` |
 | Clustering, proportion test, RAISIN | Each compared group needs at least 2 samples. | Comparisons with a one-sample group are skipped. On 8 samples use `*_cluster_number` ≤ 3. |
 

@@ -90,7 +90,8 @@ def downstream_analysis(
     multiomics_force_data_type: Optional[str] = None,
     dge_pseudobulk_celltype_col: Optional[str] = None,
     dge_pseudobulk_batch_col: Optional[Union[str, List[str]]] = None,
-    dge_pseudobulk_n_features_per_celltype: Optional[int] = 2000,
+    dge_pseudobulk_min_cells_per_group: int = 10,
+    dge_pseudobulk_min_variance_ratio: float = 2.0,
     dge_pseudobulk_columns_to_preserve: Optional[Union[str, List[str]]] = None,
 ) -> dict
 ```

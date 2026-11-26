@@ -26,7 +26,7 @@ print(pseudo_adata.obs["sev.level"].to_dict())
 {'CoV-3-Wilk': 4, 'CoV-34-Aruna': 4, 'CoV-36-Aruna': 4, 'CoV-4-Wilk': 4, 'HD-1-Wilk': 1, 'HD-20-Aruna': 1, 'HD-21-Aruna': 1, 'HD-4-Wilk': 1}
 ```
 
-`adata` (cells) feeds the steps that need expression or cell types: EMD, trajectory DGE, the proportion test, RAISIN and the dendrogram. `pseudo_adata` (one row per sample, sample-level `obs` columns only) feeds everything else. The embedding has 7 PCs: SampleDisco caps the PC count at n_samples − 1. The whole page runs in 3 to 5 minutes and needs about 5 GB of RAM on 8 CPUs.
+`adata` (cells) feeds the steps that need expression or cell types: EMD, trajectory DGE, the proportion test, RAISIN and the dendrogram. `pseudo_adata` (one row per sample, sample-level `obs` columns only) feeds everything else. The embedding has 7 PCs: SampleDisco caps the PC count at n_samples − 1. The whole page runs in about 6 to 8 minutes (the trajectory DGE takes about 3) and needs about 5 GB of RAM on 8 CPUs.
 
 ## What runs where
 
@@ -182,7 +182,7 @@ dge = run_trajectory_gam_differential_gene_analysis(
     anchor_col="sev.level",         # UP = rises with severity
     output_dir=f"{OUT}/trajectoryDEG", verbose=False,
 )
-print(f"{len(dge)} features fitted, {(dge['fdr'] < 0.05).sum()} with FDR < 0.05")  # about 10,000, 0
+print(f"{len(dge)} features fitted, {(dge['fdr'] < 0.05).sum()} with FDR < 0.05")  # about 41,000, 0
 ```
 
 **Output** (under `trajectoryDEG/`, `<ts>` a timestamp): `gam_all_genes_<ts>.tsv` (one row per feature, named `<cell type> - <gene>`), `gam_pseudoDEGs_<ts>.tsv`, `gam_summary_<ts>.txt` and plots in `visualizations/`. The call warns that nothing is significant with 8 samples, as expected.
@@ -190,7 +190,7 @@ print(f"{len(dge)} features fitted, {(dge['fdr'] < 0.05).sum()} with FDR < 0.05"
 ??? note "Options and caveats"
     - **Pseudotime.** `pseudotime_source` takes a `{sample: pseudotime}` dict, a DataFrame, or the path of a CSV/TSV such as `CCA/pseudotime_sample.csv`.
     - **Direction.** `UP` and `DOWN` follow the pseudotime. `anchor_col` names a numeric column and reverses the pseudotime when it runs against it; keep it for TSCAN, whose direction depends on `origin`. The config run sets it for TSCAN only.
-    - **Model.** Per cell type, the pseudobulk keeps the 2,000 most variable genes (`n_features_per_celltype`); with `batch_col` the batch is regressed out first. Each feature gets a GAM on the samples where it is non-zero, with a BH FDR over all features; the `top_n_genes` largest effects among the features with FDR < `fdr_threshold` are the pseudoDEGs. `n_jobs=-1` fits on every core.
+    - **Model.** Per cell type, a sample with fewer than 10 cells of that type is left out (`min_cells_per_group`), and a gene is tested when its between-sample variance is at least twice the variance expected from sampling the cells (`min_variance_ratio`); with `batch_col` the batch is regressed out first. Each feature gets a GAM on all its samples, zeros included, with a BH FDR over all features; the `top_n_genes` largest effects among the features with FDR < `fdr_threshold` are the pseudoDEGs. `n_jobs=-1` fits on every core.
     - **Files.** Each run adds new timestamped tables (`gam_all_genes_`, `gam_significant_`, `gam_pseudoDEGs_`, `gam_summary_`) instead of replacing them. The heatmap and cluster-pattern plots appear only with significant features; `visualization_gene_list` adds one plot per listed gene.
     - **Config.** `rna_trajectory_dge` runs only inside the trajectory stage, with `rna_num_splines`, `rna_spline_order`, `rna_fdr_threshold`, `rna_effect_size_threshold`, `rna_top_n_genes`, `rna_trajectory_diff_gene_covariate` and `rna_visualization_gene_list`.
 
@@ -361,6 +361,6 @@ Every call above runs on 8 samples, but several hit hard limits there ([Using yo
 - **PCs ≤ n − 1.** The embedding keeps at most n_samples − 1 PCs (7 here, whatever `pca_components` asks for), and every function caps its PC count at that.
 - **CCA needs K well below n.** With K PCs, CCA regresses the phenotype on K predictors; at K ≥ n − 1 it fits any labelling, so the score is 1.0 and so is every permuted score. On the demo the score is about 0.7 at K = 2 and already close to 1 at K = 4. Use K = 3 on 8 samples; the demo config's `rna_n_cca_pcs: 5` is valid but leaves fewer spare degrees of freedom.
 - **Permutation p-values have a floor.** A 4 + 4 design has only 35 distinct splits of the labels, so an exact p-value cannot go below 1/35 ≈ 0.029; a Monte-Carlo estimate below that only reflects how often the random permutations drew the real split. The same floor applies to the association p-values, and an FDR over many tests cannot get far below it.
-- **The GAM spline needs samples.** Trajectory DGE shrinks the spline to the sample size, then skips every feature that is non-zero in fewer than order + splines + 2 samples. On 8 samples the default `spline_order=3` (order 3, 4 splines) needs 9, so every feature is skipped and the table is empty; `spline_order=2` (the demo config) needs 7 and fits about two thirds of the roughly 16,000 features. With 10 or more samples the default fits too.
+- **The GAM spline needs samples.** Trajectory DGE shrinks the spline to the sample size, then skips every feature that has a value in fewer than order + splines + 2 samples. On 8 samples the default `spline_order=3` (order 3, 4 splines) needs 9, so every feature is skipped and the table is empty; `spline_order=2` (the demo config) needs 7 and fits the roughly 41,000 features that pass the variance filter. With 10 or more samples the default fits too.
 - **Every compared group needs 2 samples.** RAISIN and the proportion test skip groups of one; k-means with k = 3 left two clusters of one sample here.
 - **Prediction folds.** `n_splits` must not exceed the smallest class (4 here); the default of 5 raises `ValueError`.

@@ -180,7 +180,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `rna_top_n_genes` | `100` | `100` | `run_trajectory_gam_differential_gene_analysis:top_n_genes` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. |
 | `rna_trajectory_diff_gene_covariate` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:covariate_columns` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. |
 | `rna_num_splines` | `5` | `5` | `run_trajectory_gam_differential_gene_analysis:num_splines` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. |
-| `rna_spline_order` | `3` | **`2`** | `run_trajectory_gam_differential_gene_analysis:spline_order` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. A gene is fitted only if it is non-zero in at least order + splines + 2 samples (after automatic reduction). With 8 samples use 2; order 3 fits nothing. |
+| `rna_spline_order` | `3` | **`2`** | `run_trajectory_gam_differential_gene_analysis:spline_order` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. A gene is fitted only if it has a value in at least order + splines + 2 samples (after automatic reduction). With 8 samples use 2; order 3 fits nothing. |
 | `rna_visualization_gene_list` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:visualization_gene_list` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. |
 
 ### RNA: sample clustering parameters
@@ -335,7 +335,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `atac_top_n_genes` | `100` | `100` | `run_trajectory_gam_differential_gene_analysis:top_n_genes` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. |
 | `atac_trajectory_diff_gene_covariate` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:covariate_columns` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. |
 | `atac_num_splines` | `5` | `5` | `run_trajectory_gam_differential_gene_analysis:num_splines` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. |
-| `atac_spline_order` | `3` | `3` | `run_trajectory_gam_differential_gene_analysis:spline_order` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. A gene is fitted only if it is non-zero in at least order + splines + 2 samples (after automatic reduction). With 8 samples use 2; order 3 fits nothing. |
+| `atac_spline_order` | `3` | `3` | `run_trajectory_gam_differential_gene_analysis:spline_order` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. A gene is fitted only if it has a value in at least order + splines + 2 samples (after automatic reduction). With 8 samples use 2; order 3 fits nothing. |
 | `atac_visualization_gene_list` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:visualization_gene_list` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. |
 
 ### ATAC: sample clustering parameters
@@ -574,7 +574,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `multiomics_top_n_genes` | `100` | `100` | `run_trajectory_gam_differential_gene_analysis:top_n_genes` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. |
 | `multiomics_trajectory_diff_gene_covariate` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:covariate_columns` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. |
 | `multiomics_num_splines` | `5` | `5` | `run_trajectory_gam_differential_gene_analysis:num_splines` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. |
-| `multiomics_spline_order` | `3` | `3` | `run_trajectory_gam_differential_gene_analysis:spline_order` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. A gene is fitted only if it is non-zero in at least order + splines + 2 samples (after automatic reduction). With 8 samples use 2; order 3 fits nothing. |
+| `multiomics_spline_order` | `3` | `3` | `run_trajectory_gam_differential_gene_analysis:spline_order` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. A gene is fitted only if it has a value in at least order + splines + 2 samples (after automatic reduction). With 8 samples use 2; order 3 fits nothing. |
 | `multiomics_visualization_gene_list` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:visualization_gene_list` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. |
 
 ### Multi-omics: sample clustering parameters

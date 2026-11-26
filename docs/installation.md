@@ -28,7 +28,7 @@ Next: [download the demo data](tutorials/demo_data.md) and run the [Quick start]
 curl -fLO https://j041120h.github.io/SampleDisco_tutorial/assets/environment-gpu.yml
 conda env create -f environment-gpu.yml      # building on a machine without a GPU? prefix CONDA_OVERRIDE_CUDA=12.5
 conda activate sampledisco-gpu
-pip install --no-deps rapids-singlecell==0.13.1 sampledisco==0.7.0
+pip install --no-deps rapids-singlecell==0.13.1 sampledisco==0.8.0
 python -c "import cuml, cupy, rapids_singlecell, torch; print('GPU OK', torch.cuda.is_available())"
 ```
 
