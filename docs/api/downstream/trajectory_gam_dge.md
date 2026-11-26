@@ -1,12 +1,12 @@
 # `run_trajectory_gam_differential_gene_analysis`
 
-Finds genes whose expression changes along a sample pseudotime. It takes a **cell-level** AnnData (normalized, log-transformed `.X`) and builds a per-sample pseudobulk internally (per cell type when `celltype_col` is set: features are cell type × gene). A sample with fewer than `min_cells_per_group` cells of a cell type is left out for that cell type (missing, not zero), and within each cell type a gene is tested only when its between-sample variance, after regressing out batch, is at least `min_variance_ratio` times the variance expected from sampling the cells alone. Each feature then gets one generalized additive model (GAM) with pseudotime as a smooth term, `batch_col` as an unpenalized fixed effect and `covariate_columns` as penalized factor terms; the pseudobulk itself is not batch-corrected. The p-value is a Wald test that all spline coefficients are equal (flat expression along pseudotime), as in tradeSeq's `associationTest`, with an F reference; pyGAM's own term p-values are too small and are not used. Effect sizes (from the pseudotime term only) and p-values are computed per feature, BH-FDR corrected, and **pseudoDEGs** are selected: the `top_n_genes` largest effects among FDR-significant features, or, with `top_n_genes=None`, all features passing `fdr_threshold` and `effect_size_threshold`. With `anchor_col`, the pseudotime is flipped when it correlates negatively with that numeric column, so `UP` / `DOWN` keep a fixed meaning. Lamian-style plots follow.
+Finds genes whose expression changes along a sample pseudotime. It takes a **cell-level** AnnData (normalized, log-transformed `.X`) and builds a per-sample pseudobulk internally (per cell type when `celltype_col` is set: features are cell type × gene). A sample with fewer than `min_cells_per_group` cells of a cell type is left out for that cell type (missing, not zero), and within each cell type a gene is tested only when its between-sample variance, after regressing out batch, is at least `min_variance_ratio` times the variance expected from sampling the cells alone. Each feature then gets one generalized additive model (GAM), or a linear model with `test="linear"`, with pseudotime as a smooth term, `batch_col` as an unpenalized fixed effect and `covariate_columns` as penalized factor terms; the pseudobulk itself is not batch-corrected. The p-value is a Wald test that all spline coefficients are equal (flat expression along pseudotime), as in tradeSeq's `associationTest`, with an F reference; pyGAM's own term p-values are too small and are not used. Effect sizes (from the pseudotime term only) and p-values are computed per feature, BH-FDR corrected, and **pseudoDEGs** are selected: the `top_n_genes` largest effects among FDR-significant features, or, with `top_n_genes=None`, all features passing `fdr_threshold` and `effect_size_threshold`. With `anchor_col`, the pseudotime is flipped when it correlates negatively with that numeric column, so `UP` / `DOWN` keep a fixed meaning. Lamian-style plots follow.
 
 The spline basis is shrunk automatically for small cohorts, and a feature is fitted only if it has a value in at least `spline_order + num_splines + 2` samples (after that adjustment); zeros count, samples left out for too few cells do not. With 8 samples and the default `spline_order=3` no feature qualifies; use `spline_order=2`, as in the example and the demo config.
 
 **Import:** `from sampledisco.sample_trajectory.trajectory_diff_gene import run_trajectory_gam_differential_gene_analysis`
 
-**Source:** `sample_trajectory/trajectory_diff_gene.py:993`
+**Source:** `sample_trajectory/trajectory_diff_gene.py:1304`
 
 ## Signature
 
@@ -28,6 +28,7 @@ def run_trajectory_gam_differential_gene_analysis(
     top_n_genes: int = 100,
     num_splines: int = 5,
     spline_order: int = 3,
+    test: str = "gam",
     n_jobs: int = -1,
     output_dir: str = "trajectory_diff_gene_results_single",
     visualization_gene_list: Optional[List[str]] = None,
@@ -58,6 +59,7 @@ def run_trajectory_gam_differential_gene_analysis(
 | `effect_size_threshold` | float | `1.0` | Minimum effect size (used when `top_n_genes` is `None`). |
 | `top_n_genes` | int or None | `100` | Number of pseudoDEGs; `None` switches to the threshold rule. |
 | `num_splines` / `spline_order` | int | `5` / `3` | Requested GAM basis; reduced automatically for small cohorts (see above). |
+| `test` | str | `"gam"` | `"gam"`: the spline GAM and its Wald test described above. `"linear"`: least squares of each feature on pseudotime plus the same batch dummies and covariates, with a t-test on the slope; effect size is \|slope\| × pseudotime range / residual SD and direction is the sign of the slope. The linear test spends one degree of freedom instead of the spline's four, which suits small cohorts (for example a few dozen ATAC samples). Wrapper key: `*_trajectory_test`. |
 | `n_jobs` | int | `-1` | Worker processes for the per-feature fits (`-1` = the CPUs usable by the job, capped at `SLURM_CPUS_PER_TASK`). Each worker uses one BLAS thread, and each feature gets its own spline terms, so results do not depend on `n_jobs`. |
 | `output_dir` | str | `"trajectory_diff_gene_results_single"` | Output folder. The wrapper uses `{modality dir}/trajectoryDEG`. |
 | `visualization_gene_list` | list or None | `None` | Genes that always get their own plots (under `gene_visualizations/`). |

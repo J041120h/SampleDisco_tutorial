@@ -58,7 +58,13 @@ rna_pseudo_adata_path:
 
 # --- Common Column Names ---
 rna_sample_col: "sample"
-rna_sample_level_batch_col: "batch"
+# Batch: rna_batch_col is the default for both levels. Leave a level empty to inherit it,
+# or set it (a column or a list; [] = no batch at that level) to override:
+#   rna_cell_level_batch_key   -> cell-level Harmony for Z_comp and Z_rmd
+#   rna_sample_level_batch_col -> RMD reference group, sample-level Harmony, autotune
+#                                 batch term and downstream DE batch (every column is used)
+rna_batch_col: "batch"
+rna_sample_level_batch_col:
 rna_celltype_col: "cell_type"   # existing labels to start from (existing_cell_types:true) and the label column used when cell typing is off. Cell typing always writes obs['cell_type'], which later stages then use. The demo .h5ad's precomputed labels are in 'celltype' — set this to "celltype" only if you flip existing_cell_types:true.
 
 # --- Preprocessing Parameters ---
@@ -70,7 +76,6 @@ rna_num_cell_hvgs: 2000
 rna_cell_embedding_num_pcs: 20
 rna_num_harmony_iterations: 20
 rna_cell_level_batch_key:
-- "batch"
 
 # --- Cell Type Clustering Parameters ---
 rna_leiden_cluster_resolution: 0.8
@@ -123,6 +128,7 @@ rna_fdr_threshold: 0.05
 rna_effect_size_threshold: 1.0
 rna_top_n_genes: 100
 rna_trajectory_diff_gene_covariate:
+rna_trajectory_test: gam   # "gam" or "linear"; linear suits small cohorts
 rna_num_splines: 5
 rna_spline_order: 2
 rna_visualization_gene_list:
@@ -176,6 +182,7 @@ atac_pseudo_adata_path:
 
 # --- Common Column Names ---
 atac_sample_col: "sample"
+atac_batch_col:                 # default for both batch levels, as for RNA
 atac_sample_level_batch_col:
 atac_celltype_col: "cell_type"
 atac_cell_embedding_column:
@@ -245,6 +252,7 @@ atac_fdr_threshold: 0.05
 atac_effect_size_threshold: 1.0
 atac_top_n_genes: 100
 atac_trajectory_diff_gene_covariate:
+atac_trajectory_test: gam   # "gam" or "linear"; linear suits small cohorts
 atac_num_splines: 5
 atac_spline_order: 3
 atac_visualization_gene_list:
@@ -306,7 +314,9 @@ multiomics_additional_hvg_file:
 multiomics_rna_sample_column: "sample"
 multiomics_atac_sample_column: "sample"
 multiomics_sample_col: "sample"
-multiomics_batch_col:
+multiomics_batch_col:             # default for both batch levels; empty level entries inherit it
+multiomics_cell_level_batch_key:  # one column: scGLUE use_batch + the Z_comp Harmony pass
+multiomics_sample_level_batch_col:  # RMD reference group (x modality), sample-level Harmony, autotune, DE
 multiomics_celltype_col: "cell_type"
 multiomics_modality_col: "modality"
 
@@ -414,6 +424,7 @@ multiomics_fdr_threshold: 0.05
 multiomics_effect_size_threshold: 1.0
 multiomics_top_n_genes: 100
 multiomics_trajectory_diff_gene_covariate:
+multiomics_trajectory_test: gam   # "gam" or "linear"; linear suits small cohorts
 multiomics_num_splines: 5
 multiomics_spline_order: 3
 multiomics_visualization_gene_list:

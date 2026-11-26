@@ -2,9 +2,9 @@
 
 <!-- GENERATED FILE: do not edit. Regenerate with docs/assets/gen_config_reference.py -->
 
-Every key that `sampledisco -m complex --config` accepts, for sampledisco **0.6.1**: **304 keys** (Global 11, RNA 78, ATAC 83, Multi-omics 132).
+Every key that `sampledisco -m complex --config` accepts, for sampledisco **0.10.0**: **311 keys** (Global 11, RNA 80, ATAC 85, Multi-omics 135).
 
-Generated from the package by [`gen_config_reference.py`](../assets/gen_config_reference.py); do not edit by hand. **Default** is the `wrapper()` default, which a key left out of a Python call takes; the CLI requires every key except the 3 optional ones. **Demo** is the value in the template that `sampledisco --init-config` writes, in bold when it differs. **Consumed by** is the function and parameter the value reaches, or the stage it switches (`switch in X`). How the keys fit together is in the [Configuration guide](configuration.md).
+Generated from the package by [`gen_config_reference.py`](../assets/gen_config_reference.py); do not edit by hand. **Default** is the `wrapper()` default, which a key left out of a Python call takes; the CLI requires every key except the 10 optional ones. **Demo** is the value in the template that `sampledisco --init-config` writes, in bold when it differs. **Consumed by** is the function and parameter the value reaches, or the stage it switches (`switch in X`). How the keys fit together is in the [Configuration guide](configuration.md).
 
 !!! warning "15 keys are accepted but ignored"
     The CLI requires them, so leave them in the file, but changing them has no effect:
@@ -28,7 +28,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 ??? info "Template vs. signature check"
     - Keys in `wrapper()` but missing from the template (excluding optional keys): none.
     - Keys in the template that `wrapper()` does not accept: none.
-    - Optional keys (the CLI fills in the default): `atac_save_cell_adata_after_embedding`, `multiomics_save_cell_adata_after_embedding`, `rna_save_cell_adata_after_embedding`.
+    - Optional keys (the CLI fills in the default): `atac_batch_col`, `atac_save_cell_adata_after_embedding`, `atac_trajectory_test`, `multiomics_cell_level_batch_key`, `multiomics_sample_level_batch_col`, `multiomics_save_cell_adata_after_embedding`, `multiomics_trajectory_test`, `rna_batch_col`, `rna_save_cell_adata_after_embedding`, `rna_trajectory_test`.
 
 ## Global keys (11)
 
@@ -58,7 +58,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `continue_on_error` | `false` | `false` | switch in wrapper | `false`: the first failing modality aborts the run. `true`: the error is stored as `results['<modality>_error']`, later modalities still run, and the CLI still exits 1. |
 | `random_state` | `42` | `42` | `compute_sample_embedding:seed`<br>`raisinfit:seed`<br>`run_pairwise_tests:random_state` | Seeds the RNA/ATAC sample embedding and RAISIN only. Preprocessing and cell typing use a fixed seed 42; multi-omics uses `multiomics_random_state`. |
 
-## RNA keys (78)
+## RNA keys (80)
 
 ### RNA: input and output paths
 
@@ -98,7 +98,8 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | Key | Default | Demo | Consumed by | Notes |
 |---|---|---|---|---|
 | `rna_sample_col` | `"sample"` | `"sample"` | 9 functions: `build_sample_adata`, `preprocess`, `run_autotune`, `compute_sample_embedding`, `sample_distance`, `run_trajectory_gam_differential_gene_analysis`, `proportion_test`, `raisinfit`, `run_dimension_association_analysis` | A column literally named `sample` is safest. With a sample-metadata CSV, this column is kept and a `sample` copy is added. |
-| `rna_sample_level_batch_col` | `null` | **`"batch"`** | `preprocess:sample_level_batch_key`<br>`run_autotune:batch_col`<br>`compute_sample_embedding:batch_col`<br>`run_trajectory_gam_differential_gene_analysis:batch_col`<br>`raisinfit:batch_col` | A string or a list. Two or more columns give multi-covariate sample-level Harmony. Harmony runs only with at least 8 samples and more than one batch value. |
+| `rna_batch_col` | `null` | **`"batch"`** | `resolve_batch_levels:batch_col` |  |
+| `rna_sample_level_batch_col` | `null` | `null` | `resolve_batch_levels:sample_level` | A string or a list. Two or more columns give multi-covariate sample-level Harmony. Harmony runs only with at least 8 samples and more than one batch value. |
 | `rna_celltype_col` | `"cell_type"` | `"cell_type"` | `cell_types:cell_type_column`<br>`run_autotune:celltype_col`<br>`compute_sample_embedding:celltype_col`<br>`sample_distance:cell_type_column`<br>`run_trajectory_gam_differential_gene_analysis:celltype_col`<br>`proportion_test:celltype_col` | Cell typing always writes its labels to `obs['cell_type']`, and once it has run the embedding and downstream steps use that column. This key is the label source with `rna_existing_cell_types: true`, and the column the embedding reads when `rna_cell_type_cluster: false`. Template: *existing labels to start from (existing_cell_types:true) and the label column used when cell typing is off. Cell typing always writes obs['cell_type'], which later stages then use. The demo .h5ad's precomputed labels are in 'celltype' — set this to "celltype" only if you flip existing_cell_types:true.* |
 
 ### RNA: preprocessing parameters
@@ -112,7 +113,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `rna_num_cell_hvgs` | `2000` | `2000` | `preprocess:num_cell_hvgs` | Only used when `rna_preprocessing`. |
 | `rna_cell_embedding_num_pcs` | `20` | `20` | `preprocess:cell_embedding_num_PCs`<br>`cell_types:cell_embedding_num_PCs` |  |
 | `rna_num_harmony_iterations` | `30` | **`20`** | `preprocess:num_harmony_iterations` | Only used when `rna_preprocessing`. |
-| `rna_cell_level_batch_key` | `null` | **`["batch"]`** | `preprocess:cell_level_batch_key` | Only used when `rna_preprocessing`. |
+| `rna_cell_level_batch_key` | `null` | `null` | `resolve_batch_levels:cell_level` |  |
 
 ### RNA: cell type clustering parameters
 
@@ -179,6 +180,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `rna_effect_size_threshold` | `1` | `1.0` | `run_trajectory_gam_differential_gene_analysis:effect_size_threshold` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. |
 | `rna_top_n_genes` | `100` | `100` | `run_trajectory_gam_differential_gene_analysis:top_n_genes` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. |
 | `rna_trajectory_diff_gene_covariate` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:covariate_columns` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. |
+| `rna_trajectory_test` | `"gam"` | `"gam"` | `run_trajectory_gam_differential_gene_analysis:test` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. Template: *"gam" or "linear"; linear suits small cohorts* |
 | `rna_num_splines` | `5` | `5` | `run_trajectory_gam_differential_gene_analysis:num_splines` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. |
 | `rna_spline_order` | `3` | **`2`** | `run_trajectory_gam_differential_gene_analysis:spline_order` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. A gene is fitted only if it has a value in at least order + splines + 2 samples (after automatic reduction). With 8 samples use 2; order 3 fits nothing. |
 | `rna_visualization_gene_list` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:visualization_gene_list` | Only used when `rna_trajectory_analysis` and `rna_trajectory_dge`. |
@@ -208,7 +210,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `rna_association_categorical_cols` | `null` | `null` | `run_dimension_association_analysis:categorical_cols` | Only used when `rna_dimension_association_analysis`. |
 | `rna_association_n_permutations` | `999` | **`99`** | `run_dimension_association_analysis:n_permutations` | Only used when `rna_dimension_association_analysis`. |
 
-## ATAC keys (83)
+## ATAC keys (85)
 
 ### ATAC: input and output paths
 
@@ -248,7 +250,13 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | Key | Default | Demo | Consumed by | Notes |
 |---|---|---|---|---|
 | `atac_sample_col` | `"sample"` | `"sample"` | 9 functions: `build_sample_adata`, `preprocess`, `run_autotune`, `compute_sample_embedding`, `sample_distance`, `run_trajectory_gam_differential_gene_analysis`, `proportion_test`, `raisinfit`, `run_dimension_association_analysis` | A column literally named `sample` is safest. With a sample-metadata CSV, this column is kept and a `sample` copy is added. |
-| `atac_sample_level_batch_col` | `null` | `null` | `preprocess:sample_level_batch_key`<br>`run_autotune:batch_col`<br>`compute_sample_embedding:batch_col`<br>`run_trajectory_gam_differential_gene_analysis:batch_col`<br>`raisinfit:batch_col` | A string or a list. Two or more columns give multi-covariate sample-level Harmony. Harmony runs only with at least 8 samples and more than one batch value. |
+
+### ATAC: batch levels as for RNA
+
+| Key | Default | Demo | Consumed by | Notes |
+|---|---|---|---|---|
+| `atac_batch_col` | `null` | `null` | `resolve_batch_levels:batch_col` | Template: *default for both batch levels, as for RNA* |
+| `atac_sample_level_batch_col` | `null` | `null` | `resolve_batch_levels:sample_level` | A string or a list. Two or more columns give multi-covariate sample-level Harmony. Harmony runs only with at least 8 samples and more than one batch value. |
 | `atac_celltype_col` | `"cell_type"` | `"cell_type"` | `cell_types:cell_type_column`<br>`run_autotune:celltype_col`<br>`compute_sample_embedding:celltype_col`<br>`sample_distance:cell_type_column`<br>`run_trajectory_gam_differential_gene_analysis:celltype_col`<br>`proportion_test:celltype_col` | Cell typing always writes its labels to `obs['cell_type']`, and once it has run the embedding and downstream steps use that column. This key is the label source with `atac_existing_cell_types: true`, and the column the embedding reads when `atac_cell_type_cluster: false`. |
 | `atac_cell_embedding_column` | `null` | `null` | `cell_types:cell_embedding_column`<br>`run_autotune:comp_emb_key`<br>`run_autotune:rmd_emb_key`<br>`compute_sample_embedding:comp_emb_key`<br>`compute_sample_embedding:rmd_emb_key` |  |
 
@@ -261,7 +269,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `atac_max_features` | `15000` | **`50000`** | `preprocess:max_features` | Only used when `atac_preprocessing`. |
 | `atac_min_cells_per_sample` | `1` | **`50`** | `preprocess:min_cells_per_sample` | Only used when `atac_preprocessing`. |
 | `atac_exclude_features` | `null` | `null` | `preprocess:exclude_features` | Only used when `atac_preprocessing`. |
-| `atac_cell_level_batch_key` | `null` | `null` | `preprocess:cell_level_batch_key` | Only used when `atac_preprocessing`. |
+| `atac_cell_level_batch_key` | `null` | `null` | `resolve_batch_levels:cell_level` |  |
 | `atac_doublet_detection` | `true` | **`false`** | `preprocess:doublet_detection` | Only used when `atac_preprocessing`. |
 | `atac_num_cell_hvfs` | `50000` | **`10000`** | `preprocess:num_cell_hvfs` | Only used when `atac_preprocessing`. |
 | `atac_cell_embedding_num_pcs` | `50` | **`30`** | `preprocess:cell_embedding_num_PCs`<br>`cell_types:cell_embedding_num_PCs` |  |
@@ -334,6 +342,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `atac_effect_size_threshold` | `1.0` | `1.0` | `run_trajectory_gam_differential_gene_analysis:effect_size_threshold` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. |
 | `atac_top_n_genes` | `100` | `100` | `run_trajectory_gam_differential_gene_analysis:top_n_genes` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. |
 | `atac_trajectory_diff_gene_covariate` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:covariate_columns` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. |
+| `atac_trajectory_test` | `"gam"` | `"gam"` | `run_trajectory_gam_differential_gene_analysis:test` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. Template: *"gam" or "linear"; linear suits small cohorts* |
 | `atac_num_splines` | `5` | `5` | `run_trajectory_gam_differential_gene_analysis:num_splines` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. |
 | `atac_spline_order` | `3` | `3` | `run_trajectory_gam_differential_gene_analysis:spline_order` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. A gene is fitted only if it has a value in at least order + splines + 2 samples (after automatic reduction). With 8 samples use 2; order 3 fits nothing. |
 | `atac_visualization_gene_list` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:visualization_gene_list` | Only used when `atac_trajectory_analysis` and `atac_trajectory_dge`. |
@@ -363,7 +372,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `atac_association_categorical_cols` | `null` | `null` | `run_dimension_association_analysis:categorical_cols` | Only used when `atac_dimension_association_analysis`. |
 | `atac_association_n_permutations` | `999` | **`99`** | `run_dimension_association_analysis:n_permutations` | Only used when `atac_dimension_association_analysis`. |
 
-## Multi-omics keys (132)
+## Multi-omics keys (135)
 
 ### Multi-omics: input and output paths
 
@@ -415,7 +424,9 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `multiomics_rna_sample_column` | `"sample"` | `"sample"` | `multiomics_preparation:rna_sample_column` | Only used when `multiomics_integration`. |
 | `multiomics_atac_sample_column` | `"sample"` | `"sample"` | `multiomics_preparation:atac_sample_column` | Only used when `multiomics_integration`. |
 | `multiomics_sample_col` | `"sample"` | `"sample"` | 10 functions: `build_sample_adata`, `multiomics_preparation`, `harmonize_xglue`, `run_autotune`, `compute_sample_embedding`, `sample_distance`, `run_trajectory_gam_differential_gene_analysis`, `proportion_test`, `raisinfit`, `run_dimension_association_analysis` | A column literally named `sample` is safest. With a sample-metadata CSV, this column is kept and a `sample` copy is added. |
-| `multiomics_batch_col` | `null` | `null` | `multiomics_preparation:batch_key`<br>`harmonize_xglue:batch_col`<br>`run_autotune:batch_col`<br>`compute_sample_embedding:batch_col`<br>`run_trajectory_gam_differential_gene_analysis:batch_col`<br>`raisinfit:batch_col` | A single column name. It is scGLUE's `batch_key`, the `harmonize_xglue` batch, and the sample-level Harmony batch. |
+| `multiomics_batch_col` | `null` | `null` | `resolve_batch_levels:batch_col` | A single column name. It is scGLUE's `batch_key`, the `harmonize_xglue` batch, and the sample-level Harmony batch. Template: *default for both batch levels; empty level entries inherit it* |
+| `multiomics_cell_level_batch_key` | `null` | `null` | `resolve_batch_levels:cell_level` | Template: *one column: scGLUE use_batch + the Z_comp Harmony pass* |
+| `multiomics_sample_level_batch_col` | `null` | `null` | `resolve_batch_levels:sample_level` | Template: *RMD reference group (x modality), sample-level Harmony, autotune, DE* |
 | `multiomics_celltype_col` | `"cell_type"` | `"cell_type"` | `cell_types_multiomics:cell_type_column`<br>`propagate_cell_type:celltype_col`<br>`run_autotune:celltype_col`<br>`compute_sample_embedding:celltype_col`<br>`sample_distance:cell_type_column`<br>`run_trajectory_gam_differential_gene_analysis:celltype_col`<br>`proportion_test:celltype_col` | Joint cell typing writes its labels here. With `multiomics_cell_type_cluster: false` the labels must already be in this column. |
 | `multiomics_modality_col` | `"modality"` | `"modality"` | `build_sample_adata:modality_col`<br>`cell_types_multiomics:modality_column`<br>`run_autotune:modality_col`<br>`compute_sample_embedding:modality_col`<br>`visualize_multimodal_embedding:modality_col` |  |
 
@@ -573,6 +584,7 @@ Generated from the package by [`gen_config_reference.py`](../assets/gen_config_r
 | `multiomics_effect_size_threshold` | `1.0` | `1.0` | `run_trajectory_gam_differential_gene_analysis:effect_size_threshold` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. |
 | `multiomics_top_n_genes` | `100` | `100` | `run_trajectory_gam_differential_gene_analysis:top_n_genes` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. |
 | `multiomics_trajectory_diff_gene_covariate` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:covariate_columns` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. |
+| `multiomics_trajectory_test` | `"gam"` | `"gam"` | `run_trajectory_gam_differential_gene_analysis:test` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. Template: *"gam" or "linear"; linear suits small cohorts* |
 | `multiomics_num_splines` | `5` | `5` | `run_trajectory_gam_differential_gene_analysis:num_splines` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. |
 | `multiomics_spline_order` | `3` | `3` | `run_trajectory_gam_differential_gene_analysis:spline_order` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. A gene is fitted only if it has a value in at least order + splines + 2 samples (after automatic reduction). With 8 samples use 2; order 3 fits nothing. |
 | `multiomics_visualization_gene_list` | `null` | `null` | `run_trajectory_gam_differential_gene_analysis:visualization_gene_list` | Only used when `multiomics_trajectory_analysis` and `multiomics_trajectory_dge`. |
